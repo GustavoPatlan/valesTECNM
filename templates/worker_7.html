@@ -1,0 +1,47 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_student_4.css') }}">
+{% endblock %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2 id="nombreSaludo">{{casetero[1]}}</h2>
+<h4>Detalles de la Cuenta</h4>
+<div class="seccionInformacion">
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Identificación</h5>
+            <span>{{casetero[0]}}</span>
+        </div>
+    </div>
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Laboratorio</h5>
+            <span>{{casetero[3]}}</span>
+        </div>
+        <div class="seccionIDEdit">
+            <h5>Correo</h5>
+            <span>{{casetero[4]}}</span>
+        </div>
+    </div>
+    <div class="seccionIDatos" id="seccionIDatosNombres">
+        <div class="seccionIDEdit">
+            <h5>Nombres</h5>
+            <span>{{casetero[1]}}</span>
+        </div>
+        <div class="seccionIDEdit">
+            <h5>Apellidos</h5>
+            <span>{{casetero[2]}}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+
+{% endblock %}

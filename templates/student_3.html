@@ -1,0 +1,118 @@
+{% extends "sidebar_student.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_student_3.css') }}">
+{% endblock %}
+
+{% block title %}Historial{% endblock %}
+
+{% block identificacion %}{{usuario[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2>{{usuario[5]}}</h2>
+{% if solicitudes == [] %}
+<h4>Aun no hay Vales Solicitados</h4>
+{% else %}
+<h4>Vales Solicitados</h4>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Vale</th>
+                <th>Hora de Solicitud</th>
+                <th>Fecha de Solicitud</th>
+                <th>Estado</th>
+                <th>Laboratorio</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes %}
+            <tr id="solicitud-{{ solicitud[0] }}">
+                <td data-label="Vale">{{ solicitud[14] }}</td>
+                <td data-label="Hora de Solicitud">{{ solicitud[2] }}</td>
+                <td data-label="Fecha de Solicitud">{{ solicitud[3] }}</td>
+                <td data-label="Estado">{{ solicitud[13] }}</td>
+                <td data-label="Laboratorio">{{ solicitud[12] }}</td>
+                <td data-label="Detalles" id="tdButton">
+                    <button onclick="openDialogInfo('{{ solicitud[0] }}')">ABRIR</button>
+                </td>
+            </tr>
+            <dialog id="dialog-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <h3>Detalles de la Solicitud</h3>
+                    <div class="dialog-content-part">
+                        <div class="dialog-content-part-info">
+                            <div class="dialog-content-part-info-section">
+                                <h5>VALE:</h5>
+                                <span>{{ solicitud[14] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>SALON:</h5>
+                                <span>{{ solicitud[12] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>HORA:</h5>
+                                <span>{{ solicitud[2] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>FECHA:</h5>
+                                <span>{{ solicitud[3] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>PROFESOR:</h5>
+                                <span>{{ solicitud[8] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>MATERIA:</h5>
+                                <span>{{ solicitud[9] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>GRUPO:</h5>
+                                <span>{{ solicitud[10] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>N. ALUMNOS:</h5>
+                                <span>{{ solicitud[11] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>ESTADO:</h5>
+                                <span>{{ solicitud[13] }}</span>
+                            </div>
+                        </div>
+                        <div class="dialog-content-part-material">
+                            <div class="dialog-content-part-material-table">
+                                {% for item in material[solicitud[0]] %}
+                                <span>{{item[0]}} : {{item[1]}}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if solicitud[13] != 'ACTIVO' %}
+                    <button id="cancelarSolicitud" onclick="openDialogClose('{{ solicitud[0] }}')">CANCELAR</button>
+                    <dialog id="dialog-close-{{ solicitud[0] }}">
+                        <div class="dialog-content-use">
+                            <span>¿Estás seguro de borrar el vale?</span>
+                            <button onclick="deleteSolicitud('{{ solicitud[0] }}')"
+                                id="cancelarSolicitud">ACEPTAR</button>
+                            <button onclick="closeDialogClose('{{ solicitud[0] }}')">CANCELAR</button>
+                        </div>
+                    </dialog>
+                    {% endif %}
+                    <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scriptDedicado %}
+<script>
+    let usuarioSesion = '{{ usuario[0] }}';
+</script>
+<script src="{{ url_for('static', filename='js_student_3.js') }}"></script>
+{% endblock %}

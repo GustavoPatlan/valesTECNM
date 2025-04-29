@@ -1,0 +1,112 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_2_1.css') }}">
+{% endblock %}
+
+{% block title %}Solicitud{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<div class="seccionFormulario">
+    <div class="seccionFEncabezado">
+        <h4>Solicitud de Vale</h4>
+        <span>{{solicitud[5]}}</span>
+    </div>
+    <div class="seccionFAMano">
+        <div class="seccionFAMLinea">
+            <h5>PROFESOR:</h5>
+            <span>{{solicitud[6]}} {{solicitud[7]}}</span>
+        </div>
+        <div class="seccionFAMLinea">
+            <h5>LABORATORIO:</h5>
+            <span>{{solicitud[12]}}</span>
+        </div>
+    </div>
+    <button id="botonAbrirMaterial" onclick="openDialogMaterial()">Agregar Material</button>
+</div>
+<dialog id="seleccionMaterial">
+    <div class="dialogContenido">
+        <h4>Agrega el material</h4>
+        <div class="dialogCContenido">
+            <div id="dialogCCAlerta">
+                <span>Material ya Agregado</span>
+            </div>
+            <div class="dialogCCBuscardo">
+                <i><box-icon name='search-alt-2'></box-icon></i>
+                <input type="search" placeholder="Buscar" id="searchInputMaterial" oninput="filterListEquipo()">
+            </div>
+            <ul class="dialogCCLista" id="equipoLista">
+                {% for item in equipo %}
+                {% if item[2] == 'SI' %}
+                <li onclick="selectMaterialPredefinido(this)">{{item[0]}}: {{item[1]}}</li>
+                {% else %}
+                <li onclick="selectMaterial(this)">{{item[0]}}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCerrar" onclick="closeDialogMaterial()">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionCantidadMaterial">
+    <div class="dialogContenido">
+        <h4>Agrega la Cantidad de Material</h4>
+        <div class="dialogCContenido">
+            <ul class="dialogCCLista">
+                {% for d in range(1, 11) %}
+                <li onclick="selectMaterialCantidad(this)">{{ d }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeQuantityDialog()">CANCELAR</button>
+    </div>
+</dialog>
+<dialog id="dialogConfirmarEliminacion">
+    <div class="dialogContenido">
+        <span>¿Qué deseas hacer con este material?</span>
+        <button onclick="confirmarEliminacion()" id="dialogCBotonCancelar">ELIMINAR</button>
+        <button onclick="abrirDialogReportar()" id="dialogCBotonReportar">REPORTAR</button>
+        <button onclick="cerrarDialog('dialogConfirmarEliminacion')" id="dialogCBotonCerrar">CANCELAR</button>
+    </div>
+</dialog>
+<dialog id="dialogReportarMaterial">
+    <div class="dialogContenido">
+        <span>Reportar Material</span>
+        <textarea id="textoReporte" placeholder="Describe el problema..."></textarea>
+        <button onclick="enviarReporteMaterial()" id="dialogCBotonReportar">REPORTAR</button>
+        <button onclick="cerrarDialog('dialogReportarMaterial')" id="dialogCBotonCerrar">CANCELAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionEnviar">
+    <div class="dialogContenido">
+        <span>¿Estás seguro de guardar los cambios en el vale?</span>
+        <button id="dialogCBotonCerrar" onclick="enviarValeEditarMaestro()">ENVIAR</button>
+        <button id="dialogCBotonCancelar" onclick="closeDialogEnviar()">CANCELAR</button>
+    </div>
+</dialog>
+<div class="seccionMaterial">
+    <div class="seccionMTabla">
+        {% for item in materiales %}
+        <div class="seccionMTCasilla">
+            <div class="seccionMTValor">
+                <h5>{{item[0]}}</h5>
+                <span>{{item[1]}}</span>
+            </div>
+            <button>X</button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<button id="botonEnviarVale" onclick="openDialogEnviarEditar()">Guardar Cambios</button>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{ url_for('static', filename='js_student_2.js') }}"></script>
+<script src="{{ url_for('static', filename='js_teacher_5.js') }}"></script>
+<script src="{{ url_for('static', filename='js_worker_2_1.js') }}"></script>
+<script>
+    let identificacionSolicitud = "{{ solicitud[0] }}";
+</script>
+{% endblock %}

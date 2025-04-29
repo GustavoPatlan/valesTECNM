@@ -1,0 +1,117 @@
+{% extends "sidebar_teacher.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_teacher_2.css') }}">
+{% endblock %}
+
+{% block title %}Solicitudes{% endblock %}
+
+{% block identificacion %}{{maestro[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<div class="searchSection">
+    <span>Busqueda</span>
+    <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Hora</th>
+                <th>Fecha</th>
+                <th>Laboratorio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes %}
+            <tr id="solicitud-{{ solicitud[0] }}">
+                <td data-label="Nombre">{{ solicitud[8] }} {{ solicitud[9] }}</td>
+                <td data-label="Hora de Finalización">{{ solicitud[6] }}</td>
+                <td data-label="Fecha de Finalización">{{ solicitud[7] }}</td>
+                <td data-label="Laboratorio">{{ solicitud[15] }}</td>
+                <td data-label="Detalles">
+                    <button onclick="openDialogInfo('{{ solicitud[0] }}')">INFORMACIÓN</button>
+                </td>
+            </tr>
+            <dialog id="dialog-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <h3>Detalles de la Solicitud</h3>
+                    <div class="dialog-content-part">
+                        <div class="dialog-content-part-info">
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>PROFESOR:</h5>
+                                <span>{{ solicitud[8] }} {{ solicitud[9] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>CASETERO:</h5>
+                                <span>{{ solicitud[11] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>LABORATORIO:</h5>
+                                <span>{{ solicitud[15] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-horario">
+                                <div class="dialog-content-part-info-horario-bloque">
+                                    <h4>HORARIOS</h4>
+                                    <div class="dialog-content-part-info-horario-bloque-info">
+                                        <div>
+                                            <h5>Solicitud</h5>
+                                            <span>{{ solicitud[2] }}</span>
+                                        </div>
+                                        <div>
+                                            <h5>Finalización</h5>
+                                            <span>{{ solicitud[6] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dialog-content-part-info-horario-bloque">
+                                    <h4>FECHAS</h4>
+                                    <div class="dialog-content-part-info-horario-bloque-info">
+                                        <div>
+                                            <h5>Solicitud</h5>
+                                            <span>{{ solicitud[3] }}</span>
+                                        </div>
+                                        <div>
+                                            <h5>Finalización</h5>
+                                            <span>{{ solicitud[7] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dialog-content-part-material">
+                            <div class="dialog-content-part-material-table">
+                                {% for item in material[solicitud[0]] %}
+                                <span>{{item[0]}} : {{item[1]}}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if solicitud[17] != 'N/A'%}
+                    <button id="botonReporte" onclick="openDialogAceptar('{{ solicitud[0] }}')">REPORTE</button>
+                    {% endif %}
+                    <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            {% if solicitud[17] != 'N/A'%}
+            <dialog id="dialog-accept-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <div class="dialog-content-textarea">
+                        <h3>Reporte de Vale</h3>
+                        <textarea id="reporte-{{ solicitud[0] }}" readonly>{{ solicitud[17] }}</textarea>
+                    </div>
+                    <button onclick="closeDialogAceptar('{{ solicitud[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{url_for('static', filename='js_teacher_2.js')}}"></script>
+{% endblock %}

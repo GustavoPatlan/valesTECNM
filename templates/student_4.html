@@ -1,0 +1,59 @@
+{% extends "sidebar_student.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_student_4.css') }}">
+{% endblock %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block identificacion %}{{usuario[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2 id="nombreSaludo">{{usuario[5]}}</h2>
+<h4>Configuración de la Cuenta</h4>
+<div class="menuCabecera">
+    <button class="botonActivo" onclick="toggleMenuProfile1()" id="botonCuenta">Cuenta</button>
+    <button onclick="toggleMenuProfile2()" id="botonLlave">Contraseña</button>
+</div>
+<div class="seccionInformacion">
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Número de Control</h5>
+            <span>{{usuario[0]}}</span>
+        </div>
+        <div class="seccionIDEdit">
+            <h5>Carrera</h5>
+            <span>{{usuario[4]}}</span>
+        </div>
+    </div>
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Correo</h5>
+            <span>{{usuario[3]}}</span>
+        </div>
+    </div>
+    <div class="seccionIDatos" id="seccionIDatosNombres">
+        <div class="seccionIDEdit">
+            <h5>Nombres</h5>
+            <input type="text" value="{{usuario[5]}}" placeholder="Nombres" name="nombres" id="nombres">
+        </div>
+        <div class="seccionIDEdit">
+            <h5>Apellidos</h5>
+            <input type="text" value="{{usuario[6]}}" placeholder="Apellidos" name="apellidos" id="apellidos">
+        </div>
+    </div>
+    <div class="seccionIDatos" id="seccionIDatosLLave">
+        <div class="seccionIDEdit">
+            <h5>Nueva Contraseña</h5>
+            <input type="text" placeholder="Nueva Contraseña" name="llave" id="llave">
+        </div>
+    </div>
+    <button id="botonCuentaAccion" onclick="actualizarDatosGenerales()">Actualizar</button>
+    <button id="botonLlaveAccion" onclick="actualizarDatosGeneralesLLave()">Cambiar</button>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{ url_for('static', filename='js_student_4.js') }}"></script>
+{% endblock %}

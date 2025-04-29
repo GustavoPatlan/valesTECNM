@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{url_for('static', filename='img_logo.png')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css_notification.css')}}">
+    {% block head %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    {% block popup %}{% endblock %}
+    <main>
+        <div id="notificacionAccion" class="notification">
+            <div class="notificationHead">
+                <div class="notificationHTitle">
+                    <i id="iconoColor"><box-icon id="iconoForma" name='check'></box-icon></i>
+                    <h5 id="notificacionTitulo">Excelente</h5>
+                </div>
+                <button onclick="cerrarNotificacion()">X</button>
+            </div>
+            <p id="notificacionInfo">
+                Your changes have been saved.
+            </p>
+        </div>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="{{url_for('static', filename='js_notification.js')}}"></script>
+    {% block script_section %}{% endblock %}
+</body>
+
+</html>

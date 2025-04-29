@@ -1,0 +1,36 @@
+{% extends "sidebar_teacher.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_teacher_1.css') }}">
+{% endblock %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block identificacion %}{{maestro[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2>{{maestro[2]}}</h2>
+<div class="mainLinkSection">
+    <a href="/maestro/firma">Solicitud de Firma</a>
+    <a href="/maestro/estudiantes/aceptados">Vales Aceptados</a>
+    <a href="/maestro/estudiantes/registros">Vales Registrados</a>
+    <a href="/maestro/vales/activos">Vales Personales</a>
+    <a href="/maestro/registros">Registro Personal</a>
+</div>
+<h4>Contador de Vales</h4>
+<div class="avisosSection">
+    <div class="avisoCard">
+        <h5>SOLICITUDES ACTIVAS</h5>
+        <h1>{{solicitudes['activo']}}</h1>
+    </div>
+    <div class="avisoCard">
+        <h5>PENDIENTES DE MATERIAL</h5>
+        <h1>{{solicitudes['espera']}}</h1>
+    </div>
+    <div class="avisoCard">
+        <h5>PENDIENTES DE FIRMA</h5>
+        <h1>{{solicitudes['sin']}}</h1>
+    </div>
+</div>
+{% endblock %}

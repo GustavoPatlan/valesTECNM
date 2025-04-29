@@ -1,0 +1,369 @@
+main .seccionFormulario {
+    padding: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+main .seccionMaterial {
+    width: 100%;
+    max-height: 90%;
+    padding: 5px;
+}
+
+main .seccionFormulario .seccionFEncabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    background: #1c336c;
+    color: #ffff;
+    border-radius: 8px;
+    padding: 8px;
+    width: 100%;
+}
+
+main .seccionFormulario .seccionFEncabezado h4 {
+    font-size: 14px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+main .seccionFormulario .seccionFEncabezado span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+main .seccionFormulario .seccionFAMano,
+main .seccionFormulario .seccionFABoton {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+main .seccionFormulario .seccionFAMano .seccionFAMLinea {
+    display: flex;
+    flex-direction: row;
+    padding-top: 8px;
+}
+
+main .seccionFormulario .seccionFAMano .seccionFAMLinea h5 {
+    font-size: 14px;
+    font-weight: 600;
+    padding-right: 5px;
+}
+
+main .seccionFormulario .seccionFAMano .seccionFAMLinea span {
+    font-size: 14px;
+    font-weight: 400;
+    width: 100%;
+    border-bottom: solid 1px #333;
+}
+
+main .seccionFormulario .seccionFAMano .seccionFAMLinea input {
+    background: none;
+    border: none;
+    outline: none;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 100%;
+    border-bottom: solid 1px #333;
+}
+
+main .seccionFormulario .seccionFABoton .seccionFABEntrada {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 8px;
+}
+
+main .seccionFormulario .seccionFABoton .seccionFABEntrada .seccionFABAccion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+main .seccionFormulario .seccionFABoton .seccionFABEntrada .seccionFABAccion h5 {
+    font-size: 14px;
+    font-weight: 600;
+    padding-right: 5px;
+}
+
+main .seccionFormulario .seccionFABoton .seccionFABEntrada .seccionFABAccion input {
+    background: none;
+    border: none;
+    outline: none;
+    padding-right: 5px;
+    padding-left: 5px;
+    width: 100%;
+    border-bottom: solid 1px #333;
+    margin-right: 5px;
+    pointer-events: none;
+}
+
+main .seccionFormulario .seccionFABoton .seccionFABEntrada button {
+    padding: 8px;
+    background: #1c336c;
+    color: #ffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+main .seccionFormulario #botonAbrirMaterial {
+    display: none;
+    justify-content: center;
+    margin-top: 5px;
+    background: #1c336c;
+    color: #ffff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 150px;
+}
+
+main .seccionMaterial .seccionMTabla {
+    width: 100%;
+    height: 100%;
+    border: solid 1px #333;
+    border-radius: 8px;
+    overflow-y: auto;
+}
+
+main .seccionMaterial .seccionMTabla::-webkit-scrollbar {
+    width: 8px;
+}
+
+main .seccionMaterial .seccionMTabla::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+main .seccionMaterial .seccionMTabla::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+main .seccionMaterial .seccionMTabla::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+main .seccionMaterial .seccionMTabla .seccionMTCasilla {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    border-bottom: solid 1px #333;
+}
+
+main .seccionMaterial .seccionMTabla .seccionMTCasilla .seccionMTValor {
+    display: flex;
+    flex-direction: column;
+}
+
+main .seccionMaterial .seccionMTabla .seccionMTCasilla .seccionMTValor h5 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+main .seccionMaterial .seccionMTabla .seccionMTCasilla .seccionMTValor span {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+main .seccionMaterial .seccionMTabla .seccionMTCasilla button {
+    background: crimson;
+    border: none;
+    border-radius: 8px;
+    color: #ffff;
+    font-size: 14px;
+    font-weight: 600;
+    height: 30px;
+    width: 40px;
+    cursor: pointer;
+}
+
+@media (max-width: 800px) {
+    main {
+        flex-direction: column;
+    }
+
+    main .seccionFormulario {
+        height: auto;
+    }
+
+    main .seccionMaterial {
+        height: 100%;
+        max-height: 200px;
+    }
+
+    main .seccionFormulario .seccionFABoton .seccionFABEntrada {
+        flex-direction: column;
+    }
+
+    main .seccionFormulario .seccionFABoton .seccionFABEntrada button {
+        margin-top: 5px;
+        width: 120px;
+    }
+}
+
+body main #botonEnviarVale {
+    position: fixed;
+    bottom: 20px;
+    right: 25px;
+    width: 120px;
+    padding: 10px;
+    background: #1c336c;
+    color: #ffff;
+    z-index: 10;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#seleccionLaboratorio,
+#seleccionMaestro,
+#seleccionCantidad,
+#seleccionSalon,
+#seleccionMaterial,
+#seleccionCantidadMaterial,
+#seleccionEnviar {
+    width: 300px;
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.dialogContenido {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.dialogContenido h4 {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.dialogContenido .dialogCContenido {
+    border: 2px solid #333;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.dialogContenido .dialogCContenido #dialogCCAlerta{
+    display: none;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: crimson;
+    padding-bottom: 5px;
+}
+
+.dialogContenido .dialogCContenido .dialogCCBuscardo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #333;
+    border-radius: 8px;
+}
+
+.dialogContenido .dialogCContenido .dialogCCBuscardo i {
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+    padding-right: 5px;
+}
+
+.dialogContenido .dialogCContenido .dialogCCBuscardo i box-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.dialogContenido .dialogCContenido .dialogCCBuscardo input {
+    background: none;
+    outline: none;
+    border: none;
+    width: 100%;
+}
+
+.dialogContenido .dialogCContenido ul {
+    margin-top: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.dialogContenido .dialogCContenido ul li {
+    display: flex;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.dialogContenido .dialogCContenido ul li:hover {
+    background: #e9e9e9;
+}
+
+.dialogContenido .dialogCContenido ul::-webkit-scrollbar {
+    width: 2px;
+}
+
+.dialogContenido .dialogCContenido ul::-webkit-scrollbar-thumb {
+    background-color: #acacac;
+    border-radius: 10px;
+}
+
+.dialogContenido .dialogCContenido ul::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+.dialogContenido #dialogCBotonCancelar,
+.dialogContenido #dialogCBotonCerrar {
+    margin-top: 5px;
+    text-align: center;
+    border: none;
+    color: #ffff;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 90px;
+    padding: 10px;
+}
+
+.dialogContenido #dialogCBotonCancelar {
+    background: crimson;
+}
+
+.dialogContenido #dialogCBotonCerrar {
+    background: #1c336c;
+}
+
+#potList, 
+#adList,
+#sdList{
+    display: none;
+}

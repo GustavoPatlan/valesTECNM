@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: #ffff;
+    overflow: hidden;
+}
+
+body main {
+    justify-content: space-between;
+}
+
+body main,
+body main .seccionLogo,
+body main .seccionFormulario {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+body main .seccionLogo,
+body main .seccionFormulario {
+    justify-content: center;
+}
+
+body main .seccionLogo img {
+    z-index: 1;
+    width: 100%;
+}
+
+body main::before {
+    content: '';
+    position: absolute;
+    width: 2000px;
+    height: 2000px;
+    border-radius: 50%;
+    background: #1c336c;
+    top: -10%;
+    right: 48%;
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+body main .seccionFormulario {
+    flex-direction: column;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #333;
+}
+
+body main .seccionFormulario .seccionFRadio{
+    display: inline-flex;
+    border-radius: 15px;
+    border: 1px solid #333;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario .seccionFRadio .radioEntrada{
+    display: none;
+}
+
+body main .seccionFormulario .seccionFRadio .radioLabel{
+    padding: 6px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+}
+
+body main .seccionFormulario .seccionFRadio .radioLabel:not(:last-of-type){
+    border-right: 1px solid #333;
+}
+
+.seccionFRadio .radioEntrada:checked + .radioLabel {
+    color: #ffff;
+    background: #1c336c;
+}
+
+body main .seccionFormulario .seccionFEntrada {
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    border: 1px solid #333;
+    border-radius: 55px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario .seccionFEntrada i {
+    display: flex;
+    align-items: center;
+    fill: #acacac;
+    padding-left: 15px;
+}
+
+body main .seccionFormulario .seccionFEntrada i box-icon{
+    width: 20px;
+    height: 20px;
+}
+
+body main .seccionFormulario .seccionFEntrada input{
+    background: none;
+    border: none;
+    outline: none;
+    color: #333;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+body main .seccionFormulario .seccionFEntrada input::placeholder{
+    color: #acacac;
+    font-weight: 500;
+}
+
+body main .seccionFormulario .seccionFLlave{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario .seccionFLlave button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-right: 5px;
+}
+
+body main .seccionFormulario .seccionFLlave button i{
+    display: flex;
+    align-items: center;
+}
+
+body main .seccionFormulario .seccionFLlave button i box-icon{
+    width: 30px;
+    height: 30px;
+}
+
+body main .seccionFormulario #botonInicio{
+    text-align: center;
+    border: none;
+    background: #1c336c;
+    color: #ffff;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+body main .seccionFormulario .seccionFEnlace{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario .seccionFEnlace a{
+    text-decoration: none;
+    color: #1c336c;
+    font-weight: 900;
+    font-size: 13px;
+    padding-top: 5px;
+}
+
+body main .seccionFormulario .seccionFEnlace#enlacesTrabajadores{
+    display: none;
+}
+
+@media (max-width: 900px) {
+    body main::before {
+        width: 1500px;
+        height: 1500px;
+        bottom: 80%;
+        left: 50%;
+        transform: translateX(-50%);
+        right: initial;
+        top: initial;
+    }
+
+    body main {
+        flex-direction: column;
+    }
+
+    body main .seccionLogo {
+        height: auto;
+        width: auto;
+        padding: 2rem 12% 0rem 12%;
+    }
+
+    body main .seccionFormulario {
+        align-items: center;
+    }
+}

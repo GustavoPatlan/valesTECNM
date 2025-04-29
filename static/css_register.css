@@ -1,0 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: #ffff;
+    overflow: hidden;
+}
+
+body main,
+body main .seccionFormulario {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+body main .seccionFormulario .seccionFCambio {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+body main .seccionFormulario,
+body main .seccionFormulario .seccionFCambio {
+    justify-content: center;
+}
+
+body main .seccionFormulario #seccionFCambioCode {
+    display: none;
+}
+
+body main .seccionFormulario #seccionFCambioCode h5 {
+    padding-top: 6px;
+}
+
+body main .seccionFormulario #seccionFCambioCode a {
+    text-align: center;
+    border: none;
+    background: crimson;
+    color: #ffff;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 10px;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+body main .seccionFormulario {
+    flex-direction: column;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #333;
+}
+
+/* body main .seccionFormulario .seccionFRadio {
+    display: inline-flex;
+    border-radius: 15px;
+    border: 1px solid #333;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario .seccionFRadio .radioEntrada {
+    display: none;
+}
+
+body main .seccionFormulario .seccionFRadio .radioLabel {
+    padding: 6px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+}
+
+body main .seccionFormulario .seccionFRadio .radioLabel:not(:last-of-type) {
+    border-right: 1px solid #333;
+}
+
+.seccionFRadio .radioEntrada:checked+.radioLabel {
+    color: #ffff;
+    background: #1c336c;
+} */
+
+body main .seccionFormulario .seccionFEntrada {
+    width: 100%;
+    max-width: 300px;
+    height: 50px;
+    border: 1px solid #333;
+    border-radius: 55px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario #seccionFCambioCode .seccionFEntrada{
+    justify-content: space-between;
+}
+
+body main .seccionFormulario #seccionFCambioCode .seccionFEntrada div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+body main .seccionFormulario #seccionFCambioCode .seccionFEntrada button{
+    background: none;
+    border: none;
+    height: 100%;
+    padding-right: 8px;
+    padding-left: 8px;
+    border-left: 1px solid #333;
+    color: #acacac;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+body main .seccionFormulario .seccionFEntrada i {
+    fill: #acacac;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+body main .seccionFormulario .seccionFEntrada i box-icon{
+    width: 20px;
+    height: 20px;
+}
+
+body main .seccionFormulario .seccionFEntrada input {
+    background: none;
+    border: none;
+    outline: none;
+    color: #333;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 10px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+body main .seccionFormulario .seccionFEntrada input::placeholder {
+    color: #acacac;
+    font-weight: 500;
+}
+
+body main .seccionFormulario .seccionFLlave {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario .seccionFLlave button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-right: 5px;
+}
+
+body main .seccionFormulario .seccionFLlave button i {
+    display: flex;
+    align-items: center;
+}
+
+body main .seccionFormulario .seccionFLlave button i box-icon{
+    width: 30px;
+    height: 30px;
+}
+
+body main .seccionFormulario #botonInicio {
+    text-align: center;
+    border: none;
+    background: #1c336c;
+    color: #ffff;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+body main .seccionFormulario .seccionFEnlace {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+body main .seccionFormulario .seccionFEnlace a {
+    text-decoration: none;
+    color: #1c336c;
+    font-weight: 900;
+    font-size: 13px;
+    padding-top: 5px;
+}
+
+body main .seccionFormulario .seccionFEntrada#seccionFECarreraBoton {
+    cursor: pointer;
+    background: none;
+}
+
+body main .seccionFormulario .seccionFEntrada#seccionFECarreraBoton span {
+    color: #acacac;
+    font-weight: 500;
+    font-size: 14px;
+    margin-left: 6px;
+    margin-right: 15px;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+body main .seccionFormulario .seccionFEntrada#seccionFECarreraBoton span::-webkit-scrollbar {
+    height: 5px;
+}
+
+body main .seccionFormulario .seccionFEntrada#seccionFECarreraBoton span::-webkit-scrollbar-thumb {
+    background-color: #acacac;
+    border-radius: 10px;
+}
+
+body main .seccionFormulario .seccionFEntrada#seccionFECarreraBoton span::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+#seleccionCarrera {
+    width: 300px;
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#seleccionCarrera .dialogContenido {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+#seleccionCarrera .dialogContenido h4 {
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera {
+    border: 2px solid #333;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera .dialogCCBuscardo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #333;
+    border-radius: 8px;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera .dialogCCBuscardo i {
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+    padding-right: 5px;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera .dialogCCBuscardo i box-icon{
+    width: 20px;
+    height: 20px;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera .dialogCCBuscardo input {
+    background: none;
+    outline: none;
+    border: none;
+    width: 100%;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera ul {
+    margin-top: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera ul li {
+    display: flex;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera ul li:hover {
+    background: #e9e9e9;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera ul::-webkit-scrollbar {
+    width: 2px;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera ul::-webkit-scrollbar-thumb {
+    background-color: #acacac;
+    border-radius: 10px;
+}
+
+#seleccionCarrera .dialogContenido .dialogCCarrera ul::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+}
+
+#seleccionCarrera .dialogContenido #dialogCBotonCancelar,
+#seleccionCarrera .dialogContenido #dialogCBotonCerrar {
+    margin-top: 5px;
+    text-align: center;
+    border: none;
+    color: #ffff;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 90px;
+    padding: 10px;
+}
+
+#seleccionCarrera .dialogContenido #dialogCBotonCancelar {
+    background: crimson;
+}
+
+#seleccionCarrera .dialogContenido #dialogCBotonCerrar {
+    background: #1c336c;
+}

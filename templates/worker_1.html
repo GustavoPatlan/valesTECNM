@@ -1,0 +1,36 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_teacher_1.css') }}">
+{% endblock %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2>{{casetero[1]}}</h2>
+<div class="mainLinkSection">
+    <a href="/casetero/vales/activos">Solicitudes Activas</a>
+    <a href="/casetero/vales/pendientes">Solicitudes Pendientes</a>
+    <a href="/casetero/vales/maestros">Vales de Maestros</a>
+    <a href="/casetero/material">Materiales</a>
+    <a href="/casetero/registros">Registros</a>
+</div>
+<h4>Contador de Vales</h4>
+<div class="avisosSection">
+    <div class="avisoCard">
+        <h5>SOLICITUDES ACTIVAS</h5>
+        <h1>{{solicitudes['activo']}}</h1>
+    </div>
+    <div class="avisoCard">
+        <h5>PENDIENTES DE MATERIAL</h5>
+        <h1>{{solicitudes['espera']}}</h1>
+    </div>
+    <div class="avisoCard">
+        <h5>VALES DE MAESTROS</h5>
+        <h1>{{solicitudes['sin']}}</h1>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,272 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_2_1.css') }}">
+{% endblock %}
+
+{% block title %}Registro Nuevo{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<dialog id="seleccionLaboratorio">
+    <div class="dialogContenido">
+        <h4>Seleccióna el Tipo de Vale</h4>
+        <div class="dialogCContenido">
+            <ul class="dialogCCLista">
+                <li onclick="selectLab(this)">LABORATORIO</li>
+                <li onclick="selectLab(this)">PROYECTO</li>
+                <li onclick="selectLab(this)">MAESTRO</li>
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeDialogLabCancelada()">CANCELAR</button>
+        <button id="dialogCBotonCerrar" onclick="closeDialogLab()">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionMaestro">
+    <div class="dialogContenido">
+        <h4>Seleccióna al Profesor</h4>
+        <div class="dialogCContenido">
+            <div class="dialogCCBuscardo">
+                <i><box-icon name='search-alt-2'></box-icon></i>
+                <input type="search" placeholder="Buscar" id="searchInputTeacher" oninput="filterListTeacher()">
+            </div>
+            <ul class="dialogCCLista" id="teacherList">
+                <li onclick="selectTeacher(this)">S/A</li>
+                {% for maestro in maestros %}
+                <li onclick="selectTeacher(this)">{{maestro[0]}} {{maestro[1]}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeDialogTeacherCancelada()">CANCELAR</button>
+        <button id="dialogCBotonCerrar" onclick="closeDialogTeacher()">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionCantidad">
+    <div class="dialogContenido">
+        <h4>Seleccióna el número de Alumnos</h4>
+        <div class="dialogCContenido">
+            <ul class="dialogCCLista">
+                <li onclick="selectCantidad(this)">S/A</li>
+                {% for d in range(1, 11) %}
+                <li onclick="selectCantidad(this)">{{ d }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeDialogCantidadCancelada()">CANCELAR</button>
+        <button id="dialogCBotonCerrar" onclick="closeDialogCantidad()">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionSalon">
+    <div class="dialogContenido">
+        <h4>Seleccióna el Laboratorio</h4>
+        <div class="dialogCContenido">
+            <ul class="dialogCCLista">
+                <li onclick="selectSalon(this)">Y1</li>
+                <li onclick="selectSalon(this)">Y2</li>
+                <li onclick="selectSalon(this)">Y6</li>
+                <li onclick="selectSalon(this)">Y7</li>
+                <li onclick="selectSalon(this)">Y8</li>
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeDialogSalonCancelada()">CANCELAR</button>
+        <button id="dialogCBotonCerrar" onclick="closeDialogSalon()">CERRAR</button>
+    </div>
+</dialog>
+<div class="seccionFormulario">
+    <div class="seccionFEncabezado">
+        <h4>Vale de Laboratorio</h4>
+        <span>{{fecha}}</span>
+    </div>
+    <div class="seccionFAMano">
+        <div class="seccionFAMLinea">
+            <h5>IDENTIFICACIÓN:</h5>
+            <input type="text" placeholder="Agrega el número de control..." id="valeControlInput"
+                name="valeControlInput">
+        </div>
+        <div class="seccionFAMLinea">
+            <h5>NOMBRE:</h5>
+            <input type="text" placeholder="Agrega un nombre..." id="valeNombreInput" name="valeNombreInput">
+        </div>
+        <div class="seccionFAMLinea">
+            <h5>MATERIA:</h5>
+            <input type="text" placeholder="Agrega una materia..." id="valeMateriaInput" name="valeMateriaInput">
+        </div>
+        <div class="seccionFAMLinea">
+            <h5>GRUPO:</h5>
+            <input type="text" placeholder="Agrega tu grupo..." id="valeGrupoInput" name="valeGrupoInput">
+        </div>
+    </div>
+    <div class="seccionFABoton">
+        <div class="seccionFABEntrada">
+            <div class="seccionFABAccion">
+                <h5>VALE:</h5>
+                <input type="text" placeholder="Selecciona un tipo de vale..." id="valeLabInput" name="valeLabInput">
+            </div>
+            <button onclick="openDialogLab()">Agregar</button>
+        </div>
+        <div class="seccionFABEntrada">
+            <div class="seccionFABAccion">
+                <h5>PROFESOR:</h5>
+                <input type="text" placeholder="Selecciona a tu profesor..." id="valeTeacherInput"
+                    name="valeTeacherInput">
+            </div>
+            <button onclick="openDialogTeacher()">Agregar</button>
+        </div>
+        <div class="seccionFABEntrada">
+            <div class="seccionFABAccion">
+                <h5>ALUMNOS:</h5>
+                <input type="text" placeholder="Alumnos en el equipo..." id="valeNumInput" name="valeNumInput">
+            </div>
+            <button onclick="openDialogCantidad()">Agregar</button>
+        </div>
+        <div class="seccionFABEntrada">
+            <div class="seccionFABAccion">
+                <h5>LABORATORIO:</h5>
+                <input type="text" placeholder="Selecciona tu laboratorio..." id="valeSalonInput" name="valeSalonInput">
+            </div>
+            <button onclick="openDialogSalon()">Agregar</button>
+        </div>
+    </div>
+    <button id="botonAbrirMaterial" onclick="openDialogMaterial()">Agregar Material</button>
+    <button id="botonAbrirMaterial" onclick="openDialogReportar()">Agregar Reporte</button>
+</div>
+<dialog id="seleccionMaterial">
+    <div class="dialogContenido">
+        <h4>Agrega el material</h4>
+        <div class="dialogCContenido">
+            <div id="dialogCCAlerta">
+                <span>Material ya Agregado</span>
+            </div>
+            <div class="dialogCCBuscardo">
+                <i><box-icon name='search-alt-2'></box-icon></i>
+                <input type="search" placeholder="Buscar" id="searchInputMaterial" oninput="filterListEquipo()">
+            </div>
+            <ul class="dialogCCLista" id="equipoLista">
+                {% for item in equipo %}
+                {% if item[2] == 'SI' %}
+                <li onclick="selectMaterialPredefinido(this)">{{item[0]}}: {{item[1]}}</li>
+                {% else %}
+                <li onclick="selectMaterial(this)">{{item[0]}}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCerrar" onclick="closeDialogMaterial()">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionCantidadMaterial">
+    <div class="dialogContenido">
+        <h4>Agrega la Cantidad de Material</h4>
+        <div class="dialogCContenido">
+            <ul class="dialogCCLista">
+                {% for d in range(1, 11) %}
+                <li onclick="selectMaterialCantidad(this)">{{ d }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeQuantityDialog()">CANCELAR</button>
+    </div>
+</dialog>
+<dialog id="dialogReportarMaterial">
+    <div class="dialogContenido">
+        <span>Reportar Material</span>
+        <textarea id="textoReporte" placeholder="Describe el problema..."></textarea>
+        <button onclick="cerrarDialog('dialogReportarMaterial')" id="dialogCBotonCerrar">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionEnviar">
+    <div class="dialogContenido">
+        <span>¿Estás seguro de registrar el vale?</span>
+        <button id="dialogCBotonCerrar" onclick="enviarRegistro()">ENVIAR</button>
+        <button id="dialogCBotonCancelar" onclick="closeDialogEnviar()">CANCELAR</button>
+    </div>
+</dialog>
+<div class="seccionMaterial">
+    <div class="seccionMTabla">
+    </div>
+</div>
+<button id="botonEnviarVale" onclick="openDialogEnviarRegistro()">Registrar</button>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{ url_for('static', filename='js_student_2.js') }}"></script>
+<script src="{{ url_for('static', filename='js_teacher_5.js') }}"></script>
+<script src="{{ url_for('static', filename='js_worker_2_1.js') }}"></script>
+<script>
+    function openDialogEnviarRegistro() {
+        let items = document.querySelectorAll(".seccionMTabla .seccionMTCasilla");
+        let control = document.getElementById("valeControlInput").value;
+        let nombre = document.getElementById("valeNombreInput").value;
+        let materia = document.getElementById("valeMateriaInput").value;
+        let grupo = document.getElementById("valeGrupoInput").value;
+        let vale = document.getElementById('valeLabInput').value;
+        let profesor = document.getElementById('valeTeacherInput').value;
+        let alumnos = document.getElementById('valeNumInput').value;
+        let laboratorio = document.getElementById('valeSalonInput').value;
+
+        if (control === '' || nombre === '' || materia === '' || grupo === '' || vale === '' || profesor === '' || alumnos === '' || laboratorio === '') {
+            mostrarNotificacionRequest('Notificación', 'Falta Información', '#1c336c', 'bell');
+        }
+        else if (items.length === 0) {
+            mostrarNotificacionRequest('Notificación', 'No hay Materiales Agregados', '#1c336c', 'bell');
+        }
+        else {
+            dialogEnviar.showModal();
+        }
+    };
+
+    function enviarRegistro() {
+        let control = document.getElementById("valeControlInput").value;
+        let nombre = document.getElementById("valeNombreInput").value;
+        let materia = document.getElementById("valeMateriaInput").value;
+        let grupo = document.getElementById("valeGrupoInput").value;
+        let vale = document.getElementById('valeLabInput').value;
+        let profesor = document.getElementById('valeTeacherInput').value;
+        let alumnos = document.getElementById('valeNumInput').value;
+        let laboratorio = document.getElementById('valeSalonInput').value;
+        let reporte = document.getElementById('textoReporte').value.trim();
+        let items = document.querySelectorAll(".seccionMTabla .seccionMTCasilla");
+
+        let materialList = [];
+        items.forEach(item => {
+            let name = item.querySelector(".seccionMTValor h5").textContent.trim();
+            let quantity = item.querySelector(".seccionMTValor span").textContent.trim();
+
+            materialList.push([name, quantity]);
+        });
+
+        fetch('/casetero/registros/nuevo/agregar', {
+            method: 'POST',
+            body: JSON.stringify({ control: control, nombre: nombre, materia: materia, grupo: grupo, vale: vale, profesor: profesor, alumnos: alumnos, laboratorio: laboratorio, reporte: reporte, items: materialList }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                switch (data.status) {
+                    case 'error':
+                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
+                        break;
+                    case 'redirect':
+                        sessionStorage.setItem("notificacion_mensaje", data.mensaje);
+                        window.location.href = data.url;
+                        break;
+                };
+            });
+    };
+
+    function openDialogReportar() {
+        let dialog = document.getElementById(`dialogReportarMaterial`);
+        if (dialog) {
+            dialog.showModal();
+        }
+    }
+
+    function closeDialogReportar() {
+        let dialog = document.getElementById(`dialogReportarMaterial`);
+        if (dialog) {
+            dialog.close();
+        }
+    }
+</script>
+{% endblock %}

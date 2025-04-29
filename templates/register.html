@@ -1,0 +1,82 @@
+{% extends "notification.html" %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_register.css') }}">
+{% endblock %}
+
+{% block title %}Registro{% endblock %}
+
+{% block popup %}
+<dialog id="seleccionCarrera">
+    <div class="dialogContenido">
+        <h4>Seleccióna la Carrera</h4>
+        <div class="dialogCCarrera">
+            <div class="dialogCCBuscardo">
+                <i><box-icon name='search-alt-2'></box-icon></i>
+                <input type="search" placeholder="Buscar" id="searchInput" oninput="filterList()">
+            </div>
+            <ul class="dialogCCLista" id="careerList">
+                {% for carrera in carreras %}
+                <li onclick="selectCareer(this)">{{ carrera }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeDialogCarreraCancelada()">CANCELAR</button>
+        <button id="dialogCBotonCerrar" onclick="closeDialogCarrea()">CERRAR</button>
+    </div>
+</dialog>
+{% endblock %}
+{% block content %}
+<div class="seccionFormulario">
+    <h1>Regístrate</h1>
+    <div class="seccionFEntrada">
+        <i><box-icon name='user'></box-icon></i>
+        <input type="text" placeholder="Número de Control" id="usuarioInicio" autocomplete="off">
+    </div>
+    <div class="seccionFEntrada">
+        <i><box-icon name='envelope' ></box-icon></i>
+        <input type="email" placeholder="Correo Institucional" id="correoInicio" autocomplete="off">
+    </div>
+    <button class="seccionFEntrada" id="seccionFECarreraBoton" onclick="openDialogCarrea()">
+        <i><box-icon name='graduation' type='solid' ></box-icon></i>
+        <span id="seccionFECarreraBotonspan">Carrera</span>
+    </button>
+    <div class="seccionFCambio" id="seccionFCambioForm">
+        <div class="seccionFEntrada">
+            <i><box-icon name='id-card'></box-icon></i>
+            <input type="text" placeholder="Nombres" id="nombreInicio" autocomplete="off">
+        </div>
+        <div class="seccionFEntrada">
+            <i><box-icon name='id-card'></box-icon></i>
+            <input type="text" placeholder="Apellidos" id="apellidoInicio" autocomplete="off">
+        </div>
+        <div class="seccionFEntrada">
+            <i><box-icon type='solid' name='key'></box-icon></i>
+            <input type="password" placeholder="Contraseña" id="llaveInicio" autocomplete="off">
+        </div>
+        <div class="seccionFLlave">
+            <button onclick="togglePassword()"><i><box-icon name='show'></box-icon></i></button>
+            <h5>Mostrar Contraseña</h5>
+        </div>
+    </div>
+    <div class="seccionFCambio" id="seccionFCambioCode">
+        <h5>Ingresa el Codigo Enviado a tu Correo</h5>
+        <div class="seccionFEntrada">
+            <div>
+                <i><box-icon name='id-card'></box-icon></i>
+                <input type="text" placeholder="Codigo" id="codigoInicio" autocomplete="off">
+            </div>
+            <button onclick="registrarAdd()">ENVIAR</button>
+        </div>
+        <a href="/registro">CAMBIAR DATOS</a>
+    </div>
+    <button id="botonInicio" onclick="registrarCheck()">ENVIAR CODIGO</button>
+    <div class="seccionFEnlace">
+        <h5>¿Ya tienes una cuenta?</h5>
+        <a href="/inicio">Inicia Sesión</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block script_section %}
+<script src="{{url_for('static', filename='js_register.js')}}"></script>
+{% endblock %}

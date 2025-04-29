@@ -1,0 +1,128 @@
+{% extends "sidebar_teacher.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_student_2.css') }}">
+{% endblock %}
+
+{% block title %}Solicitud{% endblock %}
+
+{% block identificacion %}{{maestro[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<dialog id="seleccionSalon">
+    <div class="dialogContenido">
+        <h4>Seleccióna el Laboratorio</h4>
+        <div class="dialogCContenido">
+            <ul class="dialogCCLista">
+                <li onclick="selectSalon(this)">Y1</li>
+                <li onclick="selectSalon(this)">Y2</li>
+                <li onclick="selectSalon(this)">Y6</li>
+                <li onclick="selectSalon(this)">Y7</li>
+                <li onclick="selectSalon(this)">Y8</li>
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeDialogSalonCancelada()">CANCELAR</button>
+        <button id="dialogCBotonCerrar" onclick="closeDialogSalon()">CERRAR</button>
+    </div>
+</dialog>
+<div class="seccionFormulario">
+    <div class="seccionFEncabezado">
+        <h4>Solicitud de Vale</h4>
+        <span>{{fecha}}</span>
+    </div>
+    <div class="seccionFAMano">
+        <div class="seccionFAMLinea">
+            <h5>NOMBRE:</h5>
+            <span>{{maestro[2]}} {{maestro[3]}}</span>
+        </div>
+    </div>
+    <div class="seccionFABoton">
+        <div class="seccionFABEntrada">
+            <div class="seccionFABAccion">
+                <h5>LABORATORIO:</h5>
+                <input type="text" placeholder="Selecciona tu laboratorio..." id="valeSalonInput" name="valeSalonInput">
+            </div>
+            <button onclick="openDialogSalon()">Agregar</button>
+        </div>
+    </div>
+    <button id="botonAbrirMaterial" onclick="openDialogMaterial()">Agregar Material</button>
+</div>
+<dialog id="seleccionMaterial">
+    <div class="dialogContenido">
+        <h4>Agrega el material</h4>
+        <div class="dialogCContenido">
+            <div id="dialogCCAlerta">
+                <span>Material ya Agregado</span>
+            </div>
+            <div class="dialogCCBuscardo">
+                <i><box-icon name='search-alt-2'></box-icon></i>
+                <input type="search" placeholder="Buscar" id="searchInputMaterial" oninput="filterListMaterial()">
+            </div>
+            <ul class="dialogCCLista" id="potList">
+                {% for material in materiales %}
+                {% if material[3] == 'POT' %}
+                {% if material[2] == 'SI' %}
+                <li onclick="selectMaterialPredefinido(this)">{{material[0]}}: {{material[1]}}</li>
+                {% else %}
+                <li onclick="selectMaterial(this)">{{material[0]}}</li>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <ul class="dialogCCLista" id="adList">
+                {% for material in materiales %}
+                {% if material[3] == 'A/D' %}
+                {% if material[2] == 'SI' %}
+                <li onclick="selectMaterialPredefinido(this)">{{material[0]}}: {{material[1]}}</li>
+                {% else %}
+                <li onclick="selectMaterial(this)">{{material[0]}}</li>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <ul class="dialogCCLista" id="sdList">
+                {% for material in materiales %}
+                {% if material[3] == 'S/D' %}
+                {% if material[2] == 'SI' %}
+                <li onclick="selectMaterialPredefinido(this)">{{material[0]}}: {{material[1]}}</li>
+                {% else %}
+                <li onclick="selectMaterial(this)">{{material[0]}}</li>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCerrar" onclick="closeDialogMaterial()">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionCantidadMaterial">
+    <div class="dialogContenido">
+        <h4>Agrega la Cantidad de Material</h4>
+        <div class="dialogCContenido">
+            <ul class="dialogCCLista">
+                {% for d in range(1, 11) %}
+                <li onclick="selectMaterialCantidad(this)">{{ d }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <button id="dialogCBotonCancelar" onclick="closeQuantityDialog()">CANCELAR</button>
+    </div>
+</dialog>
+<dialog id="seleccionEnviar">
+    <div class="dialogContenido">
+        <h4>¿Estás seguro de enviar el vale?</h4>
+        <button id="dialogCBotonCerrar" onclick="enviarValeMaestro()">ENVIAR</button>
+        <button id="dialogCBotonCancelar" onclick="closeDialogEnviar()">CANCELAR</button>
+    </div>
+</dialog>
+<div class="seccionMaterial">
+    <div class="seccionMTabla">
+    </div>
+</div>
+<button id="botonEnviarVale" onclick="openDialogEnviarMaestro()">Enviar Vale</button>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{ url_for('static', filename='js_student_2.js') }}"></script>
+<script src="{{ url_for('static', filename='js_teacher_5.js') }}"></script>
+{% endblock %}

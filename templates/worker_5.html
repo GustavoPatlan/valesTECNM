@@ -1,0 +1,546 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_5.css') }}">
+{% endblock %}
+
+{% block title %}Material{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<div class="searchSection download">
+    <div><span>Busqueda</span>
+        <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+    </div>
+    <div>
+        <button id="downloadButton" onclick="openDialogNuevo()">Nuevo Material</button>
+        <dialog id="dialog-nuevo-material">
+            <div class="dialog-content-use">
+                <h5>Nuevo Material</h5>
+                <span>Selecciona una de las opciones</span>
+                <div class="seccionFRadio">
+                    <input type="radio" name="checkIN" id="Equipo" class="radioEntrada" checked>
+                    <label for="Equipo" class="radioLabel">Equipo Electrónico</label>
+                    <input type="radio" name="checkIN" id="Componente" class="radioEntrada">
+                    <label for="Componente" class="radioLabel">Componente Auxiliar</label>
+                </div>
+                <div class="dialog-content-material">
+                    <div class="dialog-content-material-div">
+                        <h5 id="equipoComponente">EQUIPO:</h5>
+                        <input type="text" id="inputMaterialSeleccionado" placeholder="Agrega o Ingresa uno Nuevo">
+                    </div>
+                    <button onclick="openDialogEquipo()" style="margin-bottom: 3px;">AGREGAR</button>
+                    <dialog id="dialog-nuevo-equipo">
+                        <div class="dialog-content-use">
+                            <h4>Selecciona el material</h4>
+                            <div class="dialogCContenido">
+                                <div class="dialogCCBuscardo">
+                                    <i><box-icon name='search-alt-2'></box-icon></i>
+                                    <input type="search" placeholder="Buscar" id="searchInputMaterial"
+                                        oninput="filterListMaterial()">
+                                </div>
+                                <ul class="dialogCCLista" id="potList">
+                                    <li onclick="selectMaterial(this)">NINGUNO</li>
+                                    {% for item in equipo %}
+                                    {% if item[1] == 'SI' %}
+                                    <li onclick="selectMaterial(this)">{{item[0]}}</li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <ul class="dialogCCLista" id="adList" style="display: none;">
+                                    <li onclick="selectMaterial(this)">NINGUNO</li>
+                                    {% for item in equipo %}
+                                    {% if item[1] == 'NO' %}
+                                    <li onclick="selectMaterial(this)">{{item[0]}}</li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </dialog>
+                    <div class="dialog-content-material-div">
+                        <h5>MARCA:</h5>
+                        <input type="text" id="inputMarca" placeholder="S/A">
+                    </div>
+                    <div class="dialog-content-material-div">
+                        <h5>MODELO:</h5>
+                        <input type="text" id="inputModelo" placeholder="S/A">
+                    </div>
+                </div>
+                <div class="dialog-content-material activate">
+                    <div class="dialog-content-material-div">
+                        <h5>CANTIDAD:</h5>
+                        <input type="number" id="inputCantidad" value="1" min="1">
+                    </div>
+                </div>
+                <div class="dialog-content-material">
+                    <div class="dialog-content-material-div">
+                        <h5>N. CASETA:</h5>
+                        <input type="text" id="inputCaseta" placeholder="S/A">
+                    </div>
+                    <div class="dialog-content-material-div">
+                        <h5>N. SERIE:</h5>
+                        <input type="text" id="inputSerie" placeholder="S/A">
+                    </div>
+                    <div class="dialog-content-material-div">
+                        <h5>N. INVENTARIO:</h5>
+                        <input type="text" id="inputInventario" placeholder="S/A">
+                    </div>
+                    <div class="dialog-content-material-div">
+                        <h5>VOLTAJE:</h5>
+                        <input type="text" id="inputVoltaje" placeholder="S/A">
+                    </div>
+                    <div class="dialog-content-material-div">
+                        <h5>POTENCIA:</h5>
+                        <input type="text" id="inputPotencia" placeholder="S/A">
+                    </div>
+                </div>
+                <button onclick="agregarMaterial()">ENVIAR</button>
+                <button onclick="closeDialogNuevo()">CERRAR</button>
+            </div>
+        </dialog>
+        <button onclick="openDialogDescargar()" id="downloadButton">Descargar Materiales</button>
+        <dialog id="dialog-download">
+            <div class="dialog-content-use">
+                <span>¿Quieres descargar la lista de materiales del {{casetero[3]}}?</span>
+                <a id="cancelarSolicitud" href="/casetero/material/pdf"><box-icon type='solid'
+                        name='file-pdf'></box-icon>PDF</a>
+                <a id="aceptarSolicitud" href="/casetero/material/csv"><box-icon type='logo'
+                        name='microsoft'></box-icon>EXCEL</a>
+                <button onclick="closeDialogDescargar()">CERRAR</button>
+            </div>
+        </dialog>
+    </div>
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Equipo</th>
+                <th>Marca</th>
+                <th>Caseta</th>
+                <th>Condición</th>
+                <th>Disponibilidad</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in material %}
+            <tr id="solicitud-{{ item[0] }}">
+                <td data-label="Equipo">{{ item[1] }}</td>
+                <td data-label="Marca">{{ item[2] }}</td>
+                <td data-label="Caseta">{{ item[4] }}</td>
+                <td data-label="Condición">{{ item[10] }}</td>
+                <td data-label="Disponibilidad">{{ item[11] }}</td>
+                <td data-label="Detalles">
+                    <button onclick="openDialogInfo('{{ item[0] }}')">INFORMACIÓN</button>
+                </td>
+            </tr>
+            <dialog id="dialog-{{ item[0] }}">
+                <div class="dialog-content-use form">
+                    <h3>Detalles del Material</h3>
+                    <div class="dialog-content-part">
+                        <div class="dialog-content-part-info">
+                            <div class="dialog-content-part-info-section">
+                                {% if item[12] != 'SI'%}
+                                <h5>COMPONENTE:</h5>
+                                {% else %}
+                                <h5>EQUIPO:</h5>
+                                {% endif %}
+                                <input type="text" value="{{ item[1] }}">
+                            </div>
+                            {% if item[12] == 'SI'%}
+                            <div class="dialog-content-part-info-section">
+                                <h5>N. CASETA:</h5>
+                                <input type="text" value="{{ item[4] }}">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>MARCA:</h5>
+                                <input type="text" value="{{ item[2] }}">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>MODELO:</h5>
+                                <input type="text" value="{{ item[3] }}">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>N. SERIE:</h5>
+                                <input type="text" value="{{ item[5] }}">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>N. INVENTARIO:</h5>
+                                <input type="text" value="{{ item[6] }}">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>VOLTAJE:</h5>
+                                <input type="text" value="{{ item[7] }}">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>POTENCIA:</h5>
+                                <input type="text" value="{{ item[8] }}">
+                            </div>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>CONDICIÓN:</h5>
+                                    <span id="condicion-span-{{ item[0] }}">{{ item[10] }}</span>
+                                </div>
+                                <button onclick="openDialogCondicion('{{ item[0] }}')">CAMBIAR</button>
+                                <dialog id="dialog-condition-{{ item[0] }}">
+                                    <div class="dialog-content-use">
+                                        <h4>Selecciona la Condición</h4>
+                                        <ul>
+                                            <li onclick="selectCondition(this, '{{ item[0] }}')">OK</li>
+                                            <li onclick="selectCondition(this, '{{ item[0] }}')">EN REVISIÓN</li>
+                                        </ul>
+                                        <button onclick="closeDialogCondicion('{{ item[0] }}')">CERRAR</button>
+                                    </div>
+                                </dialog>
+                            </div>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>DISPONIBILIDAD:</h5>
+                                    <span id="disponibilidad-span-{{ item[0] }}">{{ item[11] }}</span>
+                                </div>
+                                <button onclick="openDialogDisponibilidad('{{ item[0] }}')">CAMBIAR</button>
+                                <dialog id="dialog-disponibilidad-{{ item[0] }}">
+                                    <div class="dialog-content-use">
+                                        <h4>Selecciona la Disposición</h4>
+                                        <ul>
+                                            <li onclick="selectDisponibilidad(this, '{{ item[0] }}')">DISPONIBLE</li>
+                                            <li onclick="selectDisponibilidad(this, '{{ item[0] }}')">NO DISPONIBLE</li>
+                                            <li onclick="selectDisponibilidad(this, '{{ item[0] }}')">OCUPADO</li>
+                                        </ul>
+                                        <button onclick="closeDialogDisponibilidad('{{ item[0] }}')">CERRAR</button>
+                                    </div>
+                                </dialog>
+                            </div>
+                            {% else %}
+                            <div class="dialog-content-part-info-section">
+                                <h5>CANTIDAD:</h5>
+                                <input type="number" value="{{ item[9] }}" min="1 ">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>MARCA:</h5>
+                                <input type="text" value="{{ item[2] }}">
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>MODELO:</h5>
+                                <input type="text" value="{{ item[3] }}">
+                            </div>
+                            {% endif %}
+                            <div class="dialog-content-part-info-horario">
+                                <h5>Observaciones</h5>
+                                <textarea>{{ item[13] }}"</textarea>
+                            </div>
+                            <div class="dialog-content-part-info-acciones">
+                                <button id="aceptarSolicitud"
+                                    onclick="openDialogAceptar('{{ item[0] }}')">Actualizar</button>
+                                <button id="cancelarSolicitud"
+                                    onclick="openDialogCancelar('{{ item[0] }}')">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="closeDialogInfo('{{ item[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            <dialog id="dialog-accept-{{ item[0] }}">
+                <div class="dialog-content-use">
+                    <span>¿Estás seguro de actualizar los datos del material?</span>
+                    <button id="cancelarSolicitud" onclick="obtenerValoresMaterial('{{ item[0] }}')">ACEPTAR</button>
+                    <button onclick="closeDialogAceptar('{{ item[0] }}')">CANCELAR</button>
+                </div>
+            </dialog>
+            <dialog id="dialog-cancel-{{ item[0] }}">
+                <div class="dialog-content-use">
+                    <span>¿Estás seguro de borrar el material?</span>
+                    <button id="cancelarSolicitud" onclick="borrarMaterial('{{ item[0] }}')">ACEPTAR</button>
+                    <button onclick="closeDialogCancelar('{{ item[0] }}')">CANCELAR</button>
+                </div>
+            </dialog>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{url_for('static', filename='js_teacher_2.js')}}"></script>
+<script>
+    function openDialogCondicion(id) {
+        let dialog = document.getElementById(`dialog-condition-${id}`);
+        if (dialog) {
+            dialog.showModal();
+        }
+    };
+
+    function closeDialogCondicion(id) {
+        let dialog = document.getElementById(`dialog-condition-${id}`);
+        if (dialog) {
+            dialog.close();
+        }
+    };
+
+    function selectCondition(element, id) {
+        let selectedCondition = element.textContent;
+        let conditionSpan = document.getElementById(`condicion-span-${id}`);
+        conditionSpan.textContent = selectedCondition;
+        closeDialogCondicion(id);
+    };
+
+    function openDialogDisponibilidad(id) {
+        let dialog = document.getElementById(`dialog-disponibilidad-${id}`);
+        if (dialog) {
+            dialog.showModal();
+        }
+    };
+
+    function closeDialogDisponibilidad(id) {
+        let dialog = document.getElementById(`dialog-disponibilidad-${id}`);
+        if (dialog) {
+            dialog.close();
+        }
+    };
+
+    function selectDisponibilidad(element, id) {
+        let selectedDisponible = element.textContent;
+        let disponibleSpan = document.getElementById(`disponibilidad-span-${id}`);
+        disponibleSpan.textContent = selectedDisponible;
+        closeDialogDisponibilidad(id);
+    };
+
+    function obtenerValoresMaterial(id) {
+        let dialogMaterial = document.querySelector(`#dialog-${id}`);
+
+        let valores = [];
+        let inputs = dialogMaterial.querySelectorAll("input");
+
+        for (let i = 0; i < inputs.length; i++) {
+            let valor = inputs[i].value.trim();
+            if (valor === "") {
+                mostrarNotificacionRequest('Error', 'Falta Información', 'crimson', 'bug');
+                return null; // Detenemos si hay un input vacío
+            }
+            valores.push(valor);
+        }
+
+        let condicionSpan = document.getElementById(`condicion-span-${id}`);
+        let disponibilidadSpan = document.getElementById(`disponibilidad-span-${id}`);
+
+        let condicion = condicionSpan ? condicionSpan.textContent.trim() : "";
+        let disponibilidad = disponibilidadSpan ? disponibilidadSpan.textContent.trim() : "";
+
+        valores.push(condicion);
+        valores.push(disponibilidad);
+
+        // Textarea
+        let textarea = dialogMaterial.querySelector("textarea");
+        let observaciones = textarea ? textarea.value.trim() : "";
+        valores.push(observaciones);
+
+        fetch('/casetero/material/actualizado', {
+            method: 'POST',
+            body: JSON.stringify({ identificacion: id, valores: valores }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                switch (data.status) {
+                    case 'error':
+                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
+                        break;
+                    case 'redirect':
+                        sessionStorage.setItem("notificacion_mensaje", data.mensaje);
+                        window.location.href = data.url;
+                        break;
+                };
+            });
+    };
+
+    function borrarMaterial(id) {
+        fetch('/casetero/material/eliminado', {
+            method: 'POST',
+            body: JSON.stringify({ identificacion: id }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                switch (data.status) {
+                    case 'error':
+                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
+                        break;
+                    case 'redirect':
+                        sessionStorage.setItem("notificacion_mensaje", data.mensaje);
+                        window.location.href = data.url;
+                        break;
+                };
+            });
+    };
+
+    function openDialogNuevo() {
+        let dialog = document.getElementById(`dialog-nuevo-material`);
+        if (dialog) {
+            dialog.showModal();
+        }
+    };
+
+    function closeDialogNuevo() {
+        let dialog = document.getElementById(`dialog-nuevo-material`);
+        if (dialog) {
+            dialog.close();
+        }
+    };
+
+    let radios = document.querySelectorAll('input[name="checkIN"]');
+    let inputUsuario = document.getElementById('equipoComponente');
+    let inputMaterialSeleccionado = document.getElementById('inputMaterialSeleccionado');
+
+    let cantidadBlock = document.querySelectorAll('.dialog-content-material')[1];
+    let casetaBlock = document.querySelectorAll('.dialog-content-material')[2];
+
+    // Listas del dialog para materiales
+    let potList = document.getElementById('potList');
+    let adList = document.getElementById('adList');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            let esEquipo = document.getElementById('Equipo').checked;
+
+            // Cambia el título
+            inputUsuario.textContent = esEquipo ? 'EQUIPO:' : 'COMPONENTE:';
+            inputMaterialSeleccionado.value = ''
+
+            // Mostrar/ocultar bloques
+            if (esEquipo) {
+                cantidadBlock.classList.add('activate');
+                casetaBlock.classList.remove('activate');
+                potList.style.display = 'block';
+                adList.style.display = 'none';
+            } else {
+                cantidadBlock.classList.remove('activate');
+                casetaBlock.classList.add('activate');
+                potList.style.display = 'none';
+                adList.style.display = 'block';
+            }
+        });
+    });
+
+    function selectMaterial(element) {
+        let value = element.textContent.trim();
+        let inputField = document.getElementById('inputMaterialSeleccionado');
+
+        if (value === 'NINGUNO') {
+            inputField.value = '';
+        } else {
+            inputField.value = value;
+        }
+
+        closeDialogEquipo();
+    }
+
+    function openDialogEquipo() {
+        let dialog = document.getElementById(`dialog-nuevo-equipo`);
+        if (dialog) {
+            dialog.showModal();
+        }
+    };
+
+    function closeDialogEquipo() {
+        let dialog = document.getElementById(`dialog-nuevo-equipo`);
+        if (dialog) {
+            dialog.close();
+        }
+    };
+
+    function filterListMaterial() {
+        let input = document.getElementById('searchInputMaterial').value.toLowerCase();
+        let lists = ['potList', 'adList', 'sdList'];
+
+        lists.forEach(listId => {
+            let listItems = document.querySelectorAll(`#${listId} li`);
+            listItems.forEach(li => {
+                let text = li.textContent.toLowerCase();
+                li.style.display = text.includes(input) ? 'flex' : 'none';
+            });
+        });
+    };
+
+    function revisarMaterialAntesDeEnviar(equipo, caseta) {
+        let filas = document.querySelectorAll("tbody tr");
+        let coincidencia = false;
+
+        filas.forEach(tr => {
+            let tds = tr.querySelectorAll("td");
+            let equipoText = "";
+            let casetaText = "";
+
+            tds.forEach(td => {
+                if (td.getAttribute("data-label") === "Equipo") {
+                    equipoText = td.textContent.trim();
+                }
+                if (td.getAttribute("data-label") === "Caseta") {
+                    casetaText = td.textContent.trim();
+                }
+            });
+
+            if (equipoText === equipo && casetaText === caseta) {
+                mostrarNotificacionRequest('Error', 'El Equipo y Número de Caseta ya está asignado', 'crimson', 'bug');
+                coincidencia = true;
+            }
+        });
+
+        return coincidencia;
+    }
+
+    function agregarMaterial() {
+        let tipoSeleccionado = document.querySelector('input[name="checkIN"]:checked').id;
+        let inputMaterial = document.getElementById('inputMaterialSeleccionado').value.trim();
+        let marca = document.getElementById('inputMarca').value.trim();
+        let modelo = document.getElementById('inputModelo').value.trim();
+        let cantidad = document.getElementById('inputCantidad').value.trim();
+        let caseta = document.getElementById('inputCaseta').value.trim();
+        let serie = document.getElementById('inputSerie').value.trim();
+        let inventario = document.getElementById('inputInventario').value.trim();
+        let voltaje = document.getElementById('inputVoltaje').value.trim();
+        let potencia = document.getElementById('inputPotencia').value.trim();
+
+        if (!inputMaterial) {
+            mostrarNotificacionRequest('Error', 'Faltan Información', 'crimson', 'bug');
+            return;
+        }
+
+        // Si existe la coincidencia, detenemos aquí
+        let existe = revisarMaterialAntesDeEnviar(inputMaterial, caseta);
+        if (existe) return;
+
+        fetch('/casetero/material/agregado', {
+            method: 'POST',
+            body: JSON.stringify({
+                radio: tipoSeleccionado,
+                equipo: inputMaterial,
+                marca: marca,
+                modelo: modelo,
+                cantidad: cantidad,
+                caseta: caseta,
+                serie: serie,
+                inventario: inventario,
+                voltaje: voltaje,
+                potencia: potencia
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                switch (data.status) {
+                    case 'error':
+                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
+                        break;
+                    case 'redirect':
+                        sessionStorage.setItem("notificacion_mensaje", data.mensaje);
+                        window.location.href = data.url;
+                        break;
+                }
+            });
+    }
+
+</script>
+{% endblock %}

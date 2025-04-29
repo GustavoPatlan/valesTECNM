@@ -1,0 +1,78 @@
+main{
+    flex-direction: column;
+}
+
+main h4{
+    color: #6b7280;
+}
+
+main h4, main h2{
+    padding-bottom: 5px;
+}
+
+main .mainLinkSection,
+main .avisosSection{
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 5px;
+}
+
+main .mainLinkSection a{
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+    border: solid 1px #333;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+main .mainLinkSection a:hover{
+    color: #ffff;
+    background: #1c336c;
+}
+
+main .avisosSection .avisoCard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: solid 1px #333;
+    border-radius: 8px;
+    padding: 8px;
+    margin-right: 5px;
+}
+
+main .avisosSection .avisoCard h5{
+    font-weight: 600;
+}
+
+
+@media (max-width: 600px) {
+    main{
+        align-items: center;
+        text-align: center;
+    }
+
+    main .mainLinkSection{
+        flex-direction: column;
+        align-items: center;
+        padding-bottom: 0;
+        width: 100%;
+    }
+
+    main .mainLinkSection a{
+        margin-bottom: 5px;
+        width: 100%;
+    }
+
+    main .avisosSection{
+        flex-direction: column;
+        width: 100%;
+    }
+
+    main .avisosSection .avisoCard{
+        margin-top: 5px;
+    }
+}

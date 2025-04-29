@@ -1,0 +1,46 @@
+{% extends "sidebar_student.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_student_1.css') }}">
+{% endblock %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block identificacion %}{{usuario[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2>{{usuario[5]}}</h2>
+<div class="mainLinkSection">
+    <a href="/estudiante/vale">Solicitar Vale</a>
+    <a href="/estudiante/historial">Vales Solicitados</a>
+</div>
+<h4>Cantidad de Vales Solicitados</h4>
+<div class="avisosSection">
+    <span id="avisoLab">Vales de Laboratorio: {{usuario[1]}}</span>
+    <span id="avisoPro">Vales de Proyecto: {{usuario[2]}}</span>
+</div>
+<h4>Horarios de Laboratorio Libres</h4>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Dia</th>
+                <th>Laboratorio</th>
+                <th>Inicio</th>
+                <th>Final</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horarios in horarios %}
+            <tr>
+                <td>{{ horarios[1] }}</td>
+                <td>{{ horarios[2] }}</td>
+                <td>{{ horarios[3] }}</td>
+                <td>{{ horarios[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

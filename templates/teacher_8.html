@@ -1,0 +1,43 @@
+{% extends "sidebar_teacher.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_student_4.css') }}">
+{% endblock %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block identificacion %}{{maestro[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2 id="nombreSaludo">{{maestro[2]}}</h2>
+<h4>Detalles de la Cuenta</h4>
+<div class="seccionInformacion">
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Identificación</h5>
+            <span>{{maestro[0]}}</span>
+        </div>
+    </div>
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Correo</h5>
+            <span>{{maestro[1]}}</span>
+        </div>
+    </div>
+    <div class="seccionIDatos" id="seccionIDatosNombres">
+        <div class="seccionIDEdit">
+            <h5>Nombres</h5>
+            <span>{{maestro[2]}}</span>
+        </div>
+        <div class="seccionIDEdit">
+            <h5>Apellidos</h5>
+            <span>{{maestro[3]}}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+
+{% endblock %}

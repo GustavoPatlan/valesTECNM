@@ -1,0 +1,108 @@
+main{
+    flex-direction: column;
+}
+
+main h4{
+    color: #6b7280;
+}
+
+main h4, main h2{
+    padding-bottom: 5px;
+}
+
+main .menuCabecera{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+main .menuCabecera button{
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+main .menuCabecera .botonActivo{
+    color: #1c336c;
+    border-bottom: #1c336c solid 1px;
+}
+
+main .seccionInformacion{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+main .seccionInformacion .seccionIDatos{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit{
+    display: flex;
+    flex-direction: column;
+    padding-right: 5px;
+    width: 100%;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit h5{
+    font-weight: 500;
+    font-style: italic;
+    padding-left: 3px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit span,
+main .seccionInformacion .seccionIDatos .seccionIDEdit input{
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: solid 1px #333;
+    border-radius: 8px;
+    padding-left: 3px;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit input{
+    padding-right: 5px;
+}
+
+main .seccionInformacion .seccionIDatos#seccionIDatosLLave{
+    display: none;
+}
+
+main .seccionInformacion button{
+    display: flex;
+    justify-content: center;
+    border: none;
+    background: #1c336c;
+    color: #ffff;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 5px;
+    cursor: pointer;
+    width: 150px;
+    margin-left: auto;
+}
+
+main .seccionInformacion #botonLlaveAccion{
+    display: none;
+}
+
+@media (max-width: 600px) {
+    main{
+        align-items: center;
+    }
+
+    main .seccionInformacion .seccionIDatos{
+        flex-direction: column;
+    }
+}

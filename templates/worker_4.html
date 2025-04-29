@@ -1,0 +1,106 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_2.css') }}">
+{% endblock %}
+
+{% block title %}Solicitudes{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<div class="searchSection">
+    <span>Busqueda</span>
+    <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Hora</th>
+                <th>Fecha</th>
+                <th>Laboratorio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes %}
+            <tr id="solicitud-{{ solicitud[0] }}">
+                <td data-label="Nombre">{{ solicitud[6] }} {{ solicitud[7] }}</td>
+                <td data-label="Hora de Solicitud">{{ solicitud[4] }}</td>
+                <td data-label="Fecha de Solicitud">{{ solicitud[5] }}</td>
+                <td data-label="Laboratorio">{{ solicitud[12] }}</td>
+                <td data-label="Detalles" id="tdButton">
+                    <button id="botonCancelar" onclick="openDialogCancelar('{{ solicitud[0] }}')">FINALIZAR</button>
+                    <button id="botonReportar" onclick="openDialogAceptar('{{ solicitud[0] }}')">REPORTAR</button>
+                    <button onclick="openDialogInfo('{{ solicitud[0] }}')">DETALLES</button>
+                </td>
+            </tr>
+            <dialog id="dialog-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <h3>Detalles de la Solicitud</h3>
+                    <div class="dialog-content-part">
+                        <div class="dialog-content-part-info">
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>PROFESOR:</h5>
+                                <span>{{ solicitud[6] }} {{ solicitud[7] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>LABORATORIO:</h5>
+                                <span>{{ solicitud[12] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>HORA:</h5>
+                                <span>{{ solicitud[4] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>FECHA:</h5>
+                                <span>{{ solicitud[5] }}</span>
+                            </div>
+                        </div>
+                        <div class="dialog-content-part-material">
+                            <div class="dialog-content-part-material-table" data-id="{{ solicitud[0] }}">
+                                {% for item in material[solicitud[0]] %}
+                                <span>{{item[0]}} : {{item[1]}}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <a id="botonAceptar" href="/casetero/vales/maestros/{{solicitud[0]}}">EDITAR</a>
+                    <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            <dialog id="dialog-accept-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <div class="dialog-content-textarea">
+                        <h3>Reporte de Vale</h3>
+                        {% if solicitud[15] == 'N/A'%}
+                        <textarea id="reporte-{{ solicitud[0] }}" maxlength="1000"></textarea>
+                        {% else %}
+                        <textarea id="reporte-{{ solicitud[0] }}" maxlength="1000">{{ solicitud[15] }}</textarea>
+                        {% endif %}
+                    </div>
+                    <button id="botonReportar" onclick="reportarAlumnoCasetero('{{ solicitud[0] }}')">REPORTAR</button>
+                    <button id="cancelarSolicitud"
+                        onclick="cancelarReporteAlumnoCasetero('{{ solicitud[0] }}')">CANCELAR</button>
+                    <button onclick="closeDialogAceptar('{{ solicitud[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            <dialog id="dialog-cancel-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <span>¿Estás seguro de finalizar el vale?</span>
+                    <button id="cancelarSolicitud" onclick="registrarValeMaestro('{{ solicitud[0] }}')">ACEPTAR</button>
+                    <button onclick="closeDialogCancelar('{{ solicitud[0] }}')">CANCELAR</button>
+                </div>
+            </dialog>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{url_for('static', filename='js_teacher_2.js')}}"></script>
+<script src="{{url_for('static', filename='js_worker_3.js')}}"></script>
+{% endblock %}

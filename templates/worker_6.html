@@ -1,0 +1,174 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_teacher_2.css') }}">
+{% endblock %}
+
+{% block title %}Registro{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<div class="searchSection download">
+    <div><span>Busqueda</span>
+        <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+    </div>
+    <div>
+        <a href="/casetero/registros/nuevo" id="downloadButton">Nuevo Registro</a>
+        <button onclick="openDialogDescargar()" id="downloadButton">Descargar Lista</button>
+        <dialog id="dialog-download">
+            <div class="dialog-content-use">
+                <span>¿Quieres descargar los registros del {{casetero[3]}}?</span>
+                <a id="cancelarSolicitud" href="/casetero/registros/pdf"><box-icon type='solid' name='file-pdf'></box-icon>PDF</a>
+                <a id="aceptarSolicitud" href="/casetero/registros/csv"><box-icon type='logo' name='microsoft'></box-icon>EXCEL</a>
+                <button onclick="closeDialogDescargar()">CERRAR</button>
+            </div>
+        </dialog>
+    </div>
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Identificación</th>
+                <th>Nombre</th>
+                <th>Vale</th>
+                <th>Hora</th>
+                <th>Fecha</th>
+                <th>Laboratorio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes %}
+            <tr id="solicitud-{{ solicitud[0] }}">
+                <td data-label="Identificación">{{ solicitud[1] }}</td>
+                <td data-label="Nombre">{{ solicitud[8] }} {{ solicitud[9] }}</td>
+                <td data-label="Vale">{{ solicitud[16] }}</td>
+                <td data-label="Hora de Finalización">{{ solicitud[6] }}</td>
+                <td data-label="Fecha de Finalización">{{ solicitud[7] }}</td>
+                <td data-label="Laboratorio">{{ solicitud[15] }}</td>
+                <td data-label="Detalles">
+                    <button onclick="openDialogInfo('{{ solicitud[0] }}')">INFORMACIÓN</button>
+                </td>
+            </tr>
+            <dialog id="dialog-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <h3>Detalles de la Solicitud</h3>
+                    <div class="dialog-content-part">
+                        <div class="dialog-content-part-info">
+                            <div class="dialog-content-part-info-section">
+                                <h5>IDENTIFICACIÓN:</h5>
+                                <span>{{ solicitud[1] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                {% if solicitud[16] == 'MAESTRO'%}
+                                <h5>PROFESOR:</h5>
+                                {% else %}
+                                <h5>ESTUDIANTE:</h5>
+                                {% endif %}
+                                <span>{{ solicitud[8] }} {{ solicitud[9] }}</span>
+                            </div>
+                            {% if solicitud[16] != 'MAESTRO'%}
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>PROFESOR:</h5>
+                                <span>{{ solicitud[10] }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>CASETERO:</h5>
+                                <span>{{ solicitud[11] }}</span>
+                            </div>
+                            {% if solicitud[16] != 'MAESTRO'%}
+                            <div class="dialog-content-part-info-section">
+                                <h5>MATERIA:</h5>
+                                <span>{{ solicitud[12] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>GRUPO:</h5>
+                                <span>{{ solicitud[13] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-section">
+                                <h5>N. ALUMNOS:</h5>
+                                <span>{{ solicitud[14] }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="dialog-content-part-info-section">
+                                <h5>LABORATORIO:</h5>
+                                <span>{{ solicitud[15] }}</span>
+                            </div>
+                            <div class="dialog-content-part-info-horario">
+                                <div class="dialog-content-part-info-horario-bloque">
+                                    <h4>HORARIOS</h4>
+                                    <div class="dialog-content-part-info-horario-bloque-info">
+                                        <div>
+                                            <h5>Solicitud</h5>
+                                            <span>{{ solicitud[2] }}</span>
+                                        </div>
+                                        {% if solicitud[16] != 'MAESTRO'%}
+                                        <div>
+                                            <h5>Aceptación</h5>
+                                            <span>{{ solicitud[4] }}</span>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            <h5>Finalización</h5>
+                                            <span>{{ solicitud[6] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dialog-content-part-info-horario-bloque">
+                                    <h4>FECHAS</h4>
+                                    <div class="dialog-content-part-info-horario-bloque-info">
+                                        <div>
+                                            <h5>Solicitud</h5>
+                                            <span>{{ solicitud[3] }}</span>
+                                        </div>
+                                        {% if solicitud[16] != 'MAESTRO'%}
+                                        <div>
+                                            <h5>Aceptación</h5>
+                                            <span>{{ solicitud[5] }}</span>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            <h5>Finalización</h5>
+                                            <span>{{ solicitud[7] }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dialog-content-part-material">
+                            <div class="dialog-content-part-material-table">
+                                {% for item in material[solicitud[0]] %}
+                                <span>{{item[0]}} : {{item[1]}}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if solicitud[17] != 'N/A'%}
+                    <button id="botonReporte" onclick="openDialogAceptar('{{ solicitud[0] }}')">REPORTE</button>
+                    {% endif %}
+                    <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            {% if solicitud[17] != 'N/A'%}
+            <dialog id="dialog-accept-{{ solicitud[0] }}">
+                <div class="dialog-content-use">
+                    <div class="dialog-content-textarea">
+                        <h3>Reporte de Vale</h3>
+                        <textarea id="reporte-{{ solicitud[0] }}" readonly>{{ solicitud[17] }}</textarea>
+                    </div>
+                    <button onclick="closeDialogAceptar('{{ solicitud[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{url_for('static', filename='js_teacher_2.js')}}"></script>
+{% endblock %}
