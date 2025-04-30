@@ -1,3 +1,6 @@
+/*
+Abre el diálogo modal que muestra los detalles completos de una solicitud.
+*/
 function openDialogInfo(id) {
     let dialog = document.getElementById(`dialog-${id}`);
     if (dialog) {
@@ -5,6 +8,9 @@ function openDialogInfo(id) {
     }
 };
 
+/*
+Cierra el diálogo de información de solicitud.
+*/
 function closeDialogInfo(id) {
     let dialog = document.getElementById(`dialog-${id}`);
     if (dialog) {
@@ -12,6 +18,11 @@ function closeDialogInfo(id) {
     }
 };
 
+/*
+Filtra las solicitudes en la tabla según el texto de búsqueda.
+ - Muestra solo las filas que coincidan con el texto ingresado
+ - Oculta las no coincidentes con animación suave
+*/
 function filterList() {
     let input = document.getElementById('searchInput').value.toLowerCase();
     let rows = document.querySelectorAll('tbody tr');
@@ -32,6 +43,9 @@ function filterList() {
     });
 };
 
+/*
+Abre el diálogo de confirmación para aceptar una solicitud.
+*/
 function openDialogAceptar(id) {
     let dialog = document.getElementById(`dialog-accept-${id}`);
     if (dialog) {
@@ -39,6 +53,9 @@ function openDialogAceptar(id) {
     }
 };
 
+/*
+Cierra el diálogo de aceptación de solicitud.
+*/
 function closeDialogAceptar(id) {
     let dialog = document.getElementById(`dialog-accept-${id}`);
     if (dialog) {
@@ -46,6 +63,9 @@ function closeDialogAceptar(id) {
     }
 };
 
+/*
+Abre el diálogo de confirmación para cancelar una solicitud.
+*/
 function openDialogCancelar(id) {
     let dialog = document.getElementById(`dialog-cancel-${id}`);
     if (dialog) {
@@ -53,6 +73,9 @@ function openDialogCancelar(id) {
     }
 };
 
+/*
+Cierra el diálogo de cancelación de solicitud.
+*/
 function closeDialogCancelar(id) {
     let dialog = document.getElementById(`dialog-cancel-${id}`);
     if (dialog) {
@@ -60,12 +83,17 @@ function closeDialogCancelar(id) {
     }
 };
 
+/*
+Procesa la aceptación de una solicitud mediante petición al servidor.
+*/
 function aceptarSolicitud(id) {
+    // Obtiene elementos relacionados.
     let row = document.getElementById(`solicitud-${id}`);
     let dialog1 = document.getElementById(`dialog-${id}`);
     let dialog2 = document.getElementById(`dialog-accept-${id}`);
     let dialog3 = document.getElementById(`dialog-cancel-${id}`);
     if (row) {
+        // Envía solicitud al servidor.
         fetch('/maestro/firma/aceptar', {
             method: 'POST',
             body: JSON.stringify({ identificacion: id }),
@@ -74,15 +102,17 @@ function aceptarSolicitud(id) {
             .then(response => response.json())
             .then(data => {
                 switch (data.status) {
-                    case 'error':
+                    case 'error':   // Notificación de error.
                         mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
                         break;
-                    case 'alerta':
+                    case 'alerta':  // Modificación exitosa.
                         row.remove();
                         closeDialogAceptar(id);
                         dialog1.remove();
                         dialog2.remove();
                         dialog3.remove();
+
+                        // Muestra notificación de éxito.
                         mostrarNotificacionRequest('Exito', data.mensaje, 'lawngreen', 'check');
                         break;
                 };
@@ -90,12 +120,17 @@ function aceptarSolicitud(id) {
     };
 };
 
+/*
+Procesa la cancelación de una solicitud mediante petición al servidor.
+*/
 function cancelarSolicitud(id) {
+    // Obtiene elementos relacionados.
     let row = document.getElementById(`solicitud-${id}`);
     let dialog1 = document.getElementById(`dialog-${id}`);
     let dialog2 = document.getElementById(`dialog-accept-${id}`);
     let dialog3 = document.getElementById(`dialog-cancel-${id}`);
     if (row) {
+        // Envía solicitud al servidor.
         fetch('/maestro/firma/cancelar', {
             method: 'POST',
             body: JSON.stringify({ identificacion: id }),
@@ -104,15 +139,17 @@ function cancelarSolicitud(id) {
             .then(response => response.json())
             .then(data => {
                 switch (data.status) {
-                    case 'error':
+                    case 'error':   // Notificación de error.
                         mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
                         break;
-                    case 'alerta':
+                    case 'alerta':  // Modificación exitosa.
                         row.remove();
                         closeDialogCancelar(id);
                         dialog1.remove();
                         dialog2.remove();
                         dialog3.remove();
+
+                        // Muestra notificación de éxito.
                         mostrarNotificacionRequest('Exito', data.mensaje, 'lawngreen', 'check');
                         break;
                 };
@@ -120,6 +157,7 @@ function cancelarSolicitud(id) {
     };
 };
 
+// Revisar donde se usa
 function openDialogDescargar() {
     let dialog = document.getElementById(`dialog-download`);
     if (dialog) {

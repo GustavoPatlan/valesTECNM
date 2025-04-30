@@ -1,10 +1,23 @@
 /*
-Controla la visualización del menú desplegable de vales.
+Controla la visualización del menú desplegable de vales de estudiantes.
 Alterna la clase 'activo' que muestra/oculta el submenú.
 */
-function toggleMenu() {
-    let menu = document.getElementById("menuDesplegable");
-    menu.classList.toggle("activo");    // Toggle para mostrar/ocultar.
+function toggleMenu1() {
+    let menu1 = document.getElementById("menuDesplegable1");
+    let menu2 = document.getElementById("menuDesplegable2");
+    menu1.classList.toggle("activo");
+    menu2.classList.remove("activo");
+}
+
+/*
+Controla la visualización del menú desplegable de vales personales.
+Alterna la clase 'activo' que muestra/oculta el submenú.
+*/
+function toggleMenu2() {
+    let menu1 = document.getElementById("menuDesplegable1");
+    let menu2 = document.getElementById("menuDesplegable2");
+    menu1.classList.remove("activo");
+    menu2.classList.toggle("activo");
 }
 
 /*

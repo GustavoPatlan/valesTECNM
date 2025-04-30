@@ -80,6 +80,13 @@ def agregarDatosDB_Individual(sql, data = None):
     conn.close()
 
 def agregarDatosDB_Individual_for(sql, data):
+    """
+    Ejecuta una operación SQL INSERT/UPDATE para múltiples registros en una transacción.
+
+    Parámetros:
+        sql: Consulta SQL parametrizada.
+        data: Tupla que contiene una lista de tuplas con los datos a insertar.
+    """
     conn = conexion()
     cursor = conn.cursor()
     for item in data[0]:
@@ -116,20 +123,20 @@ def obtenerDatosDB_Varios_Descarga(sql, data = None):
     conn.close()
     return resultado
 
-def material_lab():
-    conn = conexion()
-    cursor = conn.cursor()
-    cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labpotencia WHERE disponibilidad = 'DISPONIBLE'")
-    myresult = cursor.fetchall()
-    pot = [(elem + ('POT',) if 'POT' not in elem else elem) for elem in myresult]
-    cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labelectronica WHERE disponibilidad = 'DISPONIBLE'")
-    myresult = cursor.fetchall()
-    ad = [(elem + ('A/D',) if 'A/D' not in elem else elem) for elem in myresult]
-    cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labthird WHERE disponibilidad = 'DISPONIBLE'")
-    myresult = cursor.fetchall()
-    sd = [(elem + ('S/D',) if 'S/D' not in elem else elem) for elem in myresult]
-    all_results = pot + ad + sd
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return all_results
+# def material_lab():
+#     conn = conexion()
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labpotencia WHERE disponibilidad = 'DISPONIBLE'")
+#     myresult = cursor.fetchall()
+#     pot = [(elem + ('POT',) if 'POT' not in elem else elem) for elem in myresult]
+#     cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labelectronica WHERE disponibilidad = 'DISPONIBLE'")
+#     myresult = cursor.fetchall()
+#     ad = [(elem + ('A/D',) if 'A/D' not in elem else elem) for elem in myresult]
+#     cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labthird WHERE disponibilidad = 'DISPONIBLE'")
+#     myresult = cursor.fetchall()
+#     sd = [(elem + ('S/D',) if 'S/D' not in elem else elem) for elem in myresult]
+#     all_results = pot + ad + sd
+#     conn.commit()
+#     cursor.close()
+#     conn.close()
+#     return all_results

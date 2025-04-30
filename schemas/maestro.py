@@ -1,7 +1,17 @@
 from datetime import datetime
 
-# Obtener fecha y hora actual
 def obtener_horario():
+    """
+    Obtiene la fecha y hora actual del sistema formateadas para visualización.
+
+    Genera:
+        - Fecha en formato DD/MM/AAAA.
+        - Hora en formato 12 horas con indicador AM/PM.
+        - Los datos se retornan como una lista.
+
+    Resultado:
+        resultado: Datos del con fecha y hora.
+    """
     ahora = datetime.now()
     fecha = ahora.strftime('%d/%m/%Y')
     hora = ahora.strftime('%I:%M')
@@ -11,5 +21,12 @@ def obtener_horario():
     return datos
 
 def crear_identificacion(ncontrol, horarios):
+    """
+    Genera un ID único para solicitudes de maestros combinando:
+    - Prefijo 'M'.
+    - Número de control.
+    - Hora actual.
+    - Fecha actual.
+    """
     identificacion = 'M' + ncontrol + horarios[1].replace(" ", "").replace(":", "") + horarios[0].replace("/", "") 
     return identificacion
