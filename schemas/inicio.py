@@ -1,38 +1,27 @@
 import string, random, re
 from flask_mail import Mail, Message
 from flask import Flask
+from dotenv import load_dotenv
+import os
+
+load_dotenv(dotenv_path="config/.env")
 
 # Lista de carreras profesionales disponibles en el instituto.
-carreras_disponibles = [
-    "Ingeniería Biomédica",
-    "Ingeniería Bioquímica",
-    "Ingeniería Electrónica",
-    "Ingeniería Eléctrica",
-    "Ingeniería Industrial",
-    "Ingeniería Mecatrónica",
-    "Ingeniería Mecánica",
-    "Ingeniería en Gestión Empresarial",
-    "Ingeniería en Materiales",
-    "Ingeniería en Semiconductores",
-    "Ingeniería en Sistemas Computacionales",
-    "Ingeniería en Tecnologías de la Información y Comunicaciones",
-    "Licenciatura en Administración",
-    "Licenciatura en Contaduría",
-]
+carreras_disponibles = os.getenv("CARRERAS_DISPONIBLES").split(",") if os.getenv("CARRERAS_DISPONIBLES") else []
 
 # Configuración inicial de la aplicación Flask.
 app = Flask(__name__)
 
 # Clave secreta para manejar sesiones seguras.
-app.secret_key = 'valestecnm'
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 # Configuración del servicio de correo electrónico (Gmail SMTP).
-app.config["MAIL_SERVER"] = "smtp.gmail.com"  # Servidor SMTP de Gmail.
-app.config["MAIL_PORT"] = 587  # Puerto para TLS.
-app.config["MAIL_USE_TLS"] = True  # Habilitar TLS (seguridad).
-app.config["MAIL_USE_SSL"] = False  # No usar SSL (TLS es suficiente).
-app.config["MAIL_USERNAME"] = "tecnmvaleselectronicos@gmail.com"  # Cuenta de correo.
-app.config["MAIL_PASSWORD"] = "wznm iiwn ineu lrkh"  # Contraseña/App Password.
+app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")  # Servidor SMTP de Gmail.
+app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT"))  # Puerto para TLS.
+app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS").lower() == 'true'  # Habilitar TLS (seguridad).
+app.config["MAIL_USE_SSL"] = os.getenv("MAIL_USE_SSL").lower() == 'true'  # No usar SSL (TLS es suficiente).
+app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")  # Cuenta de correo.
+app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")  # Contraseña/App Password.
 
 # Inicialización de la extensión Flask-Mail
 mail = Mail(app)
