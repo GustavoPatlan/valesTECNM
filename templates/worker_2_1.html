@@ -123,10 +123,8 @@
 {% endblock %}
 
 {% block scriptDedicado %}
-<script src="{{ url_for('static', filename='js_student_2.js') }}"></script>
-<script src="{{ url_for('static', filename='js_teacher_5.js') }}"></script>
-<script src="{{ url_for('static', filename='js_worker_2_1.js') }}"></script>
 <script>
     let identificacionSolicitud = "{{ solicitud[0] }}";
 </script>
+<script src="{{ url_for('static', filename='js_worker_2_1.js') }}"></script>
 {% endblock %}

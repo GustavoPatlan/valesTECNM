@@ -106,6 +106,46 @@ def agregarDatosDB_Individual_for(sql, data):
     cursor.close()
     conn.close()
 
+def agregarDatosDB_Individual_resetear(sql, data):
+    """
+    Ejecuta una operación restablecer el material, manejando diferentes tipos de datos.
+    
+    Parámetros:
+        sql: Consulta SQL a ejecutar.
+        data: Tupla que contiene una lista de materiales con información a guardar.
+    """
+    conn = conexion()
+    cursor = conn.cursor()
+    materiales = data[0]
+    for item in materiales:
+        try:
+            float(item[1])
+            info = (item[0], 'S/A',)
+        except (ValueError, TypeError):
+            info = (item[0], item[1],)
+        cursor.execute(sql, info)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def agregarDatosDB_Individual_resetear_ocupado(sql, data):
+    """
+    Ejecuta una operación restablecer el material, manejando diferentes tipos de datos.
+    
+    Parámetros:
+        sql: Consulta SQL a ejecutar.
+        data: Tupla que contiene una lista de materiales con información a guardar.
+    """
+    conn = conexion()
+    cursor = conn.cursor()
+    materiales = data[0]
+    for item in materiales:
+        info = (item[0], item[1],)
+        cursor.execute(sql, info)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 def agregarDatosDB_Individual_reporte(sql, data):
     """
     Ejecuta una operación SQL para guardar un reporte, manejando diferentes tipos de datos.

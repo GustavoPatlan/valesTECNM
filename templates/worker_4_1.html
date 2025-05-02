@@ -1,7 +1,7 @@
 {% extends "sidebar_worker.html" %}
 
 {% block cssDedicado %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_2_1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_4_1.css') }}">
 {% endblock %}
 
 {% block title %}Solicitud{% endblock %}
@@ -103,10 +103,8 @@
 {% endblock %}
 
 {% block scriptDedicado %}
-<script src="{{ url_for('static', filename='js_student_2.js') }}"></script>
-<script src="{{ url_for('static', filename='js_teacher_5.js') }}"></script>
-<script src="{{ url_for('static', filename='js_worker_2_1.js') }}"></script>
 <script>
     let identificacionSolicitud = "{{ solicitud[0] }}";
 </script>
+<script src="{{ url_for('static', filename='js_worker_4_1.js') }}"></script>
 {% endblock %}

@@ -22,12 +22,13 @@ lab_material = {
     }
 
 def crearListadeEquipo(equipos):
-    # Paso 1: Agrupar identificaciones por equipo
+    """
+    Transforma una lista de tuplas (equipo, identificacion) en una lista de diccionarios
+    donde cada clave es un equipo y su valor es la lista de identificaciones asociadas.
+    """
     agrupados = defaultdict(list)
     for equipo, identificacion in equipos:
         agrupados[equipo].append(identificacion)
-
-    # Paso 2: Convertir a lista de diccionarios
     resultado = [{k: v} for k, v in agrupados.items()]
     return resultado
 
@@ -227,7 +228,16 @@ def generarListaPDF(laboratorio):
     return buffer
 
 def generarListaMaterialesCSV(laboratorio):
+    """
+    Genera un archivo CSV con el inventario completo de materiales de un laboratorio específico.
+    El archivo está optimizado para su visualización en Excel y otras hojas de cálculo.
+
+    Parámetros:
+        laboratorio: Nombre del laboratorio del cual se generará el reporte.
+    """
     condition = lab_material.get(laboratorio)
+
+    # Obtener datos de la base de datos.
     sql = f"""
             SELECT 
                 EQUIPO, MARCA, MODELO, N_CASETA, N_SERIE,
@@ -237,12 +247,13 @@ def generarListaMaterialesCSV(laboratorio):
             """
     datos = obtenerDatosDB_Varios_Descarga(sql)
 
+    # Definir encabezados de columnas.
     columnas = [
         "Equipo", "Marca", "Modelo", "Caseta", "N. Serie","N. Inventario", 
         "Voltaje", "Potencia", "Cantidad", "Numeracion", "Observaciones"
     ]
 
-    # BOM UTF-8 para compatibilidad con Excel
+    # Producir el contenido CSV línea por línea.
     yield '\ufeff' + ','.join(columnas) + '\n'
 
     for fila in datos:
@@ -251,7 +262,25 @@ def generarListaMaterialesCSV(laboratorio):
         yield ','.join(fila_limpia) + '\n'
 
 def generarMaterialesPDF(laboratorio):
+    """
+    Genera un reporte PDF profesional del inventario de materiales de un laboratorio específico.
+
+    Parámetros:
+        laboratorio: Nombre del laboratorio para el cual se generará el reporte.
+
+    Retorna:
+        BytesIO: Buffer con el archivo PDF generado listo para descargar.
+
+    Características del PDF:
+        - Formato horizontal (A4 landscape).
+        - Diseño profesional con estilos personalizados.
+        - Incluye todos los campos de inventario.
+        - Observaciones integradas como filas combinadas.
+        - Encabezado y pie de página estilizados.
+        - Ordenamiento por numeración y equipo.
+    """
     condition = lab_material.get(laboratorio)
+    # Obtener datos de la base de datos
     sql = f"""
             SELECT 
                 EQUIPO, MARCA, MODELO, N_CASETA, N_SERIE,

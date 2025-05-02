@@ -174,58 +174,154 @@ def rutasDeTrabajador(app, socketio):
     @app.route('/casetero/vales/activos/<string:identificacion>', methods = ['GET'])
     @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_1_4(identificacion):
+        """
+        Muestra los detalles de un vale activo para su gestión y edición de materiales.
+        
+        Permite al casetero:
+        - Visualizar los detalles completos de un vale activo.
+        - Ver los materiales actualmente asignados.
+        - Agregar nuevos materiales disponibles.
+        - Eliminar o reportar materiales asignados.
+        
+        Parametros:
+            identificacion: ID único del vale a gestionar.
+        """
         casetero = session.get("worker")
+        # Recupera los datos del vale específico.
         solicitud = vale_existente_estudiante(identificacion)
         materiales = json.loads(solicitud[16])
+
+        # Obtiene equipos disponibles del laboratorio del casetero.
         equipo = obtenerMaterialCaseteroEditar(casetero[3])
         return render_template('worker_2_1.html', casetero = casetero, solicitud = solicitud, equipo = equipo, materiales =  materiales)
     
     @app.route('/casetero/vales/activos/editado', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_1_4_1():
+        """
+        Procesa la actualización de un vale activo, incluyendo cambios en materiales y observaciones en los materiales.
+
+        Esta ruta maneja:
+        - Restablecimiento de materiales anteriores.
+        - Actualización de nuevos materiales asignados.
+        - Registro de materiales reportados.
+        - Actualización del vale en la base de datos.
+
+        Returns:
+            JSON: Respuesta con estado de redirección y mensaje de confirmación.
+        """
+        # Obtener información del casetero desde la sesión.
         casetero = session.get("worker")
+
+        # Procesar datos recibidos.
         data = request.json
         identificacion = data.get('identificacion')
+
+        # Obtener datos actuales del vale.
+        solicitud = vale_existente_estudiante(identificacion)
+        materiales = json.loads(solicitud[16])
+
+        # Restablecer estado de materiales anteriores.
+        materialReportadoReseteado(casetero[3], materiales)
+
+        # Procesar nuevos materiales asignados.
         materiales = data.get('materiales')
+        materialReportadoReseteadoOcupado(casetero[3], materiales)
+
+        # Registrar materiales reportados.
         reportados = data.get('reportados')
         materialReportado(casetero[3], reportados)
+
+        # Actualizar el vale con los nuevos materiales.
         editadoVale(identificacion, materiales)
         return {"status": "redirect", "url": url_for('worker_voucher_1'), 'mensaje': 'Vale Actualizado Exitosamente'}
     
     @app.route('/casetero/vales/pendientes', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_2():
+        """
+        Muestra la lista de vales pendientes de aprobación para el laboratorio del casetero,
+        junto con los materiales disponibles para asignar.
+
+        Flujo:
+            1. Verifica autenticación del casetero.
+            2. Obtiene vales pendientes del laboratorio asignado.
+            3. Procesa los materiales solicitados en cada vale.
+            4. Obtiene equipos disponibles del laboratorio.
+            5. Prepara datos para la vista de gestión.
+        """
+        # Obtener información del casetero desde la sesión.
         casetero = session.get("worker")
+
+        # Obtener vales pendientes para el laboratorio del casetero.
         solicitudes = valesParaCaseteroInfo(casetero[3])
+
+        # Procesar materiales de cada vale.
         material = {}
         for solicitud in solicitudes:
             k = json.loads(solicitud[16])
             material[solicitud[0]] = k
+
+        # Obtener equipos disponibles del laboratorio y agruparlos. 
         equipo = obtenerMaterialCasetero(casetero[3])
         equipo = crearListadeEquipo(equipo)
         return render_template('worker_3.html', casetero = casetero, solicitudes = solicitudes, material = material,
                                equipo = equipo)
     
     @app.route('/casetero/vales/pendientes/completado', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_2_1():
+        """
+        Procesa la activación de un vale pendiente, asignando materiales y actualizando estados.
+        
+        Flujo:
+            1. Autentica al casetero.
+            2. Recibe datos del vale a activar.
+            3. Registra fecha/hora de aceptación.
+            4. Actualiza estado de materiales y vale.
+            5. Retorna confirmación para redirección.
+        """
+        # Procesar datos de la solicitud.
         casetero = session.get("worker")
         data = request.json
         identificacion = data.get('identificacion')
         materiales = data.get('materiales')
         horario = obtener_horario()
+
+        # Procesar datos de la solicitud.
         materialAsignado(casetero[3], identificacion, materiales, horario)
         return {"status": "redirect", "url": url_for('worker_voucher_2'), 'mensaje': 'Vale Activado Exitosamente'}
     
     @app.route('/casetero/vales/pendientes/cancelado', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_2_2():
+        """
+        Maneja la cancelación de una solicitud de vale pendiente.
+
+        Flujo:
+            1. Verifica autenticación del casetero.
+            2. Obtiene datos de la solicitud a cancelar.
+            3. Realiza validación de existencia.
+            4. Procesa según tipo de vale:
+                - Laboratorio: Resetea contador.
+                - Proyecto: Decrementa contador del estudiante.
+            5. Elimina la solicitud.
+            6. Retorna estado de la operación.
+        """
+        # Obtener información del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Procesar datos.
         data = request.json
         identificacion = data.get('identificacion')
+
+        # Verificar existencia de la solicitud.
         solicitud = vale_existente_estudiante(identificacion)
         if solicitud:
+            # Obtener datos del estudiante asociado.
             estudiante = obtenerEstudianteDB(solicitud[1])
+
+            # Gestión diferenciada por tipo de vale.
             if solicitud[14] == 'LABORATORIO':
                     vales_cantidad(solicitud[14], '0', solicitud[1])
             elif solicitud[14] == 'PROYECTO':
@@ -235,15 +331,30 @@ def rutasDeTrabajador(app, socketio):
                     else:
                          cantidad = '0'
                     vales_cantidad(solicitud[14], cantidad, solicitud[1])
+            # Eliminar la solicitud independientemente del tipo.
             eliminarSolicitudEstudiante(identificacion)
             return {"status": "alerta",'mensaje': 'Solicitud Cancelada'}
         return {"status": "error",'mensaje': 'Solicitud Inexistente'}
     
     @app.route('/casetero/vales/maestros', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_teacher_1():
+        """
+        Muestra el listado de vales maestros pendientes de gestión
+        en el laboratorio asignado al casetero.
+
+        Flujo:
+            1. Autentica al casetero mediante sesión.
+            2. Obtiene vales maestros pendientes del laboratorio.
+            3. Procesa los materiales solicitados en cada vale.
+        """
+        # Obtener información del casetero desde la sesión.
         casetero = session.get("worker")
+
+        # Obtener vales maestros pendientes para el laboratorio.
         solicitudes = valesParaCaseteroMaestro(casetero[3])
+
+        # Procesar materiales de cada vale.
         material = {}
         for solicitud in solicitudes:
             k = json.loads(solicitud[16])
@@ -251,55 +362,151 @@ def rutasDeTrabajador(app, socketio):
         return render_template('worker_4.html', casetero = casetero, solicitudes = solicitudes, material = material)
     
     @app.route('/casetero/vales/maestros/finalizar', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_teacher_1_1():
+        """
+        Finaliza y registra un vale maestro, actualizando:
+            1. El estado de los materiales a 'DISPONIBLE'.
+            2. El registro del vale con fecha/hora de finalización.
+            3. La información del casetero que realizó la acción.
+
+        Returns:
+            JSON: Respuesta con:
+                - status: "redirect" .
+                - url: Endpoint para redirección.
+                - mensaje: Confirmación de la operación.
+        """
+        # Obtener información del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Procesar datos.
         data = request.json
         identificacion = data.get('identificacion')
         horario = obtener_horario()
+
+        # Recuperar información completa del vale.
         solicitud = vale_existente_estudiante(identificacion)
         materiales =json.loads(solicitud[16])
         caseteroName = casetero[1] + ' ' + casetero[2]
+
+        # Ejecutar el registro completo del vale.
         registrarVale(casetero[3], identificacion, materiales, horario, solicitud, caseteroName)
         return {"status": "redirect", "url": url_for('worker_teacher_1'), 'mensaje': 'Vale Finalizado'}
     
     @app.route('/casetero/vales/maestros/<string:identificacion>', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_teacher_1_2(identificacion):
+        """
+        Muestra el detalle de un vale maestro específico para su gestión, incluyendo:
+        - Información completa del vale.
+        - Materiales actualmente asignados.
+        - Equipos disponibles para modificación.
+        """
+        # Obtener información del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Recuperar información completa del vale maestro.
         solicitud = vale_existente_estudiante(identificacion)
         materiales = json.loads(solicitud[16])
+
+        # Obtener equipos disponibles del laboratorio para posibles modificaciones.
         equipo = obtenerMaterialCaseteroEditar(casetero[3])
         return render_template('worker_4_1.html', casetero = casetero, solicitud = solicitud, equipo = equipo, materiales =  materiales)
     
     @app.route('/casetero/vales/maestros/editado', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_teacher_1_2_1():
+        """
+        Procesa la actualización de un vale activo, incluyendo cambios en materiales y observaciones en los materiales.
+
+        Esta ruta maneja:
+        - Restablecimiento de materiales anteriores.
+        - Actualización de nuevos materiales asignados.
+        - Registro de materiales reportados.
+        - Actualización del vale en la base de datos.
+
+        Returns:
+            JSON: Respuesta con estado de redirección y mensaje de confirmación.
+        """
+        # Obtener información del casetero desde la sesión.
         casetero = session.get("worker")
+
+        # Procesar datos recibidos.
         data = request.json
         identificacion = data.get('identificacion')
+
+        # Obtener datos actuales del vale.
+        solicitud = vale_existente_estudiante(identificacion)
+        materiales = json.loads(solicitud[16])
+
+        # Restablecer estado de materiales anteriores.
+        materialReportadoReseteado(casetero[3], materiales)
+        
+        # Procesar nuevos materiales asignados.
         materiales = data.get('materiales')
+        materialReportadoReseteadoOcupado(casetero[3], materiales)
+
+        # Registrar materiales reportados.
         reportados = data.get('reportados')
         materialReportado(casetero[3], reportados)
+
+        # Actualizar el vale con los nuevos materiales.
         editadoVale(identificacion, materiales)
         return {"status": "redirect", "url": url_for('worker_teacher_1'), 'mensaje': 'Vale Actualizado Exitosamente'}
     
     @app.route('/casetero/material', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_materials():
+        """
+        Muestra el inventario completo de materiales del laboratorio asignado al casetero,
+        incluyendo tanto el listado detallado como un resumen por tipo de equipo.
+
+        Flujo:
+            1. Verifica autenticación del casetero.
+            2. Obtiene datos del inventario del laboratorio asignado.
+            3. Organiza la información para visualización.
+            4. Renderiza la vista de gestión de materiales.
+        """
         casetero = session.get("worker")
+
+        # Obtener datos completos del inventario del laboratorio.
         material, equipo = materialLaboratorio(casetero[3])
         return render_template('worker_5.html', casetero = casetero, material = material, equipo = equipo)
     
     @app.route('/casetero/material/actualizado', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_materials_1():
+        """
+        Procesa la actualización de información de materiales o componentes en el inventario del laboratorio.
+        Maneja dos flujos distintos:
+            1. Para equipos principales.
+            2. Para componentes.
+
+        Parámetros:
+            identificacion: ID del material a actualizar.
+            valores: Lista con los valores a actualizar.
+
+        Returns:
+            JSON: Respuesta con:
+                - status: "redirect"|"error".
+                - url: Endpoint para redirección.
+                - mensaje: Descripción del resultado.
+        """
+        # Obtener información del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Procesar datos.
         data = request.json
         identificacion = data.get('identificacion')
         valores = data.get('valores')
+
+        # Determinar tipo de material por cantidad de campos.
         if len(valores) >= 11:
+
+            # Verificar si ya existe otro material con misma caseta.
             resultado = materialLaboratorioChecar(casetero[3], valores[0], valores[1])
+
+            # Retornar confirmación de actualización.
             if resultado is None:
                 materialLaboratorioActualizar(casetero[3], identificacion, valores[0], valores[1], valores[2], valores[3], valores[4], 
                                 valores[5], valores[8], valores[9], valores[6], valores[7], valores[10])
@@ -310,12 +517,22 @@ def rutasDeTrabajador(app, socketio):
                 return {"status": "error",'mensaje': 'Este número de caseta ya ha sido asignado a otro material.'}
             return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Actualizado'}
         else:
+            # Retornar confirmación de actualización.
             componenteLaboratorioModificar(casetero[3], identificacion, valores[2], valores[3], valores[1], valores[6])
             return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Actualizado'}
         
     @app.route('/casetero/material/eliminado', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_materials_2():
+        """
+        Maneja la eliminación de materiales del inventario del laboratorio.
+
+        Flujo:
+            1. Verifica autenticación del casetero
+            2. Recibe el ID del material a eliminar
+            3. Ejecuta la eliminación permanente
+            4. Retorna confirmación para redirección
+        """
         casetero = session.get("worker")
         data = request.json
         identificacion = data.get('identificacion')
@@ -323,8 +540,16 @@ def rutasDeTrabajador(app, socketio):
         return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Eliminado Correctamente'}
 
     @app.route('/casetero/material/pdf')
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_materials_3():
+        """
+        Genera y descarga un reporte PDF del inventario completo del laboratorio asignado al casetero.
+
+        Flujo:
+            1. Verifica autenticación del usuario.
+            2. Genera el PDF con todos los materiales del laboratorio.
+            3. Devuelve el archivo como descarga automática.
+        """
         casetero = session.get("worker")
         pdf_buffer = generarMaterialesPDF(casetero[3])
         return Response(
@@ -334,8 +559,16 @@ def rutasDeTrabajador(app, socketio):
         )
     
     @app.route('/casetero/material/csv')
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_materials_4():
+        """
+        Genera y descarga un reporte CSV del inventario completo del laboratorio asignado al casetero.
+
+        Flujo:
+            1. Verifica autenticación del usuario.
+            2. Genera el CSV con todos los materiales del laboratorio.
+            3. Devuelve el archivo como descarga automática.
+        """
         casetero = session.get("worker")
         return Response(
             generarListaMaterialesCSV(casetero[3]),
@@ -344,14 +577,50 @@ def rutasDeTrabajador(app, socketio):
         )
     
     @app.route('/casetero/material/agregado', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_materials_5():
+        """
+        Maneja el registro de nuevos materiales en el inventario del laboratorio, 
+        diferenciando entre equipos principales y componentes/consumibles.
+
+        Flujo principal:
+            1. Verifica autenticación del casetero
+            2. Procesa datos JSON recibidos
+            3. Distingue entre:
+            - Equipos principales (control individual)
+            - Componentes/consumibles (control por cantidad)
+            4. Realiza la operación correspondiente:
+            - Registro nuevo material
+            - Actualización de existencias
+            5. Retorna confirmación para redirección
+
+        Parámetros (JSON):
+            radio: Tipo de material ('Equipo'|'Componente').
+            equipo: Nombre del material.
+            marca: Marca del equipo.
+            modelo: Modelo específico.
+            [Para equipos]:
+                caseta: Ubicación física.
+                serie: Número de serie.
+                inventario: Número de inventario.
+                voltaje: Requerimiento eléctrico.
+                potencia: Consumo energético.
+            [Para componentes]:
+                cantidad: Unidades a agregar.
+
+        Returns:
+            JSON: Respuesta con estado de redirección y mensaje.
+        """
         casetero = session.get("worker")
+
+        # Procesar datos de la solicitud.
         data = request.json
         radio = data.get('radio')
         equipo = data.get('equipo')
         marca = data.get('marca')
         modelo = data.get('modelo')
+
+        # Procesamiento según tipo de material.
         if radio == 'Equipo':
             numeracion = 'SI'
             caseta = data.get('caseta')
@@ -366,10 +635,14 @@ def rutasDeTrabajador(app, socketio):
             if potencia == '': potencia = 'S/A'
             if marca == '': marca = 'S/A'
             if modelo == '': modelo = 'S/A'
+
+            # Registrar nuevo equipo.
             agregarNuevoMaterial(casetero[3], equipo, marca, modelo, numeracion, caseta, serie, inventario, voltaje, potencia)
         elif radio == 'Componente':
             numeracion = 'NO'
             cantidad = data.get('cantidad')
+
+            # Lógica para diferentes combinaciones de marca/modelo.
             if marca == '' and modelo == '':
                 material_c = materialLaboratorioVerificarCantidad(casetero[3], equipo, 'S/A', 'S/A')
                 cantidad = int(cantidad) + material_c[0]
@@ -382,6 +655,7 @@ def rutasDeTrabajador(app, socketio):
                     cantidad = int(cantidad) + material_c[0]
                     materialLaboratorioActualizarCantidad(casetero[3], cantidad, equipo, marca, modelo)
                 else:
+                    # Registrar nuevo equipo.
                     agregarNuevoMaterial(casetero[3], equipo, marca, modelo, numeracion, 'S/A', 'S/A', 'S/A', 'S/A', 'S/A', cantidad)
         return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Agregado Correctamente'}
     
