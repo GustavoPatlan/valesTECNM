@@ -5,6 +5,9 @@ import os
 load_dotenv(dotenv_path="config/.env")
 
 def conexion():
+    """
+    Establece y retorna una conexión a la base de datos MySQL usando variables de entorno.
+    """
     conn = mysql.connector.connect(
         host=os.getenv("DB_HOST"),
         user=os.getenv("DB_USER"),
@@ -54,6 +57,9 @@ def obtenerDatosDB_Varios(sql, data = None):
 def obtenerDatosDB_VariosSQL(lista):
     """
     Recibe una lista de SQLs, ejecuta cada uno y regresa una lista de resultados.
+
+    Parámetros:
+        lista: Lista de consultas SQL a ejecutar.
     """
     conn = conexion()
     cursor = conn.cursor()
@@ -101,6 +107,13 @@ def agregarDatosDB_Individual_for(sql, data):
     conn.close()
 
 def agregarDatosDB_Individual_reporte(sql, data):
+    """
+    Ejecuta una operación SQL para guardar un reporte, manejando diferentes tipos de datos.
+    
+    Parámetros:
+        sql: Consulta SQL a ejecutar.
+        data: Tupla que contiene una lista de materiales con información a guardar.
+    """
     conn = conexion()
     cursor = conn.cursor()
     materiales = data[0]
@@ -116,6 +129,13 @@ def agregarDatosDB_Individual_reporte(sql, data):
     conn.close()
 
 def obtenerDatosDB_Varios_Descarga(sql, data = None):
+    """
+    Ejecuta una consulta SQL y retorna varios resultados, diseñado para operaciones de descarga.
+    
+    Parámetros:
+        sql: Consulta SQL a ejecutar.
+        data: Datos para consulta parametrizada.
+    """
     conn = conexion()
     cursor = conn.cursor()
     if data is None:

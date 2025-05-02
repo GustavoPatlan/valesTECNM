@@ -14,8 +14,25 @@ lab_material = {
     }
 
 def valesParaCasetero(laboratorio):
-    condition = lab_conditions.get(laboratorio)
+    """
+    Obtiene estadísticas de vales asociados a un laboratorio, clasificados por estado.
 
+    Parámetros:
+        laboratorio: Nombre del laboratorio.
+
+    Consulta SQL:
+        Realiza un conteo de vales agrupados en tres categorías:
+        1. Vales ACTIVOS.
+        2. Vales EN ESPERA.
+        3. Vales DE MAESTROS.
+
+    Resultado:
+        Diccionario con tres claves:
+            - "activo": Cantidad de vales activos.
+            - "espera": Cantidad de vales en espera.
+            - "sin": Cantidad de vales activos de maestros.
+    """
+    condition = lab_conditions.get(laboratorio)
     sql = f"""
         SELECT 
             COUNT(*) AS total,
@@ -25,8 +42,9 @@ def valesParaCasetero(laboratorio):
         FROM solicitud
         WHERE {condition}
     """
-    
     resultado = obtenerDatosDB(sql)
+
+    # Procesa los resultados (convirtiendo None a 0).
     respuesta_1, respuesta_2, respuesta_3 = [
     valor if valor is not None else 0
     for valor in resultado[1:4]
@@ -45,6 +63,17 @@ def valesParaCaseteroInfo(laboratorio):
     return resultado
 
 def valesParaCaseteroActivo(laboratorio):
+    """
+    Obtiene todas las solicitudes de vales activos de los estudiantes en un laboratorio en específico.
+
+    Parámetros:
+        laboratorio: Nombre del laboratorio.
+
+    Retorno:
+        Lista de tuplas con todos los campos de las solicitudes, donde cada tupla contiene:
+              - Todos los campos de la tabla 'solicitud' en el orden original.
+              - Lista vacía si no hay solicitudes pendientes.
+    """
     condition = lab_conditions.get(laboratorio)
     sql = f"SELECT * FROM solicitud WHERE estado = 'ACTIVO' AND ({condition}) AND (tipo_vale = 'LABORATORIO' OR tipo_vale = 'PROYECTO')"
     resultado = obtenerDatosDB_Varios(sql)
@@ -72,19 +101,47 @@ def materialAsignado(laboratorio, identificacion, materiales, horario):
     data = (material, horario[1], horario[0], identificacion,)
     agregarDatosDB_Individual(sql, data)
 
-def vale_existente_estudiante(identificacion): # Método para seleccionar una solcitud de vale de un usuario en específico.
+def vale_existente_estudiante(identificacion):
+    """
+    Verifica la existencia de solicitudes de vale asociadas a un identificador específico.
+
+    Parámetros:
+        identificacion: Cadena de identificación o fragmento a buscar en los vales.
+
+    Retorno:
+        Lista con los campos de la solicitud coincidente:
+            - Lista vacía si no se encuentran coincidencias.
+    """
     sql = "SELECT * FROM solicitud WHERE id_ncontrol LIKE %s"
     data = (f"%{identificacion}%",)
     resultado = obtenerDatosDB(sql, data)
     return resultado
 
 def obtenerEstudianteDB(ncontrol):
+    """
+    Obtiene el estado de proyecto(s) de un estudiante.
+
+    Parámetros:
+        ncontrol: Número de control del estudiante.
+
+    Retorno:
+        Resultado de la consulta con el campo 'proyecto' o None si no existe
+    """
     sql = "SELECT proyecto FROM usuarios WHERE ncontrol = %s"
     data = (ncontrol,)
     resultado = obtenerDatosDB(sql, data)
     return resultado
 
 def vales_cantidad(vale, cantidad, ncontrol):
+    """
+    Actualiza el contador de vales utilizados por un estudiante, diferenciando entre
+    vales de PROYECTO y vales regulares de LABORATORIO.
+
+    Parámetros:
+        vale: Tipo de vale.
+        cantidad: Nuevo valor a establecer en el contador correspondiente.
+        ncontrol: Número de control del estudiante a actualizar.
+    """
     if vale == 'PROYECTO':
         sql = "UPDATE usuarios SET proyecto = %s WHERE ncontrol = %s"
     else:
@@ -98,14 +155,36 @@ def eliminarSolicitudEstudiante(identificacion): # Método para elimnar una soli
     agregarDatosDB_Individual(sql, data)
 
 def reportarVale(identificacion, reporte='N/A'):
+    """
+    Actualiza el campo de reporte de una solicitud de vale.
+
+    Parámetros:
+        identificacion: ID completo del vale a actualizar.
+        reporte: Texto del reporte a asignar, por defecto N/A.
+    """
     sql = "UPDATE solicitud SET reporte = %s WHERE id_ncontrol = %s"
     data = (reporte, identificacion,)
     agregarDatosDB_Individual(sql, data)
 
 def registrarVale(laboratorio, identificacion, materiales, horario, solicitud, casetero):
+    """
+    Registra un vale de préstamo de material en el sistema, actualizando el estado del material,
+    creando un nuevo registro y eliminando la solicitud correspondiente.
+    
+    Parámetros:
+        laboratorio: Laboratorio donde se realiza el préstamo
+        identificacion: Identificación del préstamo/solicitud
+        materiales: Materiales prestados
+        horario: Tupla con fecha y hora de finalización
+        solicitud: Datos completos de la solicitud
+        casetero: Responsable que autoriza el préstamo
+    """
     condition = lab_material.get(laboratorio)
+    # Actualiza el estado del material a DISPONIBLE en el inventario del laboratorio.
     sql = f"UPDATE {condition} SET DISPONIBILIDAD = 'DISPONIBLE' WHERE EQUIPO = %s AND N_CASETA = %s AND NUMERACION = 'SI'"
     data = (materiales,)
+
+    # Inserta un nuevo registro del vale en la base de datos.
     agregarDatosDB_Individual_for(sql, data)
     sql = '''INSERT INTO registro
     (id_registro, ncontrol, hora_solicitud, fecha_solicitud, hora_aceptacion, fecha_aceptacion, 
@@ -118,6 +197,8 @@ def registrarVale(laboratorio, identificacion, materiales, horario, solicitud, c
         solicitud[12], solicitud[14], solicitud[15], solicitud[16],
     )
     agregarDatosDB_Individual(sql, data)
+
+    # Elimina la solicitud procesada de la tabla de solicitudes.
     sql = "DELETE FROM solicitud WHERE id_ncontrol = %s"
     data = (identificacion,)
     agregarDatosDB_Individual(sql, data)

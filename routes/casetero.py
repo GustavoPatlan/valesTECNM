@@ -4,26 +4,64 @@ from schemas.casetero import *
 import json
 
 def action_required_w(f):
+    """
+    Decorador para verificar sesión de casetero antes de permitir el acceso a una ruta.
+    
+    Funcionamiento:
+        1. Envuelve la función original para agregar validación de sesión.
+        2. Si no hay maestro en sesión, redirige a la ruta raíz ('/').
+        3. Si la sesión es válida, ejecuta la función original normalmente.
+    """
     def wrap(*args, **kwargs):
+        # Verificar existencia de maestro en sesión.
         if 'worker' not in session:
-            return redirect('/')
+            return redirect('/')    # Redirigir a raíz si no hay sesión.
+        
+        # Ejecutar función original si la sesión es válida.
         return f(*args, **kwargs)
+    
+    # Mantener el nombre original de la función.
     wrap.__name__ = f.__name__
     return wrap
 
 def rutasDeTrabajador(app, socketio):
+    """
+    Configura todas las rutas relacionadas con los caseteros en la aplicación web.
+    Incluye manejo de:
+        - Asignación de material.
+        - Edición de material.
+        - Manejo de registros.
+        - Administración de vales solicitados por estudiantes.
+        - Administración de vales solicitados por maestros.
+    """
+
     @app.route('/casetero/inicio', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_home():
         casetero = session.get("worker")
+
+        # Obtiene estadísticas de vales del maestro.
         solicitudes = valesParaCasetero(casetero[3])
         return render_template('worker_1.html', casetero = casetero, solicitudes = solicitudes)
     
     @app.route('/casetero/vales/activos', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_1():
+        """
+        Ruta para mostrar las solicitudes activas de los estudiantes en un laboratorio en específico.
+
+        Flujo:
+            Obtiene el laboratorio asignado al casetero.
+            Recupera solicitudes activas.
+            Procesa los materiales de cada solicitud.
+        """
+        # Obtener datos del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Obtener solicitudes activas.
         solicitudes = valesParaCaseteroActivo(casetero[3])
+
+        # Procesar materiales.
         material = {}
         for solicitud in solicitudes:
             k = json.loads(solicitud[16])
@@ -31,35 +69,94 @@ def rutasDeTrabajador(app, socketio):
         return render_template('worker_2.html', casetero = casetero, solicitudes = solicitudes, material = material)
     
     @app.route('/casetero/vales/activos/reporte', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_1_1():
+        """
+        Metodo para que el personal de casetero registre reportes sobre vales activos.
+
+        Flujo:
+            Recibe ID del vale y texto del reporte.
+            Actualiza el registro en la base de datos.
+            Retorna confirmación de la operación.
+
+        Retorna un JSON con:
+            - status: "exito".
+            - mensaje: Descripción del resultado.
+        """
+        # Obtención de datos.
         casetero = session.get("worker")
         data = request.json
         identificacion = data.get('identificacion')
         reporte = data.get('reporte')
+
+        # Agregar reporte al vale correspondiente.
         reportarVale(identificacion, reporte)
         return {"status": "exito",'mensaje': 'Reporte Asignado'}
     
     @app.route('/casetero/vales/activos/cancelar', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_1_2():
+        """
+        Metodo para que el personal de casetero cancele reportes sobre vales activos.
+
+        Flujo:
+            Recibe ID del vale.
+            Actualiza el registro en la base de datos.
+            Retorna confirmación de la operación.
+
+        Retorna un JSON con:
+            - status: "exito".
+            - mensaje: Descripción del resultado.
+        """
+        # Obtención de datos.
         casetero = session.get("worker")
         data = request.json
         identificacion = data.get('identificacion')
+
+        # Cancela el reporte al vale correspondiente.
         reportarVale(identificacion)
         return {"status": "exito",'mensaje': 'Reporte Cancelado'}
     
     @app.route('/casetero/vales/activos/finalizar', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_1_3():
+        """
+        Metodo para finalizar vales activos y actualizar registros.
+
+        Flujo:
+            Verifica existencia del vale.
+            Obtiene el nombre del casetero en turno que finaliza el vale.
+            Actualiza contadores según tipo de vale:
+                - LABORATORIO: Restablece a 0.
+                - PROYECTO: Decrementa en 1.
+            Registra el vale finalizado en historial
+            Retorna confirmación para redirección
+
+        Parámetros.:
+            identificacion: ID del vale a finalizar.
+
+        Retorna un JSON con:
+            - status: "redirect".
+            - url: "worker_voucher_1".
+            - mensaje: Descripción del resultado.
+        """
+        # Obtener datos básicos.
         casetero = session.get("worker")
         data = request.json
         identificacion = data.get('identificacion')
+
+        # Obtener horario.
         horario = obtener_horario()
+
+        # Verificar existencia del vale.
         solicitud = vale_existente_estudiante(identificacion)
+
+        # Procesar materiales y datos del casetero.
         materiales =json.loads(solicitud[16])
         caseteroName = casetero[1] + ' ' + casetero[2]
         estudiante = obtenerEstudianteDB(solicitud[1])
+
+        # Actualizar contadores según tipo de vale.
         if solicitud[14] == 'LABORATORIO':
             vales_cantidad(solicitud[14], '0', solicitud[1])
         elif solicitud[14] == 'PROYECTO':
@@ -69,11 +166,13 @@ def rutasDeTrabajador(app, socketio):
             else:
                 cantidad = '0'
             vales_cantidad(solicitud[14], cantidad, solicitud[1])
+
+        # Registrar en historial y retornar confirmación.
         registrarVale(casetero[3], identificacion, materiales, horario, solicitud, caseteroName)
         return {"status": "redirect", "url": url_for('worker_voucher_1'), 'mensaje': 'Vale Finalizado'}
     
     @app.route('/casetero/vales/activos/<string:identificacion>', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_voucher_1_4(identificacion):
         casetero = session.get("worker")
         solicitud = vale_existente_estudiante(identificacion)

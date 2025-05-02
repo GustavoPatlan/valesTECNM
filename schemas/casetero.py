@@ -31,8 +31,18 @@ def crearListadeEquipo(equipos):
     resultado = [{k: v} for k, v in agrupados.items()]
     return resultado
 
-# Obtener fecha y hora actual
 def obtener_horario():
+    """
+    Obtiene la fecha y hora actual del sistema formateadas para visualización.
+
+    Genera:
+        - Fecha en formato DD/MM/AAAA.
+        - Hora en formato 12 horas con indicador AM/PM.
+        - Los datos se retornan como una lista.
+
+    Resultado:
+        resultado: Datos del con fecha y hora.
+    """
     ahora = datetime.now()
     fecha = ahora.strftime('%d/%m/%Y')
     hora = ahora.strftime('%I:%M')
