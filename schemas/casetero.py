@@ -53,6 +53,12 @@ def obtener_horario():
     return datos
 
 def crear_identificacion(ncontrol, vale, horarios):
+    """
+    Genera un identificador único para vales de préstamo basado en:
+        - Tipo de vale (PROYECTO, MAESTRO o LABORATORIO).
+        - Número de control del solicitante.
+        - Fecha y hora actual.
+    """
     if vale == 'PROYECTO':
         lada = 'P'
     elif vale == 'MAESTRO':
@@ -63,6 +69,13 @@ def crear_identificacion(ncontrol, vale, horarios):
     return identificacion
 
 def generarListaCSV(laboratorio):
+    """
+    Genera un archivo CSV con el historial completo de préstamos de un laboratorio específico,
+    formateado para óptima compatibilidad con Excel y otros sistemas.
+
+    Parámetros:
+        laboratorio: Nombre del laboratorio para generar el reporte.
+    """
     condition = lab_conditions.get(laboratorio)
     sql = f"""
             SELECT 
@@ -97,6 +110,18 @@ def generarListaCSV(laboratorio):
         yield ','.join(fila_limpia) + '\n'
 
 def generarListaPDF(laboratorio):
+    """
+    Genera un reporte PDF profesional con el historial completo de préstamos y operaciones
+    de un laboratorio específico, organizando los datos en un formato claro y legible.
+
+    Características del PDF:
+        - Formato horizontal (A4 landscape) para mejor visualización de datos.
+        - Diseño profesional con estilos personalizados.
+        - Incluye todos los campos relevantes de cada registro.
+        - Organiza reportes y materiales en filas combinadas.
+        - Encabezado y pie de página estilizados.
+        - Ordenamiento cronológico por fecha de finalización.
+    """
     condition = lab_conditions.get(laboratorio)
     sql = f"""
             SELECT 

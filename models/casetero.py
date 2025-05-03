@@ -421,6 +421,9 @@ def obtenerMaterialCaseteroEditar(laboratorio):
     return resultado
 
 def obtenerMaterialCaseteroRegistrar(laboratorio):
+    """
+    Obtiene la lista de materiales disponibles en un laboratorio específico para procesos de registro.
+    """
     condition = lab_material.get(laboratorio)
     sql = f"SELECT EQUIPO, N_CASETA, NUMERACION FROM {condition}"
     resultado = obtenerDatosDB_Varios(sql)
@@ -478,12 +481,18 @@ def editadoVale(identificacion, materiales):
     data = (materiales, identificacion,)
     agregarDatosDB_Individual(sql, data)
 
-def maestros_registrados(): # Método para seleccionar todos los maestros ordenados por nombre.
+def maestros_registrados():
+    """
+    Obtiene la lista completa de maestros registrados en el sistema, ordenados alfabéticamente por nombre.
+    """
     sql = "SELECT nombres, apellidos FROM maestros ORDER BY nombres"
     resultado = obtenerDatosDB_Varios(sql)
     return resultado
 
 def obtenerUsuario(vale, ncontrol):
+    """
+    Obtiene el nombre completo de un usuario (maestro o estudiante) según el tipo de vale y su número de control.
+    """
     if vale == 'MAESTRO':
         lada = 'maestros'
         tipo = 'id'
@@ -496,6 +505,17 @@ def obtenerUsuario(vale, ncontrol):
     return resultado
 
 def registrarSolicitud(identificacion, materiales, horario, solicitud, casetero):
+    """
+    Registra una nueva solicitud de préstamo en la base de datos con todos los detalles necesarios.
+
+    Parámetros:
+        identificacion: ID único generado para el vale.
+        materiales: Lista de materiales.
+        horario: Tupla con fecha y hora.
+        solicitud: Lista con datos del solicitante en este orden:
+                        [ncontrol, nombre, apellido, tema, grupo, tipo_vale, profesor, num_grupo, laboratorio, reporte]
+        casetero: Nombre del casetero que registra la solicitud.
+    """
     sql = '''INSERT INTO registro
     (id_registro, ncontrol, hora_solicitud, fecha_solicitud, hora_aceptacion, fecha_aceptacion, 
     hora_final, fecha_final, name, lastname, teacher, casetero, topic, grupo, number_group, laboratory, 

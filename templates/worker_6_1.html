@@ -1,7 +1,7 @@
 {% extends "sidebar_worker.html" %}
 
 {% block cssDedicado %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_2_1.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_6_1.css') }}">
 {% endblock %}
 
 {% block title %}Registro Nuevo{% endblock %}
@@ -62,11 +62,17 @@
         <h4>Seleccióna el Laboratorio</h4>
         <div class="dialogCContenido">
             <ul class="dialogCCLista">
+                {% if casetero[3] == 'Y1-Y2' %}
                 <li onclick="selectSalon(this)">Y1</li>
                 <li onclick="selectSalon(this)">Y2</li>
+                {% endif %}
+                {% if casetero[3] == 'Y6-Y7' %}
                 <li onclick="selectSalon(this)">Y6</li>
                 <li onclick="selectSalon(this)">Y7</li>
+                {% endif %}
+                {% if casetero[3] == 'Y8' %}
                 <li onclick="selectSalon(this)">Y8</li>
+                {% endif %}
             </ul>
         </div>
         <button id="dialogCBotonCancelar" onclick="closeDialogSalonCancelada()">CANCELAR</button>
@@ -190,10 +196,10 @@
 {% endblock %}
 
 {% block scriptDedicado %}
-<script src="{{ url_for('static', filename='js_student_2.js') }}"></script>
-<script src="{{ url_for('static', filename='js_teacher_5.js') }}"></script>
-<script src="{{ url_for('static', filename='js_worker_2_1.js') }}"></script>
-<script>
+<!-- <script src="{{ url_for('static', filename='js_student_2.js') }}"></script>
+<script src="{{ url_for('static', filename='js_teacher_5.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js_worker_6_1.js') }}"></script>
+<!-- <script>
     function openDialogEnviarRegistro() {
         let items = document.querySelectorAll(".seccionMTabla .seccionMTCasilla");
         let control = document.getElementById("valeControlInput").value;
@@ -268,5 +274,5 @@
             dialog.close();
         }
     }
-</script>
+</script> -->
 {% endblock %}

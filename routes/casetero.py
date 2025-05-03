@@ -660,10 +660,25 @@ def rutasDeTrabajador(app, socketio):
         return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Agregado Correctamente'}
     
     @app.route('/casetero/registros', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_register():
+        """
+        Muestra el historial completo de registros de préstamos y operaciones para el laboratorio
+        asignado al casetero, incluyendo los detalles de materiales involucrados en cada vale.
+
+        Flujo:
+            1. Verifica autenticación del casetero.
+            2. Obtiene todos los registros históricos del laboratorio.
+            3. Procesa los materiales de cada registro.
+            4. Renderiza la vista con los datos organizados.
+        """
+        # Obtener información del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Obtener registros históricos del laboratorio.
         solicitudes = registroLaboratorio(casetero[3])
+
+        # Procesar materiales de cada registro.
         material = {}
         for solicitud in solicitudes:
             k = json.loads(solicitud[18])
@@ -671,8 +686,16 @@ def rutasDeTrabajador(app, socketio):
         return render_template('worker_6.html', casetero = casetero, solicitudes = solicitudes, material = material)
     
     @app.route('/casetero/registros/pdf')
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_register_1():
+        """
+        Genera y descarga un reporte PDF del historial completo de préstamos del laboratorio asignado al casetero.
+
+        Flujo:
+            1. Verifica autenticación del usuario.
+            2. Genera el PDF con todos los registros históricos.
+            3. Devuelve el archivo como descarga automática con nombre personalizado.
+        """
         casetero = session.get("worker")
         pdf_buffer = generarListaPDF(casetero[3])
         return Response(
@@ -682,8 +705,16 @@ def rutasDeTrabajador(app, socketio):
         )
     
     @app.route('/casetero/registros/csv')
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_register_2():
+        """
+        Genera y descarga un archivo CSV con el historial completo de préstamos del laboratorio asignado al casetero.
+
+        Flujo:
+            1. Verifica autenticación del usuario mediante sesión.
+            2. Genera el CSV con los registros históricos.
+            3. Devuelve el archivo como descarga automática.
+        """
         casetero = session.get("worker")
         return Response(
             generarListaCSV(casetero[3]),
@@ -692,18 +723,61 @@ def rutasDeTrabajador(app, socketio):
         )
     
     @app.route('/casetero/registros/nuevo', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_register_3():
+        """
+        Muestra el formulario para registrar un nuevo vale de préstamo de materiales, 
+        precargando todos los datos necesarios para su gestión.
+
+        Flujo:
+            1. Verifica autenticación del casetero.
+            2. Obtiene datos maestros, materiales y horario.
+            3. Renderiza el formulario con el contexto completo.
+        """
+        # Obtener información del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Cargar datos necesarios para el formulario.
         maestros = maestros_registrados()
         equipo = obtenerMaterialCaseteroRegistrar(casetero[3])
         horarios = obtener_horario()
         return render_template('worker_6_1.html', casetero = casetero, maestros = maestros, equipo = equipo, fecha = horarios[0])
     
     @app.route('/casetero/registros/nuevo/agregar', methods = ['POST'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_register_3_1():
+        """
+        Procesa el formulario para registrar un nuevo préstamo de materiales en el sistema.
+
+        Flujo:
+            1. Verifica autenticación del casetero.
+            2. Recibe y valida datos del formulario.
+            3. Genera identificador único para el vale.
+            4. Verifica existencia del usuario.
+            5. Registra la solicitud en la base de datos.
+            6. Retorna confirmación o error.
+
+        Parámetros:
+            control: Número de control del solicitante.
+            materia: Materia/proyecto relacionado.
+            grupo: Grupo/clase.
+            vale: Tipo de vale (LABORATORIO/PROYECTO/MAESTRO).
+            profesor: Profesor responsable.
+            alumnos: Cantidad de alumnos.
+            laboratorio: Laboratorio destino.
+            items: Lista de materiales.
+            reporte: Observaciones adicionales.
+
+        Returns:
+            JSON: Respuesta con:
+                - status: "redirect"|"error".
+                - url: Endpoint para redirección.
+                - mensaje: Descripción del resultado.
+        """
+        # Obtener información del casetero desde sesión.
         casetero = session.get("worker")
+
+        # Procesar datos.
         data = request.json
         horarios = obtener_horario()
         ncontrol = data.get('control')
@@ -715,7 +789,10 @@ def rutasDeTrabajador(app, socketio):
         laboratorio = data.get('laboratorio')
         identificacion = crear_identificacion(ncontrol, vale, horarios)
         nombres = obtenerUsuario(vale, ncontrol)
+
+        # Preparar datos para registro.
         if nombres:
+            # Registrar en base de datos.
             items = json.dumps(data.get('items'))
             reporte = data.get('reporte')
             solicitud = [ncontrol, nombres[0], nombres[1], materia, grupo, vale, profesor, alumnos, laboratorio, reporte]
@@ -725,7 +802,10 @@ def rutasDeTrabajador(app, socketio):
         return {"status": "error",'mensaje': 'Usuario Inexistente'}
 
     @app.route('/casetero/perfil', methods = ['GET'])
-    @action_required_w
+    @action_required_w  # Decorador que verifica sesión activa.
     def worker_profile():
+        """
+        Muestra la página de perfil del casetero con su información personal y laboral.
+        """
         casetero = session.get("worker")
         return render_template('worker_7.html', casetero = casetero)
