@@ -9,22 +9,6 @@ main .searchSection {
     padding-bottom: 5px;
 }
 
-main .searchSection.download{
-    justify-content: space-between;
-}
-
-main .searchSection.download #downloadButton{
-    border: none;
-    border-radius: 8px;
-    padding: 8px;
-    background: #1c336c;
-    color: #ffff;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 500;
-    text-decoration: none;
-}
-
 main .searchSection span {
     font-size: 14px;
     font-weight: 500;
@@ -84,11 +68,6 @@ main .table-container table tbody tr {
     border-bottom: solid 1px #333;
 }
 
-main .table-container table td#tdButton {
-    display: flex;
-    flex-direction: column;
-}
-
 main .table-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -143,8 +122,7 @@ main .table-container::-webkit-scrollbar-track {
     border-radius: 8px;
 }
 
-.dialog-content-use button,
-.dialog-content-use a {
+.dialog-content-use button{
     border: none;
     border-radius: 8px;
     padding: 8px;
@@ -185,11 +163,6 @@ main .table-container::-webkit-scrollbar-track {
     font-size: 13px;
     text-decoration: underline;
     white-space: nowrap;
-}
-
-.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section#sectionProfesor {
-    flex-direction: column;
-    align-items: normal;
 }
 
 .dialog-content-use .dialog-content-part .dialog-content-part-material .dialog-content-part-material-table {
@@ -241,14 +214,6 @@ main .table-container::-webkit-scrollbar-track {
         justify-content: center;
     }
 
-    main .searchSection.download{
-        flex-direction: column;
-    }
-
-    main .searchSection.download #downloadButton{
-        margin-top: 5px;
-    }
-
     main .table-container table thead {
         display: none;
     }
@@ -279,11 +244,6 @@ main .table-container::-webkit-scrollbar-track {
     main .table-container table td button {
         margin-bottom: 0;
         margin-right: 3px;
-    }
-
-    main .table-container table td#tdButton {
-        align-items: center;
-        flex-direction: row;
     }
 
     main .table-container table td::before {

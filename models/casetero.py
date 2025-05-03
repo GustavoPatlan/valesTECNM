@@ -117,7 +117,7 @@ def materialAsignado(laboratorio, identificacion, materiales, horario):
         horario: Tupla con fecha y hora.
 
     Flujo:
-        1. Actualiza el estado de cada material a 'OCUPADO' en el inventario
+        1. Actualiza el estado de cada material a 'OCUPADO' en el inventario.
         2. Actualiza el vale con:
            - Materiales asignados.
            - Fecha/hora de aceptación.
@@ -211,12 +211,12 @@ def registrarVale(laboratorio, identificacion, materiales, horario, solicitud, c
     creando un nuevo registro y eliminando la solicitud correspondiente.
     
     Parámetros:
-        laboratorio: Laboratorio donde se realiza el préstamo
-        identificacion: Identificación del préstamo/solicitud
-        materiales: Materiales prestados
-        horario: Tupla con fecha y hora de finalización
-        solicitud: Datos completos de la solicitud
-        casetero: Responsable que autoriza el préstamo
+        laboratorio: Laboratorio donde se realiza el préstamo.
+        identificacion: Identificación del préstamo/solicitud.
+        materiales: Materiales prestados.
+        horario: Tupla con fecha y hora de finalización.
+        solicitud: Datos completos de la solicitud.
+        casetero: Responsable que autoriza el préstamo.
     """
     condition = lab_material.get(laboratorio)
     # Actualiza el estado del material a DISPONIBLE en el inventario del laboratorio.
@@ -474,7 +474,7 @@ def editadoVale(identificacion, materiales):
 
     Parámetros:
         identificacion: ID único del vale a modificar.
-        materiales: Lista de materiales actualizados para asignar al vale
+        materiales: Lista de materiales actualizados para asignar al vale.
     """
     materiales = json.dumps(materiales)
     sql = "UPDATE solicitud SET material = %s WHERE id_ncontrol = %s"

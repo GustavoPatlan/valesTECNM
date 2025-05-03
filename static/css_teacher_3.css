@@ -101,8 +101,7 @@ main .table-container::-webkit-scrollbar-track {
     font-style: italic;
 }
 
-.dialog-content-use button,
-.dialog-content-use a {
+.dialog-content-use button{
     border: none;
     border-radius: 8px;
     padding: 8px;
@@ -199,14 +198,6 @@ main .table-container::-webkit-scrollbar-track {
         justify-content: center;
     }
 
-    main .searchSection.download{
-        flex-direction: column;
-    }
-
-    main .searchSection.download #downloadButton{
-        margin-top: 5px;
-    }
-
     main .table-container table thead {
         display: none;
     }
@@ -239,11 +230,6 @@ main .table-container::-webkit-scrollbar-track {
         margin-right: 3px;
     }
 
-    main .table-container table td#tdButton {
-        align-items: center;
-        flex-direction: row;
-    }
-
     main .table-container table td::before {
         content: attr(data-label);
         text-align: left;
@@ -254,11 +240,6 @@ main .table-container::-webkit-scrollbar-track {
 
     .dialog-content-use {
         min-width: 250px;
-    }
-
-    .dialog-content-use .dialog-content-textarea textarea{
-        width: 100%;
-        min-width: 100px;
     }
 
     .dialog-content-use .dialog-content-part {

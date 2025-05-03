@@ -62,36 +62,6 @@ body main .seccionFormulario {
     color: #333;
 }
 
-/* body main .seccionFormulario .seccionFRadio {
-    display: inline-flex;
-    border-radius: 15px;
-    border: 1px solid #333;
-    overflow: hidden;
-    margin-top: 10px;
-}
-
-body main .seccionFormulario .seccionFRadio .radioEntrada {
-    display: none;
-}
-
-body main .seccionFormulario .seccionFRadio .radioLabel {
-    padding: 6px;
-    font-size: 14px;
-    color: #333;
-    font-weight: 500;
-    background: transparent;
-    cursor: pointer;
-}
-
-body main .seccionFormulario .seccionFRadio .radioLabel:not(:last-of-type) {
-    border-right: 1px solid #333;
-}
-
-.seccionFRadio .radioEntrada:checked+.radioLabel {
-    color: #ffff;
-    background: #1c336c;
-} */
-
 body main .seccionFormulario .seccionFEntrada {
     width: 100%;
     max-width: 300px;

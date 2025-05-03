@@ -156,18 +156,3 @@ function cancelarSolicitud(id) {
             });
     };
 };
-
-// Revisar donde se usa
-function openDialogDescargar() {
-    let dialog = document.getElementById(`dialog-download`);
-    if (dialog) {
-        dialog.showModal();
-    }
-};
-
-function closeDialogDescargar() {
-    let dialog = document.getElementById(`dialog-download`);
-    if (dialog) {
-        dialog.close();
-    }
-};
