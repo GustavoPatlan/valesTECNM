@@ -186,21 +186,3 @@ def obtenerDatosDB_Varios_Descarga(sql, data = None):
     cursor.close()
     conn.close()
     return resultado
-
-# def material_lab():
-#     conn = conexion()
-#     cursor = conn.cursor()
-#     cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labpotencia WHERE disponibilidad = 'DISPONIBLE'")
-#     myresult = cursor.fetchall()
-#     pot = [(elem + ('POT',) if 'POT' not in elem else elem) for elem in myresult]
-#     cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labelectronica WHERE disponibilidad = 'DISPONIBLE'")
-#     myresult = cursor.fetchall()
-#     ad = [(elem + ('A/D',) if 'A/D' not in elem else elem) for elem in myresult]
-#     cursor.execute("SELECT EQUIPO, N_CASETA, NUMERACION FROM labthird WHERE disponibilidad = 'DISPONIBLE'")
-#     myresult = cursor.fetchall()
-#     sd = [(elem + ('S/D',) if 'S/D' not in elem else elem) for elem in myresult]
-#     all_results = pot + ad + sd
-#     conn.commit()
-#     cursor.close()
-#     conn.close()
-#     return all_results

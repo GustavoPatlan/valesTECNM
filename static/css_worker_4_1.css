@@ -174,7 +174,7 @@ main .seccionMaterial .seccionMTabla .seccionMTCasilla .seccionMTValor h5 {
     font-size: 14px;
     font-weight: 600;
 }
-
+seccionFABoton
 main .seccionMaterial .seccionMTabla .seccionMTCasilla .seccionMTValor span {
     font-size: 14px;
     font-weight: 400;
@@ -229,10 +229,6 @@ body main #botonEnviarVale {
     cursor: pointer;
 }
 
-#seleccionLaboratorio,
-#seleccionMaestro,
-#seleccionCantidad,
-#seleccionSalon,
 #seleccionMaterial,
 #seleccionCantidadMaterial,
 #seleccionEnviar,
@@ -380,10 +376,4 @@ body main #botonEnviarVale {
 
 .dialogContenido #dialogCBotonReportar{
     background: goldenrod;
-}
-
-#potList, 
-#adList,
-#sdList{
-    display: none;
 }

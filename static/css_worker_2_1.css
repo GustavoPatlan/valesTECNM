@@ -36,8 +36,7 @@ main .seccionFormulario .seccionFEncabezado span {
     font-weight: 600;
 }
 
-main .seccionFormulario .seccionFAMano,
-main .seccionFormulario .seccionFABoton {
+main .seccionFormulario .seccionFAMano {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -229,10 +228,6 @@ body main #botonEnviarVale {
     cursor: pointer;
 }
 
-#seleccionLaboratorio,
-#seleccionMaestro,
-#seleccionCantidad,
-#seleccionSalon,
 #seleccionMaterial,
 #seleccionCantidadMaterial,
 #seleccionEnviar,

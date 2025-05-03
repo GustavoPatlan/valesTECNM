@@ -76,25 +76,12 @@ main .table-container table td button {
     margin-bottom: 3px;
 }
 
-main .table-container table td button#botonAceptar {
-    background: rgb(90, 179, 2);
-}
-
-main .table-container table td button#botonCancelar {
-    background: crimson;
-}
-
 #botonReporte {
     background: goldenrod;
 }
 
 main .table-container table tbody tr {
     border-bottom: solid 1px #333;
-}
-
-main .table-container table td#tdButton {
-    display: flex;
-    flex-direction: column;
 }
 
 main .table-container::-webkit-scrollbar {
@@ -374,11 +361,6 @@ main .table-container::-webkit-scrollbar-track {
     main .table-container table td button {
         margin-bottom: 0;
         margin-right: 3px;
-    }
-
-    main .table-container table td#tdButton {
-        align-items: center;
-        flex-direction: row;
     }
 
     main .table-container table td::before {

@@ -236,7 +236,6 @@ body main #botonEnviarVale {
 #seleccionMaterial,
 #seleccionCantidadMaterial,
 #seleccionEnviar,
-#dialogConfirmarEliminacion,
 #dialogReportarMaterial{
     width: 300px;
     padding: 20px;
@@ -357,8 +356,7 @@ body main #botonEnviarVale {
 }
 
 .dialogContenido #dialogCBotonCancelar,
-.dialogContenido #dialogCBotonCerrar,
-.dialogContenido #dialogCBotonReportar {
+.dialogContenido #dialogCBotonCerrar{
     margin-top: 5px;
     text-align: center;
     border: none;
@@ -376,14 +374,4 @@ body main #botonEnviarVale {
 
 .dialogContenido #dialogCBotonCerrar {
     background: #1c336c;
-}
-
-.dialogContenido #dialogCBotonReportar{
-    background: goldenrod;
-}
-
-#potList, 
-#adList,
-#sdList{
-    display: none;
 }
