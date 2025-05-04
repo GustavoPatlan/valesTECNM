@@ -1,0 +1,208 @@
+main {
+    flex-direction: column;
+}
+
+main h4 {
+    color: #6b7280;
+}
+
+main .table-container {
+    height: 50%;
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    overflow-y: auto;
+}
+
+main .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+main .table-container table thead {
+    background: #1c336c;
+    color: #ffff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+main .table-container table td,
+main .table-container table th {
+    text-align: center;
+    padding: 10px;
+}
+
+main .table-container table tbody tr {
+    border-bottom: solid 1px #333;
+}
+
+main .table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+main .table-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+main .table-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+main .table-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+main .seccionInformacion {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+main .seccionInformacion .seccionIDatos {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit {
+    display: flex;
+    flex-direction: column;
+    padding-right: 5px;
+    width: 100%;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit h5 {
+    font-weight: 500;
+    font-style: italic;
+    padding-left: 3px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit span,
+main .seccionInformacion .seccionIDatos .seccionIDEdit input {
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: solid 1px #333;
+    border-radius: 8px;
+    padding-left: 3px;
+}
+
+main .seccionInformacion .seccionIDatos .seccionIDEdit input {
+    padding-right: 5px;
+}
+
+main .seccionInformacion button {
+    display: flex;
+    justify-content: center;
+    border: none;
+    background: #1c336c;
+    color: #ffff;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 5px;
+    cursor: pointer;
+    width: 150px;
+}
+
+main button#botonNuevoHorario {
+    display: flex;
+    justify-content: center;
+    border: none;
+    background: #1c336c;
+    color: #ffff;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 180px;
+    margin-bottom: 3px;
+}
+
+.dialog-content-use {
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dialog-content-use div h3 {
+    font-weight: 400;
+    text-align: center;
+    font-size: 14px;
+}
+
+.dialog-content-use div div {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 8px;
+}
+
+.dialog-content-use div div span {
+    padding-right: 5px;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.dialog-content-use div div input {
+    width: 100%;
+    outline: none;
+    border: none;
+    padding: 3px;
+    border-bottom: solid 1px #333;
+}
+
+.dialog-content-use button {
+    color: #ffff;
+    background: #1c336c;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    margin-top: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+main .table-container table td button {
+    color: #ffff;
+    font-weight: 900;
+    background: crimson;
+    padding: 5px;
+    border: solid 1px #333;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    main {
+        align-items: center;
+        text-align: center;
+    }
+
+    main .seccionInformacion .seccionIDatos {
+        flex-direction: column;
+    }
+
+    main .seccionInformacion button {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .dialog-content-use div div {
+        flex-direction: column;
+    }
+}

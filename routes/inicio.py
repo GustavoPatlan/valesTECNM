@@ -68,9 +68,9 @@ def rutasDeInicio(app):
                     case 'Casetero':
                         session["worker"] = resultado[:-1]
                         return {"status": "redirect", "url": url_for('worker_home'), 'mensaje': mensaje }
-                    # case 'Admin':
-                    #     session["user"] = resultado
-                    #     return redirect("/administrador/inicio")
+                    case 'Admin':
+                        session["admin"] = resultado[:-1]
+                        return {"status": "redirect", "url": url_for('admin_home'), 'mensaje': mensaje }
         else:
             return {"status": "error",'mensaje': 'Usuario Inexistente.'}
     

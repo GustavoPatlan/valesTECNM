@@ -7,6 +7,7 @@ from routes.inicio import rutasDeInicio
 from routes.estudiantes import rutasDeEstudiantes
 from routes.maestro import rutasDeMaestro
 from routes.casetero import rutasDeTrabajador
+from routes.administrador import rutasDeAdministrador
 
 load_dotenv(dotenv_path="config/.env")
 
@@ -18,6 +19,7 @@ rutasDeInicio(app)
 rutasDeEstudiantes(app, socketio)
 rutasDeMaestro(app, socketio)
 rutasDeTrabajador(app, socketio)
+rutasDeAdministrador(app, socketio)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)

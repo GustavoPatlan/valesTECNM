@@ -1,0 +1,104 @@
+{% extends "notification.html" %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_sidebar.css') }}">
+{% block cssDedicado %}
+{% endblock %}
+{% endblock %}
+
+{% block popup %}
+<dialog id="logoutDialog">
+    <div class="dialog-content">
+        <span>¿Estás seguro de que deseas cerrar sesión?</span>
+        <div class="dialog-buttons">
+            <a href="/">Salir</a>
+            <button onclick="closeDialog()">Cancelar</button>
+        </div>
+    </div>
+</dialog>
+<div class="backdrop" id="backdrop"></div>
+<div class="sidebar" id="sidebar">
+    <header>
+        <img src="{{url_for('static', filename='img_logo.png')}}">
+        <div class="headerInformacion">
+            <span>{% block identificacion %}{% endblock %}</span>
+            <span>Administrador</span>
+        </div>
+    </header>
+    <div class="listaSidebar">
+        <ul>
+            <li class="li_link" data-path="/administrador/inicio">
+                <a href="/administrador/inicio">
+                    <i><box-icon name='home-alt-2'></box-icon></i>
+                    <span>Inicio</span>
+                </a>
+            </li>
+            <li class="li_link" data-path="/maestro/estudiantes/aceptados,/maestro/estudiantes/registros">
+                <button class="botonOcultar" onclick="toggleMenu1()">
+                    <i><box-icon name='user'></box-icon></i>
+                    <span>Usuarios</span>
+                </button>
+            </li>
+            <div class="menuDesplegable" id="menuDesplegable1">
+                <a href="#">Estudiantes</a>
+                <a href="#">Maestros</a>
+                <a href="#">Caseteros</a>
+            </div>
+            <li class="li_link" data-path="/maestro/vales/activos,/maestro/registros">
+                <button class="botonOcultar" onclick="toggleMenu2()">
+                    <i><box-icon name='receipt'></box-icon></i>
+                    <span>Vales</span>
+                </button>
+            </li>
+            <div class="menuDesplegable" id="menuDesplegable2">
+                <a href="#">Activos</a>
+                <a href="#">Pendientes</a>
+                <a href="#">Sin aceptar</a>
+            </div>
+            <li class="li_link" data-path="/maestro/vales/activos,/maestro/registros">
+                <button class="botonOcultar" onclick="toggleMenu3()">
+                    <i><box-icon type='solid' name='torch'></box-icon></i>
+                    <span>Materiales</span>
+                </button>
+            </li>
+            <div class="menuDesplegable" id="menuDesplegable3">
+                <a href="#">Y1-Y2</a>
+                <a href="#">Y6-Y7</a>
+                <a href="#">Y8</a>
+            </div>
+            <li class="li_link" data-path="/maestro/perfil">
+                <a href="#">
+                    <i><box-icon name='archive' ></box-icon></i>
+                    <span>Registros</span>
+                </a>
+            </li>
+            <li class="li_link">
+                <button onclick="openDialog()">
+                    <i><box-icon name='exit' ></box-icon></i>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </li>
+            <li class="li_link">
+                <button class="botonOcultar" onclick="toggleSidebar()">
+                    <i><box-icon name='left-arrow-alt' ></box-icon></i>
+                    <span>Ocultar Menú</span>
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<button id="mostrarMenuBoton" class="mostrarMenuBoton" onclick="toggleSidebar()">
+    <i><box-icon name='right-arrow-alt' ></box-icon></i>
+    <span>Mostrar Menú</span>
+</button>
+{% block contenidoPrincipal %}
+{% endblock %}
+{% endblock %}
+
+{% block script_section %}
+<script src="{{ url_for('static', filename='js_sidebar_admin.js') }}"></script>
+{% block scriptDedicado %}
+{% endblock %}
+{% endblock %}

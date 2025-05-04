@@ -1,0 +1,126 @@
+{% extends "sidebar_admin.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_admin_1.css') }}">
+{% endblock %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block identificacion %}{{admin[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>¡Bienvenido!</h4>
+<h2 id="nombre-admin">{{admin[1]}}</h2>
+<div class="seccionInformacion">
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Identificación</h5>
+            <span>{{admin[0]}}</span>
+        </div>
+        <div class="seccionIDEdit">
+            <h5>Contraseña</h5>
+            <input type="text" value="{{admin[3]}}" placeholder="Agrega una nueva contraseña" name="llave" id="llave" autocomplete="off">
+        </div>
+    </div>
+    <div class="seccionIDatos">
+        <div class="seccionIDEdit">
+            <h5>Nombres</h5>
+            <input type="text" value="{{admin[1]}}" placeholder="Nombres" name="name" id="name" autocomplete="off">
+        </div>
+        <div class="seccionIDEdit">
+            <h5>Apellidos</h5>
+            <input type="text" value="{{admin[2]}}" placeholder="Apellidos" name="last" id="last" autocomplete="off">
+        </div>
+    </div>
+    <button id="botonActualizarDatos" onclick="openDialog('dialog-actualizar-datos')">Actualizar</button>
+</div>
+<h4>Horarios de Laboratorio Libres</h4>
+<button id="botonNuevoHorario" onclick="openDialog('dialog-nuevo-horario')">Agregar nuevo horario</button>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Dia</th>
+                <th>Laboratorio</th>
+                <th>Inicio</th>
+                <th>Final</th>
+                <th>Borrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horarios in horarios %}
+            <tr>
+                <td>{{ horarios[1] }}</td>
+                <td>{{ horarios[2] }}</td>
+                <td>{{ horarios[3] }}</td>
+                <td>{{ horarios[4] }}</td>
+                <td>
+                    <button onclick="eliminarHorario(this)">X</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<dialog id="dialog-actualizar-datos">
+    <div class="dialog-content-use">
+        <div>
+            <h3>¿Estás seguro de actualizar los datos?</h3>
+        </div>
+        <button onclick="actualizarDatos()">ACEPTAR</button>
+        <button onclick="closeDialog('dialog-actualizar-datos')">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="dialog-nuevo-horario">
+    <div class="dialog-content-use">
+        <div>
+            <h3>Nuevo Horario</h3>
+            <div>
+                <span>Día:</span>
+                <input list="dias" placeholder="Selecciona el dia" id="input-dia" autocomplete="off">
+                <datalist id="dias">
+                    <option value="Lunes">
+                    <option value="Martes">
+                    <option value="Miércoles">
+                    <option value="Jueves">
+                    <option value="Viernes">
+                </datalist>
+            </div>
+            <div>
+                <span>Laboratorio:</span>
+                <input list="labs" placeholder="Elige el Laboratorio" id="input-lab" autocomplete="off">
+                <datalist id="labs">
+                    <option value="Y1">
+                    <option value="Y2">
+                    <option value="Y6">
+                    <option value="Y7">
+                    <option value="Y8">
+                </datalist>
+            </div>
+            <div>
+                <span>Hora inicial:</span>
+                <input type="time" placeholder="Selecciona horario" id="input-hora1" autocomplete="off">
+            </div>
+            <div>
+                <span>Hora final:</span>
+                <input type="time" placeholder="Selecciona horario" id="input-hora2" autocomplete="off">
+            </div>
+        </div>
+        <button onclick="guardarHorario()">AGREGAR</button>
+        <button onclick="closeDialog('dialog-nuevo-horario')">CERRAR</button>
+    </div>
+</dialog>
+<dialog id="dialog-eliminar-horario">
+    <div class="dialog-content-use">
+        <div>
+            <h3>¿Estás seguro de eliminar el horario?</h3>
+        </div>
+        <button onclick="confirmarEliminacion()">ACEPTAR</button>
+        <button onclick="closeDialog('dialog-eliminar-horario')">CERRAR</button>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{ url_for('static', filename='js_admin_1.js') }}"></script>
+{% endblock %}
