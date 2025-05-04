@@ -260,7 +260,7 @@ def registrarSolicitudMaestro(identificacion, ncontrol, hora, fecha, nombre, ape
                 name, lastname, teacher, topic, grupo, number_group, laboratory, estado, tipo_vale, reporte, material) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s ,%s, %s, %s)'''
     data = (identificacion, ncontrol, hora, fecha, hora, fecha, nombre, apellido, profesor, materia, grupo, alumnos,
-            laboratorio, estado, 'MAESTRO', 'N/A', material,)
+            laboratorio, 'ACTIVO', 'MAESTRO', 'N/A', material,)
     agregarDatosDB_Individual(sql, data)
 
 def materialAsignado(laboratorio, materiales):

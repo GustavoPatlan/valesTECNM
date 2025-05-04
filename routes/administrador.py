@@ -219,7 +219,6 @@ def rutasDeAdministrador(app, socketio):
     def admin_workers_1():
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
-        print(data)
         if data[0] == data[1]:
             actualizarDatosCasetero(data)
         else:
@@ -268,3 +267,51 @@ def rutasDeAdministrador(app, socketio):
         else:
             agregarCaseteroDB(data)
             return {"status": "redirect", "url": url_for('admin_workers'), 'mensaje': 'Casetero Agregado'}
+        
+    @app.route('/administrador/vales/activos', methods = ['GET'])
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_voucher_active():
+         # Obtener datos del maestro
+        admin = session.get("admin")
+
+        # Obtener vales aceptados/en espera.
+        solicitudes = valesActivos()
+
+        # Procesar materiales.
+        material = {}
+        for solicitud in solicitudes:
+            k = json.loads(solicitud[16])
+            material[solicitud[0]] = k
+        return render_template('admin_5.html', admin = admin, solicitudes = solicitudes, material = material)
+    
+    @app.route('/administrador/vales/espera', methods = ['GET'])
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_voucher_wait():
+         # Obtener datos del maestro
+        admin = session.get("admin")
+
+        # Obtener vales aceptados/en espera.
+        solicitudes = valesEnEspera()
+
+        # Procesar materiales.
+        material = {}
+        for solicitud in solicitudes:
+            k = json.loads(solicitud[16])
+            material[solicitud[0]] = k
+        return render_template('admin_6.html', admin = admin, solicitudes = solicitudes, material = material)
+    
+    @app.route('/administrador/vales/sin', methods = ['GET'])
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_voucher_no():
+         # Obtener datos del maestro
+        admin = session.get("admin")
+
+        # Obtener vales aceptados/en espera.
+        solicitudes = valesSinAceptar()
+
+        # Procesar materiales.
+        material = {}
+        for solicitud in solicitudes:
+            k = json.loads(solicitud[16])
+            material[solicitud[0]] = k
+        return render_template('admin_7.html', admin = admin, solicitudes = solicitudes, material = material)

@@ -116,3 +116,18 @@ def agregarCaseteroDB(data):
     sql = 'INSERT INTO caseteros (id, correo, nombres, apellidos, llave, laboratorio) VALUES (%s, %s, %s, %s, %s, %s)'
     query = (data[0], data[2], data[3], data[4], data[5], data[1],)
     agregarDatosDB_Individual(sql, query)
+
+def valesActivos():
+    sql = "SELECT * FROM solicitud WHERE estado = 'ACTIVO' ORDER BY fecha_solicitud ASC"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def valesEnEspera():
+    sql = "SELECT * FROM solicitud WHERE estado = 'EN ESPERA' ORDER BY fecha_solicitud ASC"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def valesSinAceptar():
+    sql = "SELECT * FROM solicitud WHERE estado = 'SIN ACEPTAR' ORDER BY fecha_solicitud ASC"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
