@@ -1,5 +1,5 @@
-from flask import redirect, render_template, request, session, url_for
-# from schemas.estudiantes import *
+from flask import redirect, render_template, request, session, url_for, Response
+from schemas.administrador import *
 from models.administrador import *
 import json
 
@@ -78,3 +78,70 @@ def rutasDeAdministrador(app, socketio):
         # Elimina el horario de la base de datos.
         eliminarHorario(data)
         return {"status": "exito",'mensaje': 'Horario eliminado'}
+    
+    @app.route('/administrador/estudiantes', methods = ['GET'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_users():
+        admin = session.get("admin")
+        usuarios = estudiantesRegistrados()
+        carreras = carreras_disponibles
+        return render_template('admin_2.html', admin = admin, usuarios = usuarios, carreras = carreras)
+    
+    @app.route('/administrador/estudiantes/actualizar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_users_1():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        comprobacion = validar_correo(data[2], data[1])
+        if comprobacion:
+            if data[0] == data[1]:
+                actualizarDatosUsuario(data)
+            else:
+                resultado = estudianteExistente(data[1])
+                if resultado:
+                    return {"status": "error",'mensaje': 'Usuario Existente'}
+                else:
+                    actualizarDatosUsuario(data)
+            return {"status": "redirect", "url": url_for('admin_users'), 'mensaje': 'Usuario Actualizado'}
+        else:
+            return {"status": "error",'mensaje': 'Incongruencia en el correo y número de control'}
+    
+    @app.route('/administrador/estudiantes/eliminar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_users_2():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        estudianteEliminado(data)
+        return {"status": "exito",'mensaje': 'Usuario Eliminado'}
+    
+    @app.route('/administrador/estudiantes/pdf')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_users_3():
+        pdf_buffer = generarListadeEstudiantesPDF()
+        return Response(
+            pdf_buffer,
+            mimetype='application/pdf',
+            headers={"Content-Disposition": f"attachment;filename=estudiantesTECNM.pdf"}
+        )
+    
+    @app.route('/administrador/estudiantes/csv')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_users_4():
+        return Response(
+            generarListadeEstudiantesCSV(),
+            mimetype='text/csv',
+            headers={"Content-Disposition": f"attachment;filename=estudiantesTECNM.csv"}
+        )
+    
+    @app.route('/administrador/estudiantes/borrar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_users_5():
+        # Extrae nuevos datos del cuerpo JSON.
+        admin = session.get("admin")
+        data = request.json
+        resultado = administradorLlave(admin[0])
+        if resultado[0] == data:
+            resetearEstudiantes()
+            return {"status": "redirect", "url": url_for('admin_users'), 'mensaje': 'Usuarios Eliminados'}
+        else:
+            return {"status": "error",'mensaje': 'Contraseña Incorrecta'}

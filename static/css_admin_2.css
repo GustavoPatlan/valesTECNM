@@ -1,0 +1,274 @@
+main{
+    flex-direction: column;
+}
+
+main h4{
+    color: #6b7280;
+}
+
+main h4, main h2{
+    padding-bottom: 5px;
+}
+
+main .table-container{
+    height: 80%;
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    overflow-y: auto;
+}
+
+main .botonesLista{
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+main .botonesLista button{
+    background: none;
+    padding: 5px;
+    color: #333;
+    border-radius: 8px;
+    border: solid 1px #333;
+    cursor: pointer;
+}
+
+main .botonesLista button:hover{
+    background: #1c336c;
+    color: #ffff;
+}
+
+main .table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+main .table-container table thead {
+    background: #1c336c;
+    color: #ffff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+main .table-container table td, main .table-container table th {
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+}
+main .table-container table td button{
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    background: #1c336c;
+    color: #ffff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+main .table-container table tbody tr {
+    border-bottom: solid 1px #333;
+}
+
+main .table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+main .table-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+main .table-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+main .table-container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.dialog-content-use {
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.dialog-content-use h3{
+    font-size: 14px;
+    font-style: italic;
+}
+
+.dialog-content-use button{
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+    background: #1c336c;
+    color: #ffff;
+    cursor: pointer;
+    font-size: 13px;
+    margin-top: 5px;
+    width: 120px;
+}
+
+.dialog-content-use a{
+    border-radius: 8px;
+    padding: 8px;
+    color: #ffff;
+    cursor: pointer;
+    font-size: 13px;
+    margin-top: 5px;
+    width: 120px;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.dialog-content-use a box-icon{
+    width: 25px;
+    height: 25px;
+    padding-right: 5px;
+    fill: #f1f1f1;
+}
+
+.dialog-content-use #botonRojo {
+    background: crimson;
+}
+
+.dialog-content-use #botonVerde {
+    background: rgb(90, 179, 2);
+}
+
+.dialog-content-use #borrarEstudiantesInput {
+    width: 100%;
+    text-align: center;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.dialog-content-use .dialog-content-part{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section h5{
+    font-size: 13px;
+    font-weight: 600;
+    padding-right: 3px;
+    white-space: nowrap;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section input {
+    font-size: 13px;
+    border: solid 1px #333;
+    outline: none;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 8px;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section#sectionProfesor{
+    flex-direction: column;
+    align-items: normal;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section#sectionVales{
+    flex-direction: column;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section#sectionVales h5{
+    text-align: center;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section#sectionVales div{
+    display: flex;
+    justify-content: space-between;
+}
+
+.dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-section#sectionVales span{
+    font-size: 13px;
+    align-items: center;
+}
+
+@media (max-width: 650px) {
+    main{
+        text-align: center;
+    }
+
+    main .table-container table thead {
+        display: none;
+    }
+
+    table, tbody, tr, td {
+        display: block;
+        width: 100%;
+    }
+
+    main .table-container table tbody tr {
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    main .table-container table td {
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+    }
+
+    main .table-container table td#tdButton {
+        align-items: center;
+    }
+
+    main .table-container table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    .dialog-content-use {
+        min-width: 250px;
+    }
+
+    .dialog-content-use .dialog-content-part{
+        flex-direction: column;
+    }
+
+    .dialog-content-use .dialog-content-part .dialog-content-part-info {
+        padding-right: 0;
+    }
+
+    main .botonesLista{
+        padding-bottom: 0;
+    }
+    
+    main .botonesLista button{
+        margin-bottom: 5px;
+    }
+}
