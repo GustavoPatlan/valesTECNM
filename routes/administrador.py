@@ -158,7 +158,6 @@ def rutasDeAdministrador(app, socketio):
     def admin_teachers_1():
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
-        print(data)
         if data[0] == data[1]:
             actualizarDatosMaestro(data)
         else:
@@ -207,3 +206,65 @@ def rutasDeAdministrador(app, socketio):
         else:
             agregarMaestroDB(data)
             return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Agregado'}
+        
+    @app.route('/administrador/caseteros', methods = ['GET'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_workers():
+        admin = session.get("admin")
+        caseteros = caseterosRegistrados()
+        return render_template('admin_4.html', admin = admin, caseteros = caseteros)
+    
+    @app.route('/administrador/caseteros/actualizar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_workers_1():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        print(data)
+        if data[0] == data[1]:
+            actualizarDatosCasetero(data)
+        else:
+            resultado = caseteroExistente(data[1])
+            if resultado:
+                return {"status": "error",'mensaje': 'Casetero Existente'}
+            else:
+                actualizarDatosCasetero(data)
+        return {"status": "redirect", "url": url_for('admin_workers'), 'mensaje': 'Casetero Actualizado'}
+    
+    @app.route('/administrador/caseteros/eliminar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_workers_2():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        caseteroEliminado(data)
+        return {"status": "exito",'mensaje': 'Casetero Eliminado'}
+    
+    @app.route('/administrador/caseteros/pdf')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_workers_3():
+        pdf_buffer = generarListadeCaseterosPDF()
+        return Response(
+            pdf_buffer,
+            mimetype='application/pdf',
+            headers={"Content-Disposition": f"attachment;filename=caseterosTECNM.pdf"}
+        )
+    
+    @app.route('/administrador/caseteros/csv')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_workers_4():
+        return Response(
+            generarListadeCaseterosCSV(),
+            mimetype='text/csv',
+            headers={"Content-Disposition": f"attachment;filename=caseterosTECNM.csv"}
+        )
+    
+    @app.route('/administrador/caseteros/nuevo', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_workers_5():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        resultado = caseteroExistente(data[0])
+        if resultado:
+            return {"status": "error",'mensaje': 'Identificación ya asignada'}
+        else:
+            agregarCaseteroDB(data)
+            return {"status": "redirect", "url": url_for('admin_workers'), 'mensaje': 'Casetero Agregado'}

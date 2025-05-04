@@ -87,3 +87,32 @@ def agregarMaestroDB(data):
     sql = 'INSERT INTO maestros (id, correo, nombres, apellidos, llave) VALUES (%s, %s, %s, %s, %s)'
     query = (data[0], data[1], data[2], data[3], data[4],)
     agregarDatosDB_Individual(sql, query)
+
+def caseterosRegistrados():
+    sql = "SELECT * FROM caseteros"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def actualizarDatosCasetero(data):
+    if data[0] == data[1]:
+        sql = "UPDATE caseteros SET correo = %s, nombres = %s, apellidos = %s, llave = %s, laboratorio = %s WHERE id = %s"
+        query = (data[3], data[4], data[5], data[6], data[2], data[0],)
+    else:
+        sql = "UPDATE caseteros SET id = %s, correo = %s, nombres = %s, apellidos = %s, llave = %s, laboratorio = %s WHERE id = %s"
+        query = (data[1], data[3], data[4], data[5], data[6], data[2], data[0],)
+    agregarDatosDB_Individual(sql, query)
+
+def caseteroExistente(ncontrol):
+    sql = "SELECT id FROM caseteros WHERE id = %s"
+    query =(ncontrol,)
+    resultado = obtenerDatosDB(sql, query)
+    return resultado
+
+def caseteroEliminado(ncontrol):
+    sql = f"DELETE FROM caseteros WHERE id = '{ncontrol}'"
+    agregarDatosDB_Individual(sql)
+
+def agregarCaseteroDB(data):
+    sql = 'INSERT INTO caseteros (id, correo, nombres, apellidos, llave, laboratorio) VALUES (%s, %s, %s, %s, %s, %s)'
+    query = (data[0], data[2], data[3], data[4], data[5], data[1],)
+    agregarDatosDB_Individual(sql, query)
