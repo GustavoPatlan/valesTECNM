@@ -9,12 +9,14 @@
 {% block identificacion %}{{admin[0]}}{% endblock %}
 
 {% block contenidoPrincipal %}
-<h4>¡Bienvenido!</h4>
-<h2>{{admin[1]}}</h2>
 <h4>Estudiantes Registrados</h4>
 <div class="botonesLista">
     <button onclick="openDialog('estudiantes-descargar')">Descargar Lista</button>
     <button onclick="openDialog('estudiantes-eliminar')">Borrar Estudiantes</button>
+</div>
+<div class="searchSection">
+    <span>Busqueda</span>
+    <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
 </div>
 <div class="table-container">
     <table>
@@ -94,7 +96,7 @@
             </dialog>
             <dialog id="dialog-eliminar">
                 <div class="dialog-content-use">
-                    <span>¿Estás seguro de eliminar al estudiante de la bas de datos?</span>
+                    <span>¿Estás seguro de eliminar al estudiante de la base de datos?</span>
                     <button onclick="confirmarEliminacion()">ACEPTAR</button>
                     <button onclick="closeDialog('eliminar')">CERRAR</button>
                 </div>

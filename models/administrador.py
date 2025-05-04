@@ -58,3 +58,32 @@ def administradorLlave(identificacion):
 def resetearEstudiantes():
     sql = "DELETE FROM usuarios"
     agregarDatosDB_Individual(sql)
+
+def maestrosRegistrados():
+    sql = "SELECT * FROM maestros"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def actualizarDatosMaestro(data):
+    if data[0] == data[1]:
+        sql = "UPDATE maestros SET correo = %s, nombres = %s, apellidos = %s, llave = %s WHERE id = %s"
+        query = (data[2], data[3], data[4], data[5], data[0],)
+    else:
+        sql = "UPDATE maestros SET id = %s, correo = %s, nombres = %s, apellidos = %s, llave = %s WHERE id = %s"
+        query = (data[1], data[2], data[3], data[4], data[5], data[0],)
+    agregarDatosDB_Individual(sql, query)
+
+def maestroExistente(ncontrol):
+    sql = "SELECT id FROM maestros WHERE id = %s"
+    query =(ncontrol,)
+    resultado = obtenerDatosDB(sql, query)
+    return resultado
+
+def maestroEliminado(ncontrol):
+    sql = f"DELETE FROM maestros WHERE id = '{ncontrol}'"
+    agregarDatosDB_Individual(sql)
+
+def agregarMaestroDB(data):
+    sql = 'INSERT INTO maestros (id, correo, nombres, apellidos, llave) VALUES (%s, %s, %s, %s, %s)'
+    query = (data[0], data[1], data[2], data[3], data[4],)
+    agregarDatosDB_Individual(sql, query)

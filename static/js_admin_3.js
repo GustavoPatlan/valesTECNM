@@ -13,6 +13,11 @@ function eliminarUsuario(id) {
     openDialog('eliminar');
 };
 
+// Función. para eliminar filas.
+function agregarUsuario() {
+    openDialog('abrir');
+};
+
 // Función para confirmar la eliminación.
 function confirmarActualizacion() {
     if (usuarioActuar) {
@@ -36,13 +41,7 @@ function confirmarActualizacion() {
             valores.push(valor);
         };
 
-        // Validar que el valor esté en la lista de días
-        if (!carrerasDisponibles.includes(valores[3])) {
-            mostrarNotificacionRequest('Error', 'Carrera Invalida', 'crimson', 'bug');
-            return;
-        }
-
-        fetch('/administrador/estudiantes/actualizar', {
+        fetch('/administrador/maestros/actualizar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(valores)
@@ -65,7 +64,7 @@ function confirmarActualizacion() {
 // Función para confirmar la eliminación.
 function confirmarEliminacion() {
     if (usuarioActuar) {
-        fetch('/administrador/estudiantes/eliminar', {
+        fetch('/administrador/maestros/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(usuarioActuar)
@@ -88,18 +87,29 @@ function confirmarEliminacion() {
 };
 
 // Función para confirmar la eliminación.
-function confirmarEliminacionCompleta() {
-    let llave = document.getElementById(`borrarEstudiantesInput`).value;
+function agregarMaestro() {
+    // Array para almacenar todos los valores del formulario.
+    let valores = [];
 
-    if (!llave) {
-        mostrarNotificacionRequest('Error', 'Contraseña Ausente', 'crimson', 'bug');
-        return;
-    }
+    // Obtener todos los inputs del diálogo.
+    let inputs = document.querySelector(`#dialog-estudiantes-eliminar`).querySelectorAll("input");
 
-    fetch('/administrador/estudiantes/borrar', {
+    // Validar cada input individualmente.
+    for (let i = 0; i < inputs.length; i++) {
+        let valor = inputs[i].value.trim();
+
+        // Validación de campo vacío.
+        if (valor === "") {
+            mostrarNotificacionRequest('Error', 'Falta Información', 'crimson', 'bug');
+            return null; // Detenemos si hay un input vacío
+        }
+        valores.push(valor);
+    };
+
+    fetch('/administrador/maestros/nuevo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(llave)
+        body: JSON.stringify(valores)
     })
         .then(response => response.json())
         .then(data => {

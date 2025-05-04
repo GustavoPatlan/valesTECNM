@@ -145,3 +145,65 @@ def rutasDeAdministrador(app, socketio):
             return {"status": "redirect", "url": url_for('admin_users'), 'mensaje': 'Usuarios Eliminados'}
         else:
             return {"status": "error",'mensaje': 'Contraseña Incorrecta'}
+        
+    @app.route('/administrador/maestros', methods = ['GET'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_teachers():
+        admin = session.get("admin")
+        maestros = maestrosRegistrados()
+        return render_template('admin_3.html', admin = admin, maestros = maestros)
+    
+    @app.route('/administrador/maestros/actualizar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_teachers_1():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        print(data)
+        if data[0] == data[1]:
+            actualizarDatosMaestro(data)
+        else:
+            resultado = maestroExistente(data[1])
+            if resultado:
+                return {"status": "error",'mensaje': 'Maestro Existente'}
+            else:
+                actualizarDatosMaestro(data)
+        return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Actualizado'}
+    
+    @app.route('/administrador/maestros/eliminar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_teachers_2():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        maestroEliminado(data)
+        return {"status": "exito",'mensaje': 'Maestro Eliminado'}
+    
+    @app.route('/administrador/maestros/pdf')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_teachers_3():
+        pdf_buffer = generarListadeMaestrosPDF()
+        return Response(
+            pdf_buffer,
+            mimetype='application/pdf',
+            headers={"Content-Disposition": f"attachment;filename=maestrosTECNM.pdf"}
+        )
+    
+    @app.route('/administrador/maestros/csv')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_teachers_4():
+        return Response(
+            generarListadeMaestrosCSV(),
+            mimetype='text/csv',
+            headers={"Content-Disposition": f"attachment;filename=maestrosTECNM.csv"}
+        )
+    
+    @app.route('/administrador/maestros/nuevo', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_teachers_5():
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        resultado = maestroExistente(data[0])
+        if resultado:
+            return {"status": "error",'mensaje': 'Identificación ya asignada'}
+        else:
+            agregarMaestroDB(data)
+            return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Agregado'}
