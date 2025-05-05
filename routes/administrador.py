@@ -158,23 +158,31 @@ def rutasDeAdministrador(app, socketio):
     def admin_teachers_1():
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
-        if data[0] == data[1]:
-            actualizarDatosMaestro(data)
+        solicitud = solicitudActiva(data[0])
+        if solicitud:
+            return {"status": "error",'mensaje': 'Maestro con vales activos'}
         else:
-            resultado = maestroExistente(data[1])
-            if resultado:
-                return {"status": "error",'mensaje': 'Maestro Existente'}
-            else:
+            if data[0] == data[1]:
                 actualizarDatosMaestro(data)
-        return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Actualizado'}
+            else:
+                resultado = maestroExistente(data[1])
+                if resultado:
+                    return {"status": "error",'mensaje': 'Maestro Existente'}
+                else:
+                    actualizarDatosMaestro(data)
+            return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Actualizado'}
     
     @app.route('/administrador/maestros/eliminar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_teachers_2():
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
-        maestroEliminado(data)
-        return {"status": "exito",'mensaje': 'Maestro Eliminado'}
+        solicitud = solicitudActiva(data)
+        if solicitud:
+            return {"status": "error",'mensaje': 'Maestro con vales activos'}
+        else:
+            maestroEliminado(data)
+            return {"status": "exito",'mensaje': 'Maestro Eliminado'}
     
     @app.route('/administrador/maestros/nuevo', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.

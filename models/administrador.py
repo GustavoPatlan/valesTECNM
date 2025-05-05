@@ -153,3 +153,8 @@ def registros():
 def resetearRegistros():
     sql = "DELETE FROM registro"
     agregarDatosDB_Individual(sql)
+
+def solicitudActiva(ncontrol):
+    sql = f"SELECT ncontrol FROM solicitud WHERE ncontrol = '{ncontrol}'"
+    resultado = obtenerDatosDB(sql)
+    return resultado
