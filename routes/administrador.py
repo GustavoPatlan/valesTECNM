@@ -114,23 +114,23 @@ def rutasDeAdministrador(app, socketio):
         estudianteEliminado(data)
         return {"status": "exito",'mensaje': 'Usuario Eliminado'}
     
-    @app.route('/administrador/estudiantes/pdf')
+    @app.route('/administrador/pdf/<string:usuario>')
     @action_required_a  # Decorador que verifica sesión activa.
-    def admin_users_3():
-        pdf_buffer = generarListadeEstudiantesPDF()
+    def admin_users_3(usuario):
+        pdf_buffer = generarListadeUsuariosPDF(usuario)
         return Response(
             pdf_buffer,
             mimetype='application/pdf',
-            headers={"Content-Disposition": f"attachment;filename=estudiantesTECNM.pdf"}
+            headers={"Content-Disposition": f"attachment;filename={usuario}TECNM.pdf"}
         )
     
-    @app.route('/administrador/estudiantes/csv')
+    @app.route('/administrador/csv/<string:usuario>')
     @action_required_a  # Decorador que verifica sesión activa.
-    def admin_users_4():
+    def admin_users_4(usuario):
         return Response(
-            generarListadeEstudiantesCSV(),
+            generarListadeUsuariosCSV(usuario),
             mimetype='text/csv',
-            headers={"Content-Disposition": f"attachment;filename=estudiantesTECNM.csv"}
+            headers={"Content-Disposition": f"attachment;filename={usuario}TECNM.csv"}
         )
     
     @app.route('/administrador/estudiantes/borrar', methods = ['POST'])
@@ -176,25 +176,6 @@ def rutasDeAdministrador(app, socketio):
         maestroEliminado(data)
         return {"status": "exito",'mensaje': 'Maestro Eliminado'}
     
-    @app.route('/administrador/maestros/pdf')
-    @action_required_a  # Decorador que verifica sesión activa.
-    def admin_teachers_3():
-        pdf_buffer = generarListadeMaestrosPDF()
-        return Response(
-            pdf_buffer,
-            mimetype='application/pdf',
-            headers={"Content-Disposition": f"attachment;filename=maestrosTECNM.pdf"}
-        )
-    
-    @app.route('/administrador/maestros/csv')
-    @action_required_a  # Decorador que verifica sesión activa.
-    def admin_teachers_4():
-        return Response(
-            generarListadeMaestrosCSV(),
-            mimetype='text/csv',
-            headers={"Content-Disposition": f"attachment;filename=maestrosTECNM.csv"}
-        )
-    
     @app.route('/administrador/maestros/nuevo', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_teachers_5():
@@ -236,25 +217,6 @@ def rutasDeAdministrador(app, socketio):
         data = request.json
         caseteroEliminado(data)
         return {"status": "exito",'mensaje': 'Casetero Eliminado'}
-    
-    @app.route('/administrador/caseteros/pdf')
-    @action_required_a  # Decorador que verifica sesión activa.
-    def admin_workers_3():
-        pdf_buffer = generarListadeCaseterosPDF()
-        return Response(
-            pdf_buffer,
-            mimetype='application/pdf',
-            headers={"Content-Disposition": f"attachment;filename=caseterosTECNM.pdf"}
-        )
-    
-    @app.route('/administrador/caseteros/csv')
-    @action_required_a  # Decorador que verifica sesión activa.
-    def admin_workers_4():
-        return Response(
-            generarListadeCaseterosCSV(),
-            mimetype='text/csv',
-            headers={"Content-Disposition": f"attachment;filename=caseterosTECNM.csv"}
-        )
     
     @app.route('/administrador/caseteros/nuevo', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
