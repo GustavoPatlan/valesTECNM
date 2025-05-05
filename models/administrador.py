@@ -144,3 +144,12 @@ def materialLaboratorio(laboratorio):
     sql = f"SELECT * FROM ({condition}) ORDER BY NUMERACION DESC, EQUIPO, N_CASETA ASC"
     resultado = obtenerDatosDB_Varios(sql)
     return resultado
+
+def registros():
+    sql = f"SELECT * FROM registro ORDER BY fecha_final ASC"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def resetearRegistros():
+    sql = "DELETE FROM registro"
+    agregarDatosDB_Individual(sql)

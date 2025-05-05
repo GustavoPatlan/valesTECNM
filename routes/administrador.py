@@ -317,3 +317,51 @@ def rutasDeAdministrador(app, socketio):
             mimetype='text/csv',
             headers={"Content-Disposition": f"attachment;filename=materialesTECNM({laboratorio}).csv"}
         )
+    
+    @app.route('/administrador/registros', methods = ['GET'])
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_register():
+        # Obtener datos del maestro
+        admin = session.get("admin")
+
+        # Obtener registros históricos del laboratorio.
+        solicitudes = registros()
+
+        # Procesar materiales de cada registro.
+        material = {}
+        for solicitud in solicitudes:
+            k = json.loads(solicitud[18])
+            material[solicitud[0]] = k
+        return render_template('admin_7.html', admin = admin, solicitudes = solicitudes, material = material)
+    
+    @app.route('/administrador/registros/pdf')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_register_1():
+        pdf_buffer = generarListaPDF()
+        return Response(
+            pdf_buffer,
+            mimetype='application/pdf',
+            headers={"Content-Disposition": "attachment;filename=registroTECNM.pdf"}
+        )
+    
+    @app.route('/administrador/registros/csv')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_register_2():
+        return Response(
+            generarListaCSV(),
+            mimetype='text/csv',
+            headers={"Content-Disposition": "attachment;filename=registroTECNM.csv"}
+        )
+    
+    @app.route('/administrador/registros/borrar', methods = ['POST'])
+    @action_required_a    # Decorador que verifica sesión activa.
+    def admin_register_3():
+        # Extrae nuevos datos del cuerpo JSON.
+        admin = session.get("admin")
+        data = request.json
+        resultado = administradorLlave(admin[0])
+        if resultado[0] == data:
+            resetearRegistros()
+            return {"status": "redirect", "url": url_for('admin_register'), 'mensaje': 'Registros Eliminados'}
+        else:
+            return {"status": "error",'mensaje': 'Contraseña Incorrecta'}
