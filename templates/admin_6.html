@@ -4,103 +4,151 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css_admin_6.css') }}">
 {% endblock %}
 
-{% block title %}Vales Pendientes{% endblock %}
+{% block title %}Material {{laboratorio}}{% endblock %}
 
 {% block identificacion %}{{admin[0]}}{% endblock %}
 
 {% block contenidoPrincipal %}
-<h4>Vales de Laboratorio en espera de material</h4>
-<div class="searchSection">
-    <span>Busqueda</span>
-    <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+<h4>Materiales del laboratorio {{laboratorio}}</h4>
+<div class="searchSection download">
+    <div><span>Busqueda</span>
+        <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+    </div>
+    <div>
+        <button onclick="openDialogDescargar()" id="downloadButton">Descargar Materiales</button>
+        <dialog id="dialog-download">
+            <div class="dialog-content-use">
+                <span>¿Quieres descargar la lista de materiales del laboratorio {{laboratorio}}?</span>
+                <a id="cancelarSolicitud" href="/administrador/material/pdf/{{laboratorio}}"><box-icon type='solid'
+                        name='file-pdf'></box-icon>PDF</a>
+                <a id="aceptarSolicitud" href="/administrador/material/csv/{{laboratorio}}"><box-icon type='logo'
+                        name='microsoft'></box-icon>EXCEL</a>
+                <button onclick="closeDialogDescargar()">CERRAR</button>
+            </div>
+        </dialog>
+    </div>
 </div>
 <div class="table-container">
     <table>
         <thead>
             <tr>
-                <th>Identificación</th>
-                <th>Nombre</th>
-                <th>Vale</th>
-                <th>Hora</th>
-                <th>Fecha</th>
-                <th>Laboratorio</th>
-                <th>Acciones</th>
+                <th>Equipo</th>
+                <th>Marca</th>
+                <th>Caseta</th>
+                <th>Condición</th>
+                <th>Disponibilidad</th>
+                <th>Detalles</th>
             </tr>
         </thead>
         <tbody>
-            {% for solicitud in solicitudes %}
-            <tr id="solicitud-{{ solicitud[0] }}">
-                <td data-label="Identificación">{{ solicitud[1] }}</td>
-                <td data-label="Nombre">{{ solicitud[6] }} {{ solicitud[7] }}</td>
-                <td data-label="Vale">{{ solicitud[14] }}</td>
-                <td data-label="Hora de Solicitud">{{ solicitud[2] }}</td>
-                <td data-label="Fecha de Solicitud">{{ solicitud[3] }}</td>
-                <td data-label="Laboratorio">{{ solicitud[12] }}</td>
+            {% for item in material %}
+            <tr id="solicitud-{{ item[0] }}">
+                <td data-label="Equipo">{{ item[1] }}</td>
+                <td data-label="Marca">{{ item[2] }}</td>
+                <td data-label="Caseta">{{ item[4] }}</td>
+                <td data-label="Condición">{{ item[10] }}</td>
+                <td data-label="Disponibilidad">{{ item[11] }}</td>
                 <td data-label="Detalles">
-                    <button onclick="openDialogInfo('{{ solicitud[0] }}')">INFORMACIÓN</button>
+                    <button onclick="openDialogInfo('{{ item[0] }}')">INFORMACIÓN</button>
                 </td>
             </tr>
-            <dialog id="dialog-{{ solicitud[0] }}">
-                <div class="dialog-content-use">
-                    <h3>Detalles de la Solicitud</h3>
+            <dialog id="dialog-{{ item[0] }}">
+                <div class="dialog-content-use form">
+                    <h3>Detalles del Material</h3>
                     <div class="dialog-content-part">
                         <div class="dialog-content-part-info">
-                            <div class="dialog-content-part-info-section" id="sectionProfesor">
-                                {% if solicitud[14] != 'MAESTRO' %}
-                                <h5>ESTUDIANTE:</h5>
-                                {% else %}
-                                <h5>MAESTRO:</h5>
-                                {% endif %}
-                                <span>{{ solicitud[6] }} {{ solicitud[7] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    {% if item[12] != 'SI'%}
+                                    <h5>COMPONENTE:</h5>
+                                    {% else %}
+                                    <h5>EQUIPO:</h5>
+                                    {% endif %}
+                                    <span>{{ item[1] }}</span>
+                                </div>
                             </div>
-                            <div class="dialog-content-part-info-section">
-                                {% if solicitud[14] != 'MAESTRO' %}
-                                <h5>NÚMERO DE CONTROL:</h5>
-                                {% else %}
-                                <h5>ID:</h5>
-                                {% endif %}
-                                <span>{{ solicitud[1] }}</span>
+                            {% if item[12] == 'SI'%}
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>N. CASETA:</h5>
+                                    <span>{{ item[4] }}</span>
+                                </div>
                             </div>
-                            <div class="dialog-content-part-info-section">
-                                <h5>VALE:</h5>
-                                <span>{{ solicitud[14] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>MARCA:</h5>
+                                    <span>{{ item[2] }}</span>
+                                </div>
                             </div>
-                            <div class="dialog-content-part-info-section">
-                                <h5>LABORATORIO:</h5>
-                                <span>{{ solicitud[12] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>MODELO:</h5>
+                                    <span>{{ item[3] }}</span>
+                                </div>
                             </div>
-                            <div class="dialog-content-part-info-section">
-                                <h5>HORA:</h5>
-                                <span>{{ solicitud[2] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>N. SERIE:</h5>
+                                    <span>{{ item[5] }}</span>
+                                </div>
                             </div>
-                            <div class="dialog-content-part-info-section">
-                                <h5>FECHA:</h5>
-                                <span>{{ solicitud[3] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>N. INVENTARIO:</h5>
+                                    <span>{{ item[6] }}</span>
+                                </div>
                             </div>
-                            {% if solicitud[14] != 'MAESTRO' %}
-                            <div class="dialog-content-part-info-section">
-                                <h5>MATERIA:</h5>
-                                <span>{{ solicitud[9] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>VOLTAJE:</h5>
+                                    <span>{{ item[7] }}</span>
+                                </div>
                             </div>
-                            <div class="dialog-content-part-info-section">
-                                <h5>GRUPO:</h5>
-                                <span>{{ solicitud[10] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>POTENCIA:</h5>
+                                    <span>{{ item[8] }}</span>
+                                </div>
                             </div>
-                            <div class="dialog-content-part-info-section">
-                                <h5>N. ALUMNOS:</h5>
-                                <span>{{ solicitud[11] }}</span>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>CONDICIÓN:</h5>
+                                    <span>{{ item[10] }}</span>
+                                </div>
+                            </div>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>DISPONIBILIDAD:</h5>
+                                    <span>{{ item[11] }}</span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>CANTIDAD:</h5>
+                                    <span>{{ item[9] }}</span>
+                                </div>
+                            </div>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>MARCA:</h5>
+                                    <span>{{ item[2] }}</span>
+                                </div>
+                            </div>
+                            <div class="dialog-content-part-info-button">
+                                <div class="dialog-content-part-info-section-div">
+                                    <h5>MODELO:</h5>
+                                    <span>{{ item[3] }}</span>
+                                </div>
                             </div>
                             {% endif %}
-                        </div>
-                        <div class="dialog-content-part-material">
-                            <div class="dialog-content-part-material-table">
-                                {% for item in material[solicitud[0]] %}
-                                <span>{{item[0]}} : {{item[1]}}</span>
-                                {% endfor %}
+                            <div class="dialog-content-part-info-horario">
+                                <h5>Observaciones</h5>
+                                <textarea readonly>{{ item[13] }}"</textarea>
                             </div>
                         </div>
                     </div>
-                    <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                    <button onclick="closeDialogInfo('{{ item[0] }}')">CERRAR</button>
                 </div>
             </dialog>
             {% endfor %}

@@ -4,12 +4,32 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css_admin_5.css') }}">
 {% endblock %}
 
-{% block title %}Vales Activos{% endblock %}
+{% block title %}
+{% if vales == 'activos' %}
+Vales Activos
+{% endif %}
+{% if vales == 'espera' %}
+Vales Pendientes
+{% endif %}
+{% if vales == 'sin' %}
+Vales sin aceptar
+{% endif %}
+{% endblock %}
 
 {% block identificacion %}{{admin[0]}}{% endblock %}
 
 {% block contenidoPrincipal %}
-<h4>Vales de Laboratorio Activos</h4>
+<h4>
+    {% if vales == 'activos' %}
+    Vales de Laboratorio Activos
+    {% endif %}
+    {% if vales == 'espera' %}
+    Vales de Laboratorio en espera de material
+    {% endif %}
+    {% if vales == 'sin' %}
+    Vales de Laboratorio en espera de firma del maestro
+    {% endif %}
+</h4>
 <div class="searchSection">
     <span>Busqueda</span>
     <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">

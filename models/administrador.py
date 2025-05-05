@@ -1,5 +1,11 @@
 from config.database import *
 
+lab_material = {
+        'Y1-Y2': "labpotencia",
+        'Y6-Y7': "labelectronica",
+        'Y8': "labthird"
+    }
+
 def horarios():
     """
     Obtiene todos los registros de horarios disponibles en la base de datos.
@@ -129,5 +135,12 @@ def valesEnEspera():
 
 def valesSinAceptar():
     sql = "SELECT * FROM solicitud WHERE estado = 'SIN ACEPTAR' ORDER BY fecha_solicitud ASC"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def materialLaboratorio(laboratorio):
+    condition = lab_material.get(laboratorio)
+    # Consulta 1: Obtiene todos los materiales con ordenamiento específico.
+    sql = f"SELECT * FROM ({condition}) ORDER BY NUMERACION DESC, EQUIPO, N_CASETA ASC"
     resultado = obtenerDatosDB_Varios(sql)
     return resultado

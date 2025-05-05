@@ -268,50 +268,52 @@ def rutasDeAdministrador(app, socketio):
             agregarCaseteroDB(data)
             return {"status": "redirect", "url": url_for('admin_workers'), 'mensaje': 'Casetero Agregado'}
         
-    @app.route('/administrador/vales/activos', methods = ['GET'])
+    @app.route('/administrador/vales/<string:vales>', methods = ['GET'])
     @action_required_a  # Decorador que verifica sesión activa.
-    def admin_voucher_active():
+    def admin_voucher_active(vales):
          # Obtener datos del maestro
         admin = session.get("admin")
 
-        # Obtener vales aceptados/en espera.
-        solicitudes = valesActivos()
+        # Obtener vales.
+        if vales == 'activos':
+            solicitudes = valesActivos()
+        elif vales == 'espera':
+            solicitudes = valesEnEspera()
+        else:
+            vales = 'sin'
+            solicitudes = valesSinAceptar()
 
         # Procesar materiales.
         material = {}
         for solicitud in solicitudes:
             k = json.loads(solicitud[16])
             material[solicitud[0]] = k
-        return render_template('admin_5.html', admin = admin, solicitudes = solicitudes, material = material)
+        return render_template('admin_5.html', admin = admin, solicitudes = solicitudes, material = material, vales = vales)
     
-    @app.route('/administrador/vales/espera', methods = ['GET'])
+    @app.route('/administrador/material/<string:laboratorio>', methods = ['GET'])
     @action_required_a  # Decorador que verifica sesión activa.
-    def admin_voucher_wait():
-         # Obtener datos del maestro
+    def admin_materials_1(laboratorio):
+        # Obtener datos del maestro
         admin = session.get("admin")
-
-        # Obtener vales aceptados/en espera.
-        solicitudes = valesEnEspera()
-
-        # Procesar materiales.
-        material = {}
-        for solicitud in solicitudes:
-            k = json.loads(solicitud[16])
-            material[solicitud[0]] = k
-        return render_template('admin_6.html', admin = admin, solicitudes = solicitudes, material = material)
+        # Obtener datos completos del inventario del laboratorio.
+        material = materialLaboratorio(laboratorio)
+        return render_template('admin_6.html', admin = admin, material = material, laboratorio = laboratorio)
     
-    @app.route('/administrador/vales/sin', methods = ['GET'])
+    @app.route('/administrador/material/pdf/<string:laboratorio>')
     @action_required_a  # Decorador que verifica sesión activa.
-    def admin_voucher_no():
-         # Obtener datos del maestro
-        admin = session.get("admin")
-
-        # Obtener vales aceptados/en espera.
-        solicitudes = valesSinAceptar()
-
-        # Procesar materiales.
-        material = {}
-        for solicitud in solicitudes:
-            k = json.loads(solicitud[16])
-            material[solicitud[0]] = k
-        return render_template('admin_7.html', admin = admin, solicitudes = solicitudes, material = material)
+    def admin_materials_4(laboratorio):
+        pdf_buffer = generarMaterialesPDF(laboratorio)
+        return Response(
+            pdf_buffer,
+            mimetype='application/pdf',
+            headers={"Content-Disposition": f"attachment;filename=materialesTECNM({laboratorio}).pdf"}
+        )
+    
+    @app.route('/administrador/material/csv/<string:laboratorio>')
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_materials_5(laboratorio):
+        return Response(
+            generarListaMaterialesCSV(laboratorio),
+            mimetype='text/csv',
+            headers={"Content-Disposition": f"attachment;filename=materialesTECNM({laboratorio}).csv"}
+        )
