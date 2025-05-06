@@ -25,9 +25,21 @@ def action_required_a(f):
     return wrap
 
 def rutasDeAdministrador(app, socketio):
+    """
+    Configura todas las rutas relacionadas con el panel de administración.
+    
+    Rutas incluidas:
+        - Gestión de horarios de laboratorios.
+        - Administración de estudiantes, maestros y caseteros.
+        - Control de vales y materiales.
+        - Generación de reportes en PDF y CSV.
+    """
     @app.route('/administrador/inicio', methods = ['GET'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_home():
+        """
+        Muestra el panel principal del administrador con los horarios de laboratorios.
+        """
         admin = session.get("admin")   # Datos almacenados durante el login.
         horarios_r = horarios() # Consulta de horarios académicos.
         return render_template('admin_1.html', admin = admin, horarios = horarios_r)
@@ -35,6 +47,17 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/inicio/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_home_1():
+        """
+        Actualiza los datos personales del administrador.
+        
+        Procesa:
+            - Nombres.
+            - Apellidos.
+            - Llave de acceso.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Datos almacenados durante el login.
         admin = session.get("admin")
 
@@ -53,6 +76,18 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/inicio/nuevo', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_home_2():
+        """
+        Agrega un nuevo horario para los laboratorios.
+        
+        Procesa:
+            - Día de la semana.
+            - Laboratorio.
+            - Hora de inicio.
+            - Hora de fin.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Datos almacenados durante el login.
         admin = session.get("admin")
 
@@ -71,6 +106,9 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/inicio/eliminar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_home_3():
+        """
+        Elimina un horario existente.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         data = [data['dia'], data['lab'], data['inicio'], data['fin']]
@@ -82,6 +120,9 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/estudiantes', methods = ['GET'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_users():
+        """
+        Muestra el panel de gestión de estudiantes.
+        """
         admin = session.get("admin")
         usuarios = estudiantesRegistrados()
         carreras = carreras_disponibles
@@ -90,6 +131,16 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/estudiantes/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_users_1():
+        """
+        Actualiza los datos de un estudiante existente.
+        
+        Valida:
+            - Congruencia entre correo y número de control.
+            - Existencia del nuevo número de control.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         comprobacion = validar_correo(data[2], data[1])
@@ -109,6 +160,12 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/estudiantes/eliminar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_users_2():
+        """
+        Elimina un estudiante del sistema.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         estudianteEliminado(data)
@@ -117,6 +174,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/pdf/<string:usuario>')
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_users_3(usuario):
+        """
+        Genera y descarga un PDF con la lista de usuarios.
+        
+        Parámetros:
+            usuario: Tipo de usuario (estudiantes, maestros o caseteros).
+        
+        Returns:
+            Archivo PDF para descargar.
+        """
         pdf_buffer = generarListadeUsuariosPDF(usuario)
         return Response(
             pdf_buffer,
@@ -127,6 +193,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/csv/<string:usuario>')
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_users_4(usuario):
+        """
+        Genera y descarga un CSV con la lista de usuarios.
+        
+        Parámetros:
+            usuario: Tipo de usuario (estudiantes, maestros o caseteros).
+        
+        Returns:
+            Archivo CSV para descargar.
+        """
         return Response(
             generarListadeUsuariosCSV(usuario),
             mimetype='text/csv',
@@ -136,6 +211,12 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/estudiantes/borrar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_users_5():
+        """
+        Elimina todos los estudiantes del sistema (requiere confirmación con llave).
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         admin = session.get("admin")
         data = request.json
@@ -149,6 +230,9 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/maestros', methods = ['GET'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_teachers():
+        """
+        Muestra el panel de gestión de maestros.
+        """
         admin = session.get("admin")
         maestros = maestrosRegistrados()
         return render_template('admin_3.html', admin = admin, maestros = maestros)
@@ -156,6 +240,16 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/maestros/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_teachers_1():
+        """
+        Actualiza los datos de un maestro existente.
+        
+        Valida:
+            - Que el maestro no tenga vales activos.
+            - Existencia del nuevo ID.
+        
+        Returns:
+            JSON con estado de la operación y mensaje
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         solicitud = solicitudActiva(data[0])
@@ -175,6 +269,12 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/maestros/eliminar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_teachers_2():
+        """
+        Elimina un maestro del sistema (si no tiene vales activos).
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         solicitud = solicitudActiva(data)
@@ -187,6 +287,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/maestros/nuevo', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_teachers_5():
+        """
+        Agrega un nuevo maestro al sistema.
+        
+        Valida:
+            - Que el ID no esté ya registrado.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         resultado = maestroExistente(data[0])
@@ -199,6 +308,9 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/caseteros', methods = ['GET'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_workers():
+        """
+        Muestra el panel de gestión de caseteros.
+        """
         admin = session.get("admin")
         caseteros = caseterosRegistrados()
         return render_template('admin_4.html', admin = admin, caseteros = caseteros)
@@ -206,6 +318,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/caseteros/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_workers_1():
+        """
+        Actualiza los datos de un casetero existente.
+        
+        Valida:
+            - Existencia del nuevo ID.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         if data[0] == data[1]:
@@ -221,6 +342,12 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/caseteros/eliminar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_workers_2():
+        """
+        Elimina un casetero del sistema.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         caseteroEliminado(data)
@@ -229,6 +356,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/caseteros/nuevo', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_workers_5():
+        """
+        Agrega un nuevo casetero al sistema.
+        
+        Valida:
+            - Que el ID no esté ya registrado.
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         data = request.json
         resultado = caseteroExistente(data[0])
@@ -241,6 +377,18 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/vales/<string:vales>', methods = ['GET'])
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_voucher_active(vales):
+        """
+        Muestra el panel de gestión de vales según su estado.
+        
+        Parámetros:
+            vales: Estado de los vales a mostrar (activos, espera o sin aceptar).
+        
+        Returns:
+            Renderiza la plantilla admin_5.html con:
+                - Datos del administrador.
+                - Lista de vales según estado.
+                - Materiales asociados a cada vale.
+        """
          # Obtener datos del maestro
         admin = session.get("admin")
 
@@ -263,7 +411,19 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/material/<string:laboratorio>', methods = ['GET'])
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_materials_1(laboratorio):
-        # Obtener datos del maestro
+        """
+        Muestra el inventario de materiales de un laboratorio específico.
+        
+        Parámetros:
+            laboratorio: Código del laboratorio a consultar.
+        
+        Returns:
+            Renderiza la plantilla admin_6.html con:
+                - Datos del administrador.
+                - Lista completa de materiales.
+                - Laboratorio consultado.
+        """
+        # Obtener datos del maestro.
         admin = session.get("admin")
         # Obtener datos completos del inventario del laboratorio.
         material = materialLaboratorio(laboratorio)
@@ -272,6 +432,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/material/pdf/<string:laboratorio>')
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_materials_4(laboratorio):
+        """
+        Genera y descarga un PDF con el inventario de materiales.
+        
+        Parámetros:
+            laboratorio: Código del laboratorio.
+        
+        Returns:
+            Archivo PDF para descargar.
+        """
         pdf_buffer = generarMaterialesPDF(laboratorio)
         return Response(
             pdf_buffer,
@@ -282,6 +451,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/material/csv/<string:laboratorio>')
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_materials_5(laboratorio):
+        """
+        Genera y descarga un CSV con el inventario de materiales.
+        
+        Parámetros:
+            laboratorio: Código del laboratorio.
+        
+        Returns:
+            Archivo CSV para descargar.
+        """
         return Response(
             generarListaMaterialesCSV(laboratorio),
             mimetype='text/csv',
@@ -291,6 +469,15 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/registros', methods = ['GET'])
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_register():
+        """
+        Muestra el historial completo de registros del sistema.
+        
+        Returns:
+            Renderiza la plantilla admin_7.html con:
+                - Datos del administrador.
+                - Lista completa de registros.
+                - Materiales asociados a cada registro.
+        """
         # Obtener datos del maestro
         admin = session.get("admin")
 
@@ -307,6 +494,12 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/registros/pdf')
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_register_1():
+        """
+        Genera y descarga un PDF con el historial de registros.
+        
+        Returns:
+            Archivo PDF para descargar.
+        """
         pdf_buffer = generarListaPDF()
         return Response(
             pdf_buffer,
@@ -317,6 +510,12 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/registros/csv')
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_register_2():
+        """
+        Genera y descarga un CSV con el historial de registros.
+        
+        Returns:
+            Archivo CSV para descargar.
+        """
         return Response(
             generarListaCSV(),
             mimetype='text/csv',
@@ -326,6 +525,12 @@ def rutasDeAdministrador(app, socketio):
     @app.route('/administrador/registros/borrar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
     def admin_register_3():
+        """
+        Elimina todos los registros históricos (requiere confirmación con llave).
+        
+        Returns:
+            JSON con estado de la operación y mensaje.
+        """
         # Extrae nuevos datos del cuerpo JSON.
         admin = session.get("admin")
         data = request.json

@@ -26,9 +26,13 @@ function formato12h(hora24) {
     return `${horasFormateadas}:${minutosFormateados} ${periodo}`;
 }
 
+// Lista de días válidos para horarios.
 const diasValidos = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+// Lista de laboratorios válidos.
 const labsValidos = ["Y1", "Y2", "Y6", "Y7", "Y8"];
 
+// Función para guardar un nuevo horario
 function guardarHorario() {
     let inputDia = document.getElementById("input-dia");
     let inputLab = document.getElementById("input-lab");
@@ -52,6 +56,7 @@ function guardarHorario() {
         return;
     }
 
+    // Validación de horarios completos.
     if (!inputHora1 || !inputHora2) {
         mostrarNotificacionRequest('Error', 'Faltan horarios', 'crimson', 'bug');
         return;
@@ -96,8 +101,6 @@ function guardarHorario() {
 
                     // Cerrar el diálogo
                     closeDialog('dialog-nuevo-horario');
-                    // sessionStorage.setItem("notificacion_mensaje", data.mensaje);
-                    // window.location.href = data.url;
                     break;
             };
         });
@@ -115,13 +118,14 @@ function eliminarHorario(boton) {
 // Función para confirmar la eliminación.
 function confirmarEliminacion() {
     if (filaAEliminar) {
+        // Prepara los datos de la fila a eliminar.
         let datos = {
             dia: filaAEliminar.cells[0].textContent,
             lab: filaAEliminar.cells[1].textContent,
             inicio: filaAEliminar.cells[2].textContent,
             fin: filaAEliminar.cells[3].textContent
         };
-
+        // Envía la solicitud de eliminación al servidor.
         fetch('/administrador/inicio/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -144,15 +148,18 @@ function confirmarEliminacion() {
     };
 };
 
+// Función para actualizar los datos del administrador.
 function actualizarDatos() {
+    // Obtiene los valores del formulario.
     let nombres = document.getElementById("name").value;
     let apellidos = document.getElementById("last").value;
     let llave = document.getElementById("llave").value;
-
+    // Validación de campos requeridos.
     if (!nombres || !apellidos) {
         mostrarNotificacionRequest('Error', 'Faltan datos', 'crimson', 'bug');
         return;
     }
+    // Envía los datos actualizados al servidor.
     fetch('/administrador/inicio/actualizar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

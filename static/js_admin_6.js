@@ -39,6 +39,9 @@ function closeDialogInfo(id) {
     }
 };
 
+/*
+Abre el diálogo de descarga.
+*/
 function openDialogDescargar() {
     let dialog = document.getElementById(`dialog-download`);
     if (dialog) {
@@ -46,6 +49,9 @@ function openDialogDescargar() {
     }
 };
 
+/*
+Cierra el diálogo de descarga.
+*/
 function closeDialogDescargar() {
     let dialog = document.getElementById(`dialog-download`);
     if (dialog) {

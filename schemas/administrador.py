@@ -10,23 +10,44 @@ from io import BytesIO
 from config.database import obtenerDatosDB_Varios_Descarga
 from datetime import datetime
 
+# Mapeo de laboratorios a sus respectivas tablas en la base de datos.
 lab_material = {
         'Y1-Y2': "labpotencia",
         'Y6-Y7': "labelectronica",
         'Y8': "labthird"
     }
 
+# Carga las variables de entorno desde el archivo .env
 load_dotenv(dotenv_path="config/.env")
 
 # Lista de carreras profesionales disponibles en el instituto.
 carreras_disponibles = os.getenv("CARRERAS_DISPONIBLES").split(",") if os.getenv("CARRERAS_DISPONIBLES") else []
 
 def validar_correo(correo, identificador):
+    """
+    Valida si un correo electrónico cumple con el formato institucional esperado.
+    
+    Parámetros:
+        correo: Correo electrónico a validar.
+        identificador: Identificador esperado en el correo (número de control o ID).
+    
+    Retorna:
+        bool: True si el correo es válido, False en caso contrario.
+    """
     patron = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     patron = rf"^[a-zA-Z]?[0-9]*{re.escape(identificador)}@morelia\.tecnm\.mx$"
     return re.match(patron, correo) is not None
 
 def generarListadeUsuariosPDF(usuario):
+    """
+    Genera un reporte PDF con la lista de usuarios según el tipo especificado.
+    
+    Parámetros:
+        usuario: Tipo de usuario ('estudiantes', 'maestros' o 'caseteros').
+    
+    Retorna:
+        BytesIO: Buffer con el PDF generado listo para descargar.
+    """
     if usuario == 'estudiantes':
         sql = "SELECT ncontrol, correo, carrera, nombres, apellidos FROM usuarios"
         columnas = ["Número de Control", "Correo", "Carrera", "Nombres", "Apellidos"]
@@ -128,6 +149,15 @@ def generarListadeUsuariosPDF(usuario):
     return buffer
 
 def generarListadeUsuariosCSV(usuario):
+    """
+    Genera un archivo CSV con la lista de usuarios según el tipo especificado.
+    
+    Parámetros:
+        usuario: Tipo de usuario ('estudiantes', 'maestros' o 'caseteros').
+    
+    Retorna:
+        generator: Generador que produce líneas del archivo CSV.
+    """
     if usuario == 'estudiantes':
         sql = "SELECT ncontrol, correo, carrera, nombres, apellidos FROM usuarios"
         columnas = ["Número de Control", "Correo", "Carrera", "Nombres", "Apellidos"]
@@ -191,14 +221,6 @@ def generarMaterialesPDF(laboratorio):
 
     Retorna:
         BytesIO: Buffer con el archivo PDF generado listo para descargar.
-
-    Características del PDF:
-        - Formato horizontal (A4 landscape).
-        - Diseño profesional con estilos personalizados.
-        - Incluye todos los campos de inventario.
-        - Observaciones integradas como filas combinadas.
-        - Encabezado y pie de página estilizados.
-        - Ordenamiento por numeración y equipo.
     """
     condition = lab_material.get(laboratorio)
     # Obtener datos de la base de datos
@@ -314,6 +336,12 @@ def generarMaterialesPDF(laboratorio):
     return buffer
 
 def generarListaPDF():
+    """
+    Genera un reporte PDF con todos los registros del sistema.
+    
+    Retorna:
+        BytesIO: Buffer con el PDF generado listo para descargar.
+    """
     sql = f"""
             SELECT 
                 ncontrol, hora_solicitud, fecha_solicitud, hora_final, fecha_final,
@@ -442,6 +470,12 @@ def generarListaPDF():
     return buffer
 
 def generarListaCSV():
+    """
+    Genera un archivo CSV con todos los registros del sistema.
+    
+    Retorna:
+        generator: Generador que produce líneas del archivo CSV.
+    """
     sql = f"""
             SELECT 
                 ncontrol, hora_solicitud, fecha_solicitud, hora_final, fecha_final,

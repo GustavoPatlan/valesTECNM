@@ -42,6 +42,7 @@ function confirmarActualizacion() {
             return;
         }
 
+        // Envía los datos al servidor para actualizar.
         fetch('/administrador/estudiantes/actualizar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -65,6 +66,7 @@ function confirmarActualizacion() {
 // Función para confirmar la eliminación.
 function confirmarEliminacion() {
     if (usuarioActuar) {
+        // Envía la solicitud de eliminación al servidor.
         fetch('/administrador/estudiantes/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -87,10 +89,11 @@ function confirmarEliminacion() {
     };
 };
 
-// Función para confirmar la eliminación.
+// Función para eliminar todos los estudiantes (requiere confirmación con contraseña).
 function confirmarEliminacionCompleta() {
     let llave = document.getElementById(`borrarEstudiantesInput`).value;
 
+    // Envía la solicitud de eliminación masiva al servidor.
     if (!llave) {
         mostrarNotificacionRequest('Error', 'Contraseña Ausente', 'crimson', 'bug');
         return;

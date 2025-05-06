@@ -177,11 +177,13 @@ function closeDialogBorrarRegistros(id) {
 function confirmarEliminacionCompleta() {
     let llave = document.getElementById(`borrarEstudiantesInput`).value;
 
+    // Envía la solicitud de eliminación masiva al servidor.
     if (!llave) {
         mostrarNotificacionRequest('Error', 'Contraseña Ausente', 'crimson', 'bug');
         return;
     }
 
+    // Envía la solicitud de eliminación al servidor.
     fetch('/administrador/registros/borrar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

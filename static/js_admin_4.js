@@ -43,12 +43,13 @@ function confirmarActualizacion() {
             valores.push(valor);
         };
 
-        // Validar que el valor esté en la lista de días
+        // Validar que el valor esté en la lista de laboratorios.
         if (!labsDisponibles.includes(valores[2])) {
             mostrarNotificacionRequest('Error', 'Laboratorio Invalido', 'crimson', 'bug');
             return;
         }
 
+        // Envía la solicitud de eliminación al servidor.
         fetch('/administrador/caseteros/actualizar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -72,6 +73,8 @@ function confirmarActualizacion() {
 // Función para confirmar la eliminación.
 function confirmarEliminacion() {
     if (usuarioActuar) {
+
+        // Envía la solicitud de eliminación al servidor..
         fetch('/administrador/caseteros/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -114,12 +117,13 @@ function agregarMaestro() {
         valores.push(valor);
     };
 
-    // Validar que el valor esté en la lista de días
+    // Validar que el valor esté en la lista de laboratorios.
     if (!labsDisponibles.includes(valores[1])) {
         mostrarNotificacionRequest('Error', 'Laboratorio Invalido', 'crimson', 'bug');
         return;
     }
 
+    // Envía la solicitud de eliminación al servidor.
     fetch('/administrador/caseteros/nuevo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

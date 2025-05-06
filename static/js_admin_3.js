@@ -41,6 +41,7 @@ function confirmarActualizacion() {
             valores.push(valor);
         };
 
+        // Envía la solicitud de eliminación al servidor.
         fetch('/administrador/maestros/actualizar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -64,6 +65,7 @@ function confirmarActualizacion() {
 // Función para confirmar la eliminación.
 function confirmarEliminacion() {
     if (usuarioActuar) {
+        // Envía la solicitud de eliminación al servidor.
         fetch('/administrador/maestros/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -106,6 +108,7 @@ function agregarMaestro() {
         valores.push(valor);
     };
 
+    // Envía la solicitud de eliminación al servidor.
     fetch('/administrador/maestros/nuevo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
