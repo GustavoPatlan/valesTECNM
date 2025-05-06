@@ -117,16 +117,26 @@ def rutasDeAdministrador(app, socketio):
         eliminarHorario(data)
         return {"status": "exito",'mensaje': 'Horario eliminado'}
     
-    @app.route('/administrador/estudiantes', methods = ['GET'])
+    @app.route('/administrador/<string:usuario>', methods = ['GET'])
     @action_required_a    # Decorador que verifica sesión activa.
-    def admin_users():
+    def admin_users(usuario):
         """
-        Muestra el panel de gestión de estudiantes.
+        Muestra el panel de gestión de usuarios.
         """
         admin = session.get("admin")
-        usuarios = estudiantesRegistrados()
-        carreras = carreras_disponibles
-        return render_template('admin_2.html', admin = admin, usuarios = usuarios, carreras = carreras)
+
+        if usuario == 'estudiantes':
+            usuarios = estudiantesRegistrados()
+            carreras = carreras_disponibles
+            return render_template('admin_8.html', admin = admin, usuarios = usuarios, carreras = carreras, accion = usuario)
+        elif usuario == 'maestros':
+            maestros = maestrosRegistrados()
+            return render_template('admin_8.html', admin = admin, usuarios = maestros, accion = usuario)
+        elif usuario == 'caseteros':
+            caseteros = caseterosRegistrados()
+            return render_template('admin_8.html', admin = admin, usuarios = caseteros, accion = usuario)
+        else:
+            return redirect('/administrador/inicio')
     
     @app.route('/administrador/estudiantes/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
@@ -226,16 +236,6 @@ def rutasDeAdministrador(app, socketio):
             return {"status": "redirect", "url": url_for('admin_users'), 'mensaje': 'Usuarios Eliminados'}
         else:
             return {"status": "error",'mensaje': 'Contraseña Incorrecta'}
-        
-    @app.route('/administrador/maestros', methods = ['GET'])
-    @action_required_a    # Decorador que verifica sesión activa.
-    def admin_teachers():
-        """
-        Muestra el panel de gestión de maestros.
-        """
-        admin = session.get("admin")
-        maestros = maestrosRegistrados()
-        return render_template('admin_3.html', admin = admin, maestros = maestros)
     
     @app.route('/administrador/maestros/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
@@ -304,16 +304,6 @@ def rutasDeAdministrador(app, socketio):
         else:
             agregarMaestroDB(data)
             return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Agregado'}
-        
-    @app.route('/administrador/caseteros', methods = ['GET'])
-    @action_required_a    # Decorador que verifica sesión activa.
-    def admin_workers():
-        """
-        Muestra el panel de gestión de caseteros.
-        """
-        admin = session.get("admin")
-        caseteros = caseterosRegistrados()
-        return render_template('admin_4.html', admin = admin, caseteros = caseteros)
     
     @app.route('/administrador/caseteros/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
