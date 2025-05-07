@@ -1,0 +1,134 @@
+{% extends "sidebar_admin.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_admin_2.css') }}">
+{% endblock %}
+
+{% block title %}Estudiantes Registrados{% endblock %}
+
+{% block identificacion %}{{admin[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<h4>Estudiantes Registrados</h4>
+<div class="botonesLista">
+    <button onclick="openDialog('estudiantes-descargar')">Descargar Lista</button>
+    <button onclick="openDialog('estudiantes-eliminar')">Borrar Estudiantes</button>
+</div>
+<div class="searchSection">
+    <span>Busqueda</span>
+    <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Número de Control</th>
+                <th>Carrera</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr id="solicitud-{{ usuario[0] }}">
+                <td data-label="N. Control">{{ usuario[0] }}</td>
+                <td data-label="Carrera">{{ usuario[4] }}</td>
+                <td data-label="Nombres">{{ usuario[5] }}</td>
+                <td data-label="Apellidos">{{ usuario[6] }}</td>
+                <td data-label="Detalles" id="tdButton">
+                    <button onclick="openDialog('{{ usuario[0] }}')">ABRIR</button>
+                </td>
+            </tr>
+            <dialog id="dialog-{{ usuario[0] }}">
+                <div class="dialog-content-use">
+                    <h3>Detalles del Estudiante</h3>
+                    <div class="dialog-content-part">
+                        <div class="dialog-content-part-info">
+                            <div class="dialog-content-part-info-section">
+                                <h5>Número de Control:</h5>
+                                <input type="text" value="{{ usuario[0] }}" autocomplete="off">
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>Correo:</h5>
+                                <input type="text" value="{{ usuario[3] }}" autocomplete="off">
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>Carrera:</h5>
+                                <input list="carrerasd" value="{{ usuario[4] }}" autocomplete="off">
+                                <datalist id="carrerasd">
+                                    {% for carrera in carreras %}
+                                    <option value="{{ carrera }}">
+                                        {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>Nombres:</h5>
+                                <input type="text" value="{{ usuario[5] }}" autocomplete="off">
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionProfesor">
+                                <h5>Apellidos:</h5>
+                                <input type="text" value="{{ usuario[6] }}" autocomplete="off">
+                            </div>
+                            <div class="dialog-content-part-info-section" id="sectionVales">
+                                <h5>Vales Solicitados</h5>
+                                <div>
+                                    <span>Laboratorio: {{ usuario[1] }}</span>
+                                    <span>Proyecto: {{ usuario[2] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if usuario[1] == '0' and usuario[2] == '0' %}
+                    <button onclick="actualizarUsuario('{{ usuario[0] }}')">ACTUALIZAR</button>
+                    <button onclick="eliminarUsuario('{{ usuario[0] }}')">ELIMINAR</button>
+                    {% endif %}
+                    <button onclick="closeDialog('{{ usuario[0] }}')">CERRAR</button>
+                </div>
+            </dialog>
+            {% endfor %}
+            <dialog id="dialog-actualizar">
+                <div class="dialog-content-use">
+                    <span>¿Estás seguro de actualizar los datos?</span>
+                    <button onclick="confirmarActualizacion()">ACEPTAR</button>
+                    <button onclick="closeDialog('actualizar')">CERRAR</button>
+                </div>
+            </dialog>
+            <dialog id="dialog-eliminar">
+                <div class="dialog-content-use">
+                    <span>¿Estás seguro de eliminar al estudiante de la base de datos?</span>
+                    <button onclick="confirmarEliminacion()">ACEPTAR</button>
+                    <button onclick="closeDialog('eliminar')">CERRAR</button>
+                </div>
+            </dialog>
+            <dialog id="dialog-estudiantes-descargar">
+                <div class="dialog-content-use">
+                    <span>¿Quieres descargar la lista de estudiantes?</span>
+                    <a id="botonRojo" href="/administrador/pdf/estudiantes"><box-icon type='solid'
+                            name='file-pdf'></box-icon>PDF</a>
+                    <a id="botonVerde" href="/administrador/csv/estudiantes"><box-icon type='logo'
+                            name='microsoft'></box-icon>EXCEL</a>
+                    <button onclick="closeDialog('estudiantes-descargar')">CERRAR</button>
+                </div>
+            </dialog>
+            <dialog id="dialog-estudiantes-eliminar">
+                <div class="dialog-content-use">
+                    <span>¿Quieres eliminar a todos los estudiantes?</span>
+                    <input type="text" id="borrarEstudiantesInput" placeholder="Escribe tu contraseña"
+                        autocomplete="off">
+                    <button id="botonRojo" onclick="confirmarEliminacionCompleta()">BORRAR</button>
+                    <button onclick="closeDialog('estudiantes-eliminar')">CERRAR</button>
+                </div>
+            </dialog>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script>
+    // Convertir las carreras de Jinja2 a un array JavaScript
+    let carrerasDisponibles = JSON.parse('{{ carreras | tojson | safe }}');
+</script>
+<script src="{{ url_for('static', filename='js_admin_2.js') }}"></script>
+{% endblock %}
