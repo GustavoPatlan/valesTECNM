@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_socketio import SocketIO
 from dotenv import load_dotenv
 import os
 
@@ -13,13 +12,12 @@ load_dotenv(dotenv_path="config/.env")
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 rutasDeInicio(app)
-rutasDeEstudiantes(app, socketio)
-rutasDeMaestro(app, socketio)
-rutasDeTrabajador(app, socketio)
-rutasDeAdministrador(app, socketio)
+rutasDeEstudiantes(app)
+rutasDeMaestro(app)
+rutasDeTrabajador(app)
+rutasDeAdministrador(app)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)
