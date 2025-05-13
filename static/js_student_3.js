@@ -1,14 +1,3 @@
-var socket = io();
-
-socket.on('solicitudes', function (data) {
-    if (data.identificacion === usuarioSesion) {
-        console.log("Sesión válida. Actualizando solicitudes...");
-        location.reload();
-    } else {
-        console.warn("Sesión inválida o no coincide.");
-    }
-});
-
 /*
 Abre el diálogo modal que muestra los detalles de una solicitud.
 */

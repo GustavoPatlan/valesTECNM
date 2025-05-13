@@ -24,7 +24,7 @@ def action_required_a(f):
     wrap.__name__ = f.__name__
     return wrap
 
-def rutasDeAdministrador(app, socketio):
+def rutasDeAdministrador(app):
     """
     Configura todas las rutas relacionadas con el panel de administración.
     

@@ -24,7 +24,7 @@ def action_required_w(f):
     wrap.__name__ = f.__name__
     return wrap
 
-def rutasDeTrabajador(app, socketio):
+def rutasDeTrabajador(app):
     """
     Configura todas las rutas relacionadas con los caseteros en la aplicación web.
     Incluye manejo de:

@@ -24,7 +24,7 @@ def action_required_t(f):
     wrap.__name__ = f.__name__
     return wrap
 
-def rutasDeMaestro(app, socketio):
+def rutasDeMaestro(app):
     """
     Configura todas las rutas relacionadas con los maestros en la aplicación web.
     Incluye manejo de:

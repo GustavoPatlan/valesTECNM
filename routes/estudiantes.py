@@ -24,7 +24,7 @@ def action_required(f):
     wrap.__name__ = f.__name__
     return wrap
 
-def rutasDeEstudiantes(app, socketio):
+def rutasDeEstudiantes(app):
     """
     Configura todas las rutas relacionadas con los estudiantes en la aplicación web.
     Incluye manejo de:
@@ -127,7 +127,6 @@ def rutasDeEstudiantes(app, socketio):
 
                 # Registra la solicitud en la base de datos.
                 registrarSolicitudEstudiante(identificacion, ncontrol, horarios[1], horarios[0], usuario[5], usuario[6], profesor, materia, grupo, alumnos, laboratorio, estado, vale, material)
-                # socketio.emit('solicitudes', {'identificacion' : usuario[0]})
                 return {"status": "redirect", "url": url_for('student_voucher'), 'mensaje': 'Vale Enviado Exitosamente'}
     
     @app.route('/estudiante/historial', methods = ['GET'])
