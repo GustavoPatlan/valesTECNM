@@ -180,3 +180,18 @@ function registrarVale(id) {
             }
         });
 };
+
+function selectMaterialCheck(element) {
+        // Verificar si ya está seleccionado.
+        if (element.textContent.startsWith('✔ ')) {
+            // Si ya está seleccionado, volver al estado original.
+            element.style.color = '';
+            element.style.fontWeight = '';
+            element.textContent = element.textContent.substring(2);
+        } else {
+            // Si no está seleccionado, marcarlo.
+            element.style.color = '#168300';
+            element.style.fontWeight = '900';
+            element.textContent = '✔ ' + element.textContent;
+        }
+    };

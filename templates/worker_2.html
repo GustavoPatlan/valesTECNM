@@ -90,7 +90,7 @@
                         <div class="dialog-content-part-material">
                             <div class="dialog-content-part-material-table" data-id="{{ solicitud[0] }}">
                                 {% for item in material[solicitud[0]] %}
-                                <span>{{item[0]}} : {{item[1]}}</span>
+                                <span onclick="selectMaterialCheck(this)">{{item[0]}} : {{item[1]}}</span>
                                 {% endfor %}
                             </div>
                         </div>
