@@ -163,7 +163,7 @@ def rutasDeAdministrador(app):
                     return {"status": "error",'mensaje': 'Usuario Existente'}
                 else:
                     actualizarDatosUsuario(data)
-            return {"status": "redirect", "url": url_for('admin_users'), 'mensaje': 'Usuario Actualizado'}
+            return {"status": "redirect", "url": url_for('admin_users', usuario='estudiantes'), 'mensaje': 'Usuario Actualizado'}
         else:
             return {"status": "error",'mensaje': 'Incongruencia en el correo y número de control'}
     
@@ -233,7 +233,7 @@ def rutasDeAdministrador(app):
         resultado = administradorLlave(admin[0])
         if resultado[0] == data:
             resetearEstudiantes()
-            return {"status": "redirect", "url": url_for('admin_users'), 'mensaje': 'Usuarios Eliminados'}
+            return {"status": "redirect", "url": url_for('admin_users', usuario='estudiantes'), 'mensaje': 'Usuarios Eliminados'}
         else:
             return {"status": "error",'mensaje': 'Contraseña Incorrecta'}
     
@@ -264,7 +264,7 @@ def rutasDeAdministrador(app):
                     return {"status": "error",'mensaje': 'Maestro Existente'}
                 else:
                     actualizarDatosMaestro(data)
-            return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Actualizado'}
+            return {"status": "redirect", "url": url_for('admin_users', usuario='maestros'), 'mensaje': 'Maestro Actualizado'}
     
     @app.route('/administrador/maestros/eliminar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
@@ -303,7 +303,7 @@ def rutasDeAdministrador(app):
             return {"status": "error",'mensaje': 'Identificación ya asignada'}
         else:
             agregarMaestroDB(data)
-            return {"status": "redirect", "url": url_for('admin_teachers'), 'mensaje': 'Maestro Agregado'}
+            return {"status": "redirect", "url": url_for('admin_users', usuario='maestros'), 'mensaje': 'Maestro Agregado'}
     
     @app.route('/administrador/caseteros/actualizar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
@@ -327,7 +327,7 @@ def rutasDeAdministrador(app):
                 return {"status": "error",'mensaje': 'Casetero Existente'}
             else:
                 actualizarDatosCasetero(data)
-        return {"status": "redirect", "url": url_for('admin_workers'), 'mensaje': 'Casetero Actualizado'}
+        return {"status": "redirect", "url": url_for('admin_users', usuario='caseteros'), 'mensaje': 'Casetero Actualizado'}
     
     @app.route('/administrador/caseteros/eliminar', methods = ['POST'])
     @action_required_a    # Decorador que verifica sesión activa.
@@ -362,7 +362,7 @@ def rutasDeAdministrador(app):
             return {"status": "error",'mensaje': 'Identificación ya asignada'}
         else:
             agregarCaseteroDB(data)
-            return {"status": "redirect", "url": url_for('admin_workers'), 'mensaje': 'Casetero Agregado'}
+            return {"status": "redirect", "url": url_for('admin_users', usuario='caseteros'), 'mensaje': 'Casetero Agregado'}
         
     @app.route('/administrador/vales/<string:vales>', methods = ['GET'])
     @action_required_a  # Decorador que verifica sesión activa.

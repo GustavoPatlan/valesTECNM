@@ -39,8 +39,8 @@ Caseteros Registrados
     {% endif %}
 </h4>
 <div class="botonesLista">
-    <button onclick="openDialog('estudiantes-descargar')">Descargar Lista</button>
-    <button onclick="openDialog('estudiantes-eliminar')">
+    <button onclick="openDialogUser('estudiantes-descargar')">Descargar Lista</button>
+    <button onclick="openDialogUser('estudiantes-eliminar')">
         {% if accion == 'estudiantes' %}
         Borrar Estudiantes
         {% endif %}
@@ -97,7 +97,7 @@ Caseteros Registrados
                 <td data-label="Apellidos">{{ usuario[2] }}</td>
                 {% endif %}
                 <td data-label="Detalles" id="tdButton">
-                    <button onclick="openDialog('{{ usuario[0] }}')">ABRIR</button>
+                    <button onclick="openDialogUser('{{ usuario[0] }}')">ABRIR</button>
                 </td>
             </tr>
             <dialog id="dialog-{{ usuario[0] }}">
@@ -217,7 +217,7 @@ Caseteros Registrados
                     <button onclick="actualizarUsuario('{{ usuario[0] }}')">ACTUALIZAR</button>
                     <button onclick="eliminarUsuario('{{ usuario[0] }}')">ELIMINAR</button>
                     {% endif %}
-                    <button onclick="closeDialog('{{ usuario[0] }}')">CERRAR</button>
+                    <button onclick="closeDialogUser('{{ usuario[0] }}')">CERRAR</button>
                 </div>
             </dialog>
             {% endfor %}
@@ -225,7 +225,7 @@ Caseteros Registrados
                 <div class="dialog-content-use">
                     <span>¿Estás seguro de actualizar los datos?</span>
                     <button onclick="confirmarActualizacion()">ACEPTAR</button>
-                    <button onclick="closeDialog('actualizar')">CERRAR</button>
+                    <button onclick="closeDialogUser('actualizar')">CERRAR</button>
                 </div>
             </dialog>
             <dialog id="dialog-eliminar">
@@ -240,7 +240,7 @@ Caseteros Registrados
                     <span>¿Estás seguro de eliminar al casetero de la base de datos?</span>
                     {% endif %}
                     <button onclick="confirmarEliminacion()">ACEPTAR</button>
-                    <button onclick="closeDialog('eliminar')">CERRAR</button>
+                    <button onclick="closeDialogUser('eliminar')">CERRAR</button>
                 </div>
             </dialog>
             <dialog id="dialog-estudiantes-descargar">
@@ -266,7 +266,7 @@ Caseteros Registrados
                     <a id="botonVerde" href="/administrador/csv/caseteros"><box-icon type='logo'
                             name='microsoft'></box-icon>EXCEL</a>
                     {% endif %}
-                    <button onclick="closeDialog('estudiantes-descargar')">CERRAR</button>
+                    <button onclick="closeDialogUser('estudiantes-descargar')">CERRAR</button>
                 </div>
             </dialog>
             {% if accion == 'estudiantes' %}
@@ -276,7 +276,7 @@ Caseteros Registrados
                     <input type="text" id="borrarEstudiantesInput" placeholder="Escribe tu contraseña"
                         autocomplete="off">
                     <button id="botonRojo" onclick="confirmarEliminacionCompleta()">BORRAR</button>
-                    <button onclick="closeDialog('estudiantes-eliminar')">CERRAR</button>
+                    <button onclick="closeDialogUser('estudiantes-eliminar')">CERRAR</button>
                 </div>
             </dialog>
             {% endif %}
@@ -309,14 +309,14 @@ Caseteros Registrados
                         </div>
                     </div>
                     <button onclick="agregarUsuario()">AGREGAR</button>
-                    <button onclick="closeDialog('estudiantes-eliminar')">CERRAR</button>
+                    <button onclick="closeDialogUser('estudiantes-eliminar')">CERRAR</button>
                 </div>
             </dialog>
             <dialog id="dialog-abrir">
                 <div class="dialog-content-use">
                     <span>¿Estás seguro de agregar al maestro a la base de datos?</span>
                     <button onclick="agregarMaestro()">ACEPTAR</button>
-                    <button onclick="closeDialog('abrir')">CERRAR</button>
+                    <button onclick="closeDialogUser('abrir')">CERRAR</button>
                 </div>
             </dialog>
             {% endif %}
@@ -353,14 +353,14 @@ Caseteros Registrados
                         </div>
                     </div>
                     <button onclick="agregarUsuario()">AGREGAR</button>
-                    <button onclick="closeDialog('estudiantes-eliminar')">CERRAR</button>
+                    <button onclick="closeDialogUser('estudiantes-eliminar')">CERRAR</button>
                 </div>
             </dialog>
             <dialog id="dialog-abrir">
                 <div class="dialog-content-use">
                     <span>¿Estás seguro de agregar al casetero a la base de datos?</span>
                     <button onclick="agregarMaestro()">ACEPTAR</button>
-                    <button onclick="closeDialog('abrir')">CERRAR</button>
+                    <button onclick="closeDialogUser('abrir')">CERRAR</button>
                 </div>
             </dialog>
             {% endif %}

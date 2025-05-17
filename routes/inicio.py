@@ -122,10 +122,9 @@ def rutasDeInicio(app):
 
                     # Generar y almacenar código de verificación.
                     session["code"] = patron = generar_codigo(6)
-                    print(patron)
 
                     # Enviar correo.
-                    #mandar_correo(patron, correo)
+                    mandar_correo(patron, correo)
                     return {"status": "notificacion",'mensaje': 'Codigo Enviado.'}
                 else:
                     return {"status": "error",'mensaje': 'La carrera no está disponible.'}
@@ -219,10 +218,9 @@ def rutasDeInicio(app):
 
             # Generar y almacenar código de verificación.
             session["code"] = patron = generar_codigo(6)
-            print(patron)
 
             # Enviar correo.
-            #mandar_correo(patron, correo)
+            mandar_correo(patron, correo)
             return {"status": "notificacion",'mensaje': 'Codigo Enviado.'}
         else:
             return {"status": "error",'mensaje': 'Correo no registrado.'}

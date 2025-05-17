@@ -645,9 +645,13 @@ def rutasDeTrabajador(app):
             # Lógica para diferentes combinaciones de marca/modelo.
             if marca == '' and modelo == '':
                 material_c = materialLaboratorioVerificarCantidad(casetero[3], equipo, 'S/A', 'S/A')
-                cantidad = int(cantidad) + material_c[0]
-                materialLaboratorioActualizarCantidad(casetero[3], cantidad, equipo, 'S/A', 'S/A')
-            elif (marca != '' and modelo != '') or (marca != '' and modelo == '') or (marca == ''and modelo != ''):
+                if material_c:
+                    cantidad = int(cantidad) + material_c[0]
+                    materialLaboratorioActualizarCantidad(casetero[3], cantidad, equipo, 'S/A', 'S/A')
+                else:
+                    # Registrar nuevo equipo.
+                    agregarNuevoMaterial(casetero[3], equipo, marca, modelo, numeracion, 'S/A', 'S/A', 'S/A', 'S/A', 'S/A', cantidad)
+            elif (marca != '' and modelo != '') or (marca != '' and modelo == '') or (marca == '' and modelo != ''):
                 if marca == '': marca = 'S/A'
                 if modelo == '': modelo = 'S/A'
                 material_c = materialLaboratorioVerificarCantidad(casetero[3], equipo, marca, modelo)

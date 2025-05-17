@@ -4,18 +4,18 @@ let usuarioActuar = null;
 // Función. para eliminar filas.
 function actualizarUsuario(id) {
     usuarioActuar = id;
-    openDialog('actualizar');
+    openDialogUser('actualizar');
 };
 
 // Función. para eliminar filas.
 function eliminarUsuario(id) {
     usuarioActuar = id;
-    openDialog('eliminar');
+    openDialogUser('eliminar');
 };
 
 // Función. para eliminar filas.
 function agregarUsuario() {
-    openDialog('abrir');
+    openDialogUser('abrir');
 };
 
 // Función para confirmar la eliminación.
@@ -77,7 +77,7 @@ function confirmarEliminacion() {
                     case 'exito':   // Usuario eliminado.
                         document.getElementById(`solicitud-${usuarioActuar}`).remove();
                         document.getElementById(`dialog-${usuarioActuar}`).remove();
-                        closeDialog('eliminar')
+                        closeDialogUser('eliminar')
                         mostrarNotificacionRequest('Exito', data.mensaje, 'lawngreen', 'check');
                         break;
                     case 'error':    // Notificación de error.
@@ -131,7 +131,7 @@ function agregarMaestro() {
 /*
 Abre el diálogo modal que muestra los detalles de una solicitud.
 */
-function openDialog(id) {
+function openDialogUser(id) {
     let dialog = document.getElementById(`dialog-${id}`);
     if (dialog) {
         dialog.showModal();
@@ -141,7 +141,7 @@ function openDialog(id) {
 /*
 Cierra el diálogo modal de detalles de solicitud.
 */
-function closeDialog(id) {
+function closeDialogUser(id) {
     let dialog = document.getElementById(`dialog-${id}`);
     if (dialog) {
         usuarioActuar = null;

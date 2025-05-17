@@ -32,10 +32,10 @@
             <input type="text" value="{{admin[2]}}" placeholder="Apellidos" name="last" id="last" autocomplete="off">
         </div>
     </div>
-    <button id="botonActualizarDatos" onclick="openDialog('dialog-actualizar-datos')">Actualizar</button>
+    <button id="botonActualizarDatos" onclick="openDialogIn('dialog-actualizar-datos')">Actualizar</button>
 </div>
 <h4>Horarios de Laboratorio Libres</h4>
-<button id="botonNuevoHorario" onclick="openDialog('dialog-nuevo-horario')">Agregar nuevo horario</button>
+<button id="botonNuevoHorario" onclick="openDialogIn('dialog-nuevo-horario')">Agregar nuevo horario</button>
 <div class="table-container">
     <table>
         <thead>
@@ -68,7 +68,7 @@
             <h3>¿Estás seguro de actualizar los datos?</h3>
         </div>
         <button onclick="actualizarDatos()">ACEPTAR</button>
-        <button onclick="closeDialog('dialog-actualizar-datos')">CERRAR</button>
+        <button onclick="closeDialogIn('dialog-actualizar-datos')">CERRAR</button>
     </div>
 </dialog>
 <dialog id="dialog-nuevo-horario">
@@ -107,7 +107,7 @@
             </div>
         </div>
         <button onclick="guardarHorario()">AGREGAR</button>
-        <button onclick="closeDialog('dialog-nuevo-horario')">CERRAR</button>
+        <button onclick="closeDialogIn('dialog-nuevo-horario')">CERRAR</button>
     </div>
 </dialog>
 <dialog id="dialog-eliminar-horario">
@@ -116,7 +116,7 @@
             <h3>¿Estás seguro de eliminar el horario?</h3>
         </div>
         <button onclick="confirmarEliminacion()">ACEPTAR</button>
-        <button onclick="closeDialog('dialog-eliminar-horario')">CERRAR</button>
+        <button onclick="closeDialogIn('dialog-eliminar-horario')">CERRAR</button>
     </div>
 </dialog>
 {% endblock %}

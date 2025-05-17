@@ -1,5 +1,5 @@
 // Función para abrir el diálogo.
-function openDialog(id) {
+function openDialogIn(id) {
     let dialog = document.getElementById(id);
     if (dialog) {
         dialog.showModal();
@@ -7,7 +7,7 @@ function openDialog(id) {
 };
 
 // Función para cerrar el diálogo
-function closeDialog(id) {
+function closeDialogIn(id) {
     let dialog = document.getElementById(id);
     if (dialog) {
         dialog.close();
@@ -100,7 +100,7 @@ function guardarHorario() {
                     inputLab.value = '';
 
                     // Cerrar el diálogo
-                    closeDialog('dialog-nuevo-horario');
+                    closeDialogIn('dialog-nuevo-horario');
                     break;
             };
         });
@@ -112,7 +112,7 @@ let filaAEliminar = null;
 // Función. para eliminar filas.
 function eliminarHorario(boton) {
     filaAEliminar = boton.closest('tr');
-    openDialog('dialog-eliminar-horario');
+    openDialogIn('dialog-eliminar-horario');
 };
 
 // Función para confirmar la eliminación.
@@ -140,7 +140,7 @@ function confirmarEliminacion() {
                     case 'exito':    // Notificación exitosa.
                         filaAEliminar.remove();
                         filaAEliminar = null;
-                        closeDialog('dialog-eliminar-horario');
+                        closeDialogIn('dialog-eliminar-horario');
                         mostrarNotificacionRequest('Éxito', data.mensaje, 'lawngreen', 'check');
                         break;
                 };
@@ -174,7 +174,7 @@ function actualizarDatos() {
                 case 'exito':    // Notificación exitosa.
                     mostrarNotificacionRequest('Éxito', data.mensaje, 'lawngreen', 'check');
                     document.getElementById("nombre-admin").textContent = nombres;
-                    closeDialog('dialog-actualizar-datos');
+                    closeDialogIn('dialog-actualizar-datos');
                     break;
             };
         });
