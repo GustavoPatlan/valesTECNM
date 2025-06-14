@@ -1,4 +1,5 @@
 from datetime import datetime
+import pytz
 
 def obtener_horario():
     """
@@ -12,7 +13,8 @@ def obtener_horario():
     Resultado:
         resultado: Datos del con fecha y hora.
     """
-    ahora = datetime.now()
+    zona = pytz.timezone('America/Mexico_City')
+    ahora = datetime.now(zona)
     fecha = ahora.strftime('%d/%m/%Y')
     hora = ahora.strftime('%I:%M')
     periodo = 'AM' if ahora.hour < 12 else 'PM'
