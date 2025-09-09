@@ -1,0 +1,49 @@
+{% extends "sidebar_worker.html" %}
+
+{% block cssDedicado %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css_worker_5.css') }}">
+{% endblock %}
+
+{% block title %}Material{% endblock %}
+
+{% block identificacion %}{{casetero[0]}}{% endblock %}
+
+{% block contenidoPrincipal %}
+<div class="searchSection download">
+    <div><span>Busqueda</span>
+        <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+    </div>
+</div>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>Acción</th>
+                <th>Caseta</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Laboratorio</th>
+                <th>Casetero</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in material %}
+            <tr id="solicitud-{{ item[0] }}">
+                <td data-label="Material">{{ item[1] }}</td>
+                <td data-label="Acción">{{ item[3] }}</td>
+                <td data-label="Caseta">{{ item[2] }}</td>
+                <td data-label="Fecha">{{ item[4] }}</td>
+                <td data-label="Hora">{{ item[5] }}</td>
+                <td data-label="Laboratorio">{{ item[6] }}</td>
+                <td data-label="Casetero">{{ item[7] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scriptDedicado %}
+<script src="{{url_for('static', filename='js_worker_5.js')}}"></script>
+{% endblock %}

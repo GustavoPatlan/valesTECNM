@@ -312,3 +312,35 @@ def rutasDeMaestro(app):
         """
         maestro = session.get("teacher")
         return render_template('teacher_8.html', maestro = maestro)
+    
+    @app.route('/maestro/perfil/llave', methods = ['POST'])
+    @action_required_t    # Decorador que verifica sesión activa.
+    def teacher_profile_1():
+        """
+        Metodo para actualizar la contraseña del maestro.
+
+        Flujo de operación:
+            Obtiene el número de control desde la sesión activa.
+            Recibe la nueva contraseña en el cuerpo de la petición.
+            Actualiza la contraseña en la base de datos.
+            Retorna confirmación de la operación.
+
+        Parámetros:
+            llave: Nueva contraseña.
+
+        Retorna un JSON con:
+            - status: "exito".
+            - mensaje: Contraseña Actualizada.
+        """
+        maestro = session.get("teacher")
+
+        # Extrae nuevos datos del cuerpo JSON.
+        data = request.json
+        ncontrol = maestro[0]
+        llave = data.get('llave')
+
+        print(ncontrol, llave)
+
+        # Actualiza la contraseña en la base de datos.
+        actualizarLlaveMaestroDB(llave, ncontrol)
+        return {"status": "exito",'mensaje': 'Contraseña Actualizada'}

@@ -275,3 +275,15 @@ def materialAsignado(laboratorio, materiales):
     sql = f"UPDATE {condition} SET DISPONIBILIDAD = 'OCUPADO' WHERE EQUIPO = %s AND N_CASETA = %s AND NUMERACION = 'SI'"
     data = (materiales,)
     agregarDatosDB_Individual_for(sql, data)
+
+def actualizarLlaveMaestroDB(llave, ncontrol):
+    """
+    Actualiza la contraseña de un maestro en la base de datos.
+
+    Parámetros:
+        llave: Nueva contraseña.
+        id: Identificación del maestro.
+    """
+    sql = "UPDATE maestros SET llave = %s WHERE id = %s"
+    data = (llave, ncontrol,)
+    agregarDatosDB_Individual(sql, data)

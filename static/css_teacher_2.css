@@ -9,6 +9,19 @@ main .searchSection {
     padding-bottom: 5px;
 }
 
+main .searchSection h4 {
+    font-size: 16px;
+    font-weight: 800;
+    padding: 8px 16px;                /* Espaciado interno */
+    background-color: #1c336c;        /* Fondo azul */
+    color: white;                     /* Texto en blanco para contraste */
+    text-align: center;               /* Centrar el texto */
+    border-radius: 12px;              /* Esquinas redondeadas */
+    display: inline-block;            /* Solo ocupa lo que necesita */
+    margin: 0 auto;                   /* Centrado horizontal si está en un contenedor con `text-align: center` */
+    margin-bottom: 20px;
+}
+
 main .searchSection span {
     font-size: 14px;
     font-weight: 500;

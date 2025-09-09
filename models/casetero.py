@@ -268,6 +268,24 @@ def materialLaboratorio(laboratorio):
     resultado_2 = obtenerDatosDB_Varios(sql)
     return resultado_1, resultado_2
 
+def materialLaboratorioRegistro(laboratorio):
+    sql = f"SELECT * FROM materiales WHERE laboratorio = '{laboratorio}' ORDER BY fecha ASC, hora ASC"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def registrarModficacionMaterial(identi, material, caseta, accion, horario, laboratorio, responsable):
+    sql = '''INSERT INTO materiales
+    (id_registro, material, caseta, accion, fecha, hora, laboratorio, responsable) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)'''
+    data = (identi, material, caseta, accion, horario[0], horario[1], laboratorio, responsable,)
+    agregarDatosDB_Individual(sql, data)
+
+def materialLaboratorioChecar_m(laboratorio, identificacion):
+    condition = lab_material.get(laboratorio)
+    sql = f"SELECT * FROM {condition} WHERE id = %s"
+    data = (identificacion,)
+    resultado = obtenerDatosDB(sql, data)
+    return resultado
+
 def materialLaboratorioChecar(laboratorio, equipo, caseta):
     """
     Verifica la existencia de un material específico en el inventario de un laboratorio.

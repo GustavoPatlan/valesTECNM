@@ -419,6 +419,14 @@ def rutasDeAdministrador(app):
         material = materialLaboratorio(laboratorio)
         return render_template('admin_6.html', admin = admin, material = material, laboratorio = laboratorio)
     
+    @app.route('/administrador/material/registro', methods = ['GET'])
+    @action_required_a  # Decorador que verifica sesión activa.
+    def admin_materials_2():
+        admin = session.get("admin")
+        # Obtener datos completos del inventario del laboratorio.
+        material = materialLaboratorioRegistro()
+        return render_template('admin_6_1.html', admin = admin, material = material)
+    
     @app.route('/administrador/material/pdf/<string:laboratorio>')
     @action_required_a  # Decorador que verifica sesión activa.
     def admin_materials_4(laboratorio):

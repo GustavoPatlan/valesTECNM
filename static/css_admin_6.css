@@ -26,6 +26,7 @@ main .searchSection.download #downloadButton{
     cursor: pointer;
     font-size: 12px;
     font-weight: 500;
+    text-decoration: none;
 }
 
 main .searchSection span {

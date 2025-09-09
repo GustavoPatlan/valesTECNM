@@ -7,6 +7,7 @@ from reportlab.lib.pagesizes import landscape, A4
 from io import BytesIO
 from config.database import obtenerDatosDB_Varios_Descarga
 from datetime import datetime
+import pytz
 import json
 
 lab_conditions = {
@@ -44,7 +45,8 @@ def obtener_horario():
     Resultado:
         resultado: Datos del con fecha y hora.
     """
-    ahora = datetime.now()
+    zona = pytz.timezone('America/Mexico_City')
+    ahora = datetime.now(zona)
     fecha = ahora.strftime('%d/%m/%Y')
     hora = ahora.strftime('%I:%M')
     periodo = 'AM' if ahora.hour < 12 else 'PM'
@@ -66,6 +68,10 @@ def crear_identificacion(ncontrol, vale, horarios):
     else:
         lada = 'L'
     identificacion = lada + ncontrol + horarios[1].replace(" ", "").replace(":", "") + horarios[0].replace("/", "") 
+    return identificacion
+
+def crear_identificacion_m(lada, horarios, lab):
+    identificacion = lada + horarios[1].replace(" ", "").replace(":", "") + horarios[0].replace("/", "") + lab.replace("-", "")
     return identificacion
 
 def generarListaCSV(laboratorio):

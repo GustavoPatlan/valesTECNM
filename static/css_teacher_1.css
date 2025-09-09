@@ -42,6 +42,7 @@ main .avisosSection .avisoCard{
     border-radius: 8px;
     padding: 8px;
     margin-right: 5px;
+    background-color: #cfc2f2;
 }
 
 main .avisosSection .avisoCard h5{

@@ -500,6 +500,9 @@ def rutasDeTrabajador(app):
         identificacion = data.get('identificacion')
         valores = data.get('valores')
 
+        horario = obtener_horario()
+        identi = crear_identificacion_m('UP', horario, casetero[3])
+
         # Determinar tipo de material por cantidad de campos.
         if len(valores) >= 11:
 
@@ -515,10 +518,12 @@ def rutasDeTrabajador(app):
                                 valores[5], valores[8], valores[9], valores[6], valores[7], valores[10])
             else:
                 return {"status": "error",'mensaje': 'Este número de caseta ya ha sido asignado a otro material.'}
+            registrarModficacionMaterial(identi, valores[0], valores[1], 'EDITADO', horario, casetero[3], casetero[1] + ' ' + casetero[2])
             return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Actualizado'}
         else:
             # Retornar confirmación de actualización.
             componenteLaboratorioModificar(casetero[3], identificacion, valores[2], valores[3], valores[1], valores[6])
+            registrarModficacionMaterial(identi, valores[0], 'COMPONENTE', 'EDITADO', horario, casetero[3], casetero[1] + ' ' + casetero[2])
             return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Actualizado'}
         
     @app.route('/casetero/material/eliminado', methods = ['POST'])
@@ -536,6 +541,16 @@ def rutasDeTrabajador(app):
         casetero = session.get("worker")
         data = request.json
         identificacion = data.get('identificacion')
+
+        horario = obtener_horario()
+        identi = crear_identificacion_m('DEL', horario, casetero[3])
+        valores = materialLaboratorioChecar_m(casetero[3], identificacion)
+        if valores[4] == 'S/A':
+            caseta = 'COMPONENTE'
+        else:
+            caseta = valores[4]
+        registrarModficacionMaterial(identi, valores[1], caseta, 'ELIMINADO', horario, casetero[3], casetero[1] + ' ' + casetero[2])
+        
         componenteLaboratorioBorrar(casetero[3], identificacion)
         return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Eliminado Correctamente'}
 
@@ -620,6 +635,9 @@ def rutasDeTrabajador(app):
         marca = data.get('marca')
         modelo = data.get('modelo')
 
+        horario = obtener_horario()
+        identi = crear_identificacion_m('ADD', horario, casetero[3])
+
         # Procesamiento según tipo de material.
         if radio == 'Equipo':
             numeracion = 'SI'
@@ -637,6 +655,7 @@ def rutasDeTrabajador(app):
             if modelo == '': modelo = 'S/A'
 
             # Registrar nuevo equipo.
+            registrarModficacionMaterial(identi, equipo, caseta, 'AGREGADO', horario, casetero[3], casetero[1] + ' ' + casetero[2])
             agregarNuevoMaterial(casetero[3], equipo, marca, modelo, numeracion, caseta, serie, inventario, voltaje, potencia)
         elif radio == 'Componente':
             numeracion = 'NO'
@@ -661,7 +680,15 @@ def rutasDeTrabajador(app):
                 else:
                     # Registrar nuevo equipo.
                     agregarNuevoMaterial(casetero[3], equipo, marca, modelo, numeracion, 'S/A', 'S/A', 'S/A', 'S/A', 'S/A', cantidad)
+            registrarModficacionMaterial(identi, equipo, 'COMPONENTE', 'AGREGADO', horario, casetero[3], casetero[1] + ' ' + casetero[2])
         return {"status": "redirect", "url": url_for('worker_materials'), 'mensaje': 'Material Agregado Correctamente'}
+    
+    @app.route('/casetero/material/registro', methods = ['GET'])
+    @action_required_w
+    def worker_materials_6():
+        casetero = session.get("worker")
+        material = materialLaboratorioRegistro(casetero[3])
+        return render_template('worker_5_1.html', casetero = casetero, material = material)
     
     @app.route('/casetero/registros', methods = ['GET'])
     @action_required_w  # Decorador que verifica sesión activa.

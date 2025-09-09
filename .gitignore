@@ -2,6 +2,9 @@
 config/.env
 *.env
 
+# Reset
+config/reset.py
+
 # Cachés de Python
 __pycache__/
 *.py[cod]

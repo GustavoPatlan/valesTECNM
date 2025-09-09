@@ -11,7 +11,7 @@
 {% block contenidoPrincipal %}
 <h4>¡Bienvenido!</h4>
 <h2 id="nombreSaludo">{{maestro[2]}}</h2>
-<h4>Detalles de la Cuenta</h4>
+<h4>Configuración de la Cuenta</h4>
 <div class="seccionInformacion">
     <div class="seccionIDatos">
         <div class="seccionIDEdit">
@@ -35,9 +35,16 @@
             <span>{{maestro[3]}}</span>
         </div>
     </div>
+    <div class="seccionIDatos" id="seccionIDatosLLave">
+        <div class="seccionIDEdit">
+            <h5>Nueva Contraseña</h5>
+            <input type="text" placeholder="Nueva Contraseña" name="llave" id="llave">
+        </div>
+    </div>
+    <button id="botonCuentaAccion" onclick="actualizarDatosGeneralesLLave()">Actualizar Contraseña</button>
 </div>
 {% endblock %}
 
 {% block scriptDedicado %}
-
+<script src="{{ url_for('static', filename='js_teacher_8.js') }}"></script>
 {% endblock %}

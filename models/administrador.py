@@ -238,3 +238,8 @@ def solicitudActiva(ncontrol):
     sql = f"SELECT ncontrol FROM solicitud WHERE ncontrol = '{ncontrol}'"
     resultado = obtenerDatosDB(sql)
     return resultado
+
+def materialLaboratorioRegistro():
+    sql = f"SELECT * FROM materiales ORDER BY fecha ASC, hora ASC"
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado

@@ -31,13 +31,13 @@ main .avisosSection span{
 }
 
 main .avisosSection #avisoLab{
-    color: #ffff;
-    background: rgb(2, 255, 94);
+    color: #333;
+    background: rgb(240, 165, 0);
 }
 
 main .avisosSection #avisoPro{
-    color: #ffff;
-    background: gold;
+    color: #333;
+    background: rgb(240, 165, 0);
 }
 
 main .mainLinkSection a:hover{

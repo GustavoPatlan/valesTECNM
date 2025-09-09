@@ -15,18 +15,22 @@ body {
 
 body main {
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
 }
 
-body main .seccionLogo {
-    position: relative;
+body main,
+body main .seccionLogo,
+body main .seccionFormulario {
     height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
+    text-align: center;
+}
+
+body main .seccionLogo,
+body main .seccionFormulario {
     justify-content: center;
-    width: 100%;
 }
 
 body main .seccionLogo img {
@@ -34,25 +38,17 @@ body main .seccionLogo img {
     width: 100%;
 }
 
-body main .seccionFormulario {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-body main .seccionLogo::before {
+body main::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-bottom-right-radius: 100%;
+    width: 2000px;
+    height: 2000px;
+    border-radius: 50%;
     background: #1c336c;
-    z-index: 1;
+    top: -10%;
+    right: 48%;
+    transform: translateY(-50%);
+    z-index: 0;
 }
 
 body main .seccionFormulario {
@@ -62,7 +58,7 @@ body main .seccionFormulario {
     color: #333;
 }
 
-body main .seccionFormulario .seccionFRadio {
+body main .seccionFormulario .seccionFRadio{
     display: inline-flex;
     border-radius: 15px;
     border: 1px solid #333;
@@ -70,11 +66,11 @@ body main .seccionFormulario .seccionFRadio {
     margin-top: 10px;
 }
 
-body main .seccionFormulario .seccionFRadio .radioEntrada {
+body main .seccionFormulario .seccionFRadio .radioEntrada{
     display: none;
 }
 
-body main .seccionFormulario .seccionFRadio .radioLabel {
+body main .seccionFormulario .seccionFRadio .radioLabel{
     padding: 6px;
     font-size: 14px;
     color: #333;
@@ -83,11 +79,11 @@ body main .seccionFormulario .seccionFRadio .radioLabel {
     cursor: pointer;
 }
 
-body main .seccionFormulario .seccionFRadio .radioLabel:not(:last-of-type) {
+body main .seccionFormulario .seccionFRadio .radioLabel:not(:last-of-type){
     border-right: 1px solid #333;
 }
 
-.seccionFRadio .radioEntrada:checked+.radioLabel {
+.seccionFRadio .radioEntrada:checked + .radioLabel {
     color: #ffff;
     background: #1c336c;
 }
@@ -111,12 +107,12 @@ body main .seccionFormulario .seccionFEntrada i {
     padding-left: 15px;
 }
 
-body main .seccionFormulario .seccionFEntrada i box-icon {
+body main .seccionFormulario .seccionFEntrada i box-icon{
     width: 20px;
     height: 20px;
 }
 
-body main .seccionFormulario .seccionFEntrada input {
+body main .seccionFormulario .seccionFEntrada input{
     background: none;
     border: none;
     outline: none;
@@ -128,12 +124,12 @@ body main .seccionFormulario .seccionFEntrada input {
     font-size: 14px;
 }
 
-body main .seccionFormulario .seccionFEntrada input::placeholder {
+body main .seccionFormulario .seccionFEntrada input::placeholder{
     color: #acacac;
     font-weight: 500;
 }
 
-body main .seccionFormulario .seccionFLlave {
+body main .seccionFormulario .seccionFLlave{
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -147,17 +143,17 @@ body main .seccionFormulario .seccionFLlave button {
     padding-right: 5px;
 }
 
-body main .seccionFormulario .seccionFLlave button i {
+body main .seccionFormulario .seccionFLlave button i{
     display: flex;
     align-items: center;
 }
 
-body main .seccionFormulario .seccionFLlave button i box-icon {
+body main .seccionFormulario .seccionFLlave button i box-icon{
     width: 30px;
     height: 30px;
 }
 
-body main .seccionFormulario #botonInicio {
+body main .seccionFormulario #botonInicio{
     text-align: center;
     border: none;
     background: #1c336c;
@@ -169,14 +165,14 @@ body main .seccionFormulario #botonInicio {
     cursor: pointer;
 }
 
-body main .seccionFormulario .seccionFEnlace {
+body main .seccionFormulario .seccionFEnlace{
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
 }
 
-body main .seccionFormulario .seccionFEnlace a {
+body main .seccionFormulario .seccionFEnlace a{
     text-decoration: none;
     color: #1c336c;
     font-weight: 900;
@@ -184,31 +180,39 @@ body main .seccionFormulario .seccionFEnlace a {
     padding-top: 5px;
 }
 
-body main .seccionFormulario .seccionFEnlace#enlacesTrabajadores {
+body main .seccionFormulario .seccionFEnlace#enlacesTrabajadores{
     display: none;
 }
 
 @media (max-width: 900px) {
+    body main::before {
+        width: 1500px;
+        height: 1500px;
+        bottom: 80%;
+        left: 50%;
+        transform: translateX(-50%);
+        right: initial;
+        top: initial;
+    }
+
+    body{
+        height: 100vh;
+        max-height: 800px;
+        width: 100%;
+        max-width: 900px;
+    }
+
     body main {
         flex-direction: column;
     }
 
     body main .seccionLogo {
-        height: 40%;
-    }
-
-    body main .seccionLogo img {
-        max-width: 80%;
         height: auto;
-    }
-
-    body main .seccionLogo::before {
-        height: 60%;
-        border-bottom-right-radius: 100%;
-        border-bottom-left-radius: 100%;
+        width: auto;
+        padding: 2rem 12% 0rem 12%;
     }
 
     body main .seccionFormulario {
-        justify-content: start;
+        align-items: center;
     }
 }
