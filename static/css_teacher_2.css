@@ -272,6 +272,7 @@ main .table-container::-webkit-scrollbar-track {
 
     main .searchSection {
         justify-content: center;
+        flex-direction: column;
     }
 
     main .searchSection.download{
