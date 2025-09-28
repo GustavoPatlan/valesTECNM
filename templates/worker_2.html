@@ -36,7 +36,6 @@
                 <td data-label="Fecha de Solicitud">{{ solicitud[5] }}</td>
                 <td data-label="Laboratorio">{{ solicitud[12] }}</td>
                 <td data-label="Detalles" id="tdButton">
-                    <button id="botonCancelar" onclick="openDialogCancelar('{{ solicitud[0] }}')">FINALIZAR</button>
                     <button id="botonReportar" onclick="openDialogAceptar('{{ solicitud[0] }}')">REPORTAR</button>
                     <button onclick="openDialogInfo('{{ solicitud[0] }}')">DETALLES</button>
                 </td>
@@ -96,6 +95,7 @@
                         </div>
                     </div>
                     <a id="botonAceptar" href="/casetero/vales/activos/{{solicitud[0]}}">EDITAR</a>
+                    <button id="cancelarSolicitud" onclick="openDialogCancelar('{{ solicitud[0] }}')">FINALIZAR</button>
                     <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
                 </div>
             </dialog>

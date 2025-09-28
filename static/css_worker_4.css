@@ -68,7 +68,7 @@ main .table-container table td button {
     background: goldenrod;
 }
 
-main .table-container table td button#botonCancelar {
+#botonCancelar {
     background: crimson;
 }
 

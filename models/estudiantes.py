@@ -153,6 +153,13 @@ def registrarSolicitudEstudiante(identificacion, ncontrol, hora, fecha, nombre, 
             laboratorio, estado, vale, 'N/A', material,)
     agregarDatosDB_Individual(sql, data)
 
+def revisionVale(identificacion, hora, fecha, profesor, materia, grupo, alumnos, 
+                 laboratorio, estado, vale, material):
+    sql = '''UPDATE solicitud SET hora_solicitud = %s, fecha_solicitud = %s, teacher = %s, topic = %s, grupo = %s, 
+             number_group = %s, laboratory = %s, estado = %s, tipo_vale = %s, material = %s WHERE id_ncontrol = %s'''
+    data = (hora, fecha, profesor, materia, grupo, alumnos, laboratorio, estado, vale, material, identificacion,)
+    agregarDatosDB_Individual(sql, data)
+
 def valesSolicitadosEstudiantes(ncontrol):
     """
     Obtiene todos los vales solicitados por un estudiante específico, ordenados cronológicamente.

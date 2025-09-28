@@ -68,6 +68,22 @@ def rutasDeEstudiantes(app):
         horarios = obtener_horario()
         return render_template('student_2.html', usuario = usuario, maestros = maestros, materiales = materiales, fecha = horarios[0])
     
+    @app.route('/estudiante/vale/<string:identificacion>', methods = ['GET'])
+    @action_required    # Decorador que verifica sesión activa.
+    def student_voucher_2(identificacion):
+        vale = vale_existente_estudiante(identificacion)
+        info = json.loads(vale[16])
+        # Datos almacenados durante el login.
+        usuario = session.get("user")
+        resultado = obtenerEstudianteDB(usuario[0])
+        usuario = session["user"] = resultado[:-1]
+
+        # Obtiene datos para los selectores del formulario.
+        maestros = maestros_registrados()
+        materiales = material_registrado_estudiante()
+        horarios = obtener_horario()
+        return render_template('student_2_1.html', usuario = usuario, maestros = maestros, materiales = materiales, fecha = horarios[0], vale = vale, info = info, identi = identificacion)
+    
     @app.route('/estudiante/vale/enviado', methods = ['POST'])
     @action_required    # Decorador que verifica sesión activa.
     def student_voucher_1():
@@ -86,48 +102,78 @@ def rutasDeEstudiantes(app):
         usuario = session.get("user")
         data = request.json
         vale = data.get('vale')
+        revision = data.get('revision')
+        if revision is None:
+            # Validación de vale de laboratorio existente.
+            if vale == 'LABORATORIO' and usuario[1] == '1':
+                return {"status": "error",'mensaje': 'Ya tienes un vale de Laboratorio'}
+            else:
+                # Procesamiento del vale.
+                ncontrol = usuario[0]   # Número de control del estudiante.
+                horarios = obtener_horario()    # Obtiene fecha/hora actual.
+                identificacion = crear_identificacion(ncontrol, vale, horarios)  # Genera ID único.
 
-        # Validación de vale de laboratorio existente.
-        if vale == 'LABORATORIO' and usuario[1] == '1':
-            return {"status": "error",'mensaje': 'Ya tienes un vale de Laboratorio'}
+                # Verifica si el vale ya existe.
+                resultado = vale_existente_estudiante(identificacion)
+                if resultado:
+                    return {"status": "error",'mensaje': 'Ya tienes un vale Agregado'}
+                else:
+                    # Actualiza contadores según tipo de vale.
+                    if vale == 'LABORATORIO':
+                        vales_cantidad(vale, '1', ncontrol)
+                        session["user"] = (usuario[0], '1', usuario[2], usuario[3], usuario[4], usuario[5], usuario[6])
+                    elif vale == 'PROYECTO':
+                        cantidad = int(usuario[2])
+                        cantidad = str(cantidad + 1)
+                        vales_cantidad(vale, cantidad, ncontrol)
+                        session["user"] = (usuario[0], usuario[1], cantidad, usuario[3], usuario[4], usuario[5], usuario[6])
+
+                    # Prepara datos para registro.
+                    estado = 'SIN ACEPTAR'
+                    materia = data.get('materia')
+                    grupo = data.get('grupo')
+                    profesor = data.get('profesor')
+                    alumnos = data.get('alumnos')
+                    laboratorio = data.get('laboratorio')
+                    items = data.get('items')
+
+                    # Procesa numeración de equipos del laboratorio.
+                    resultado = obtener_numeracion_laboratorio(laboratorio)
+                    resultado = compara_y_agrega(items, resultado)
+                    material = json.dumps(resultado)
+
+                    # Registra la solicitud en la base de datos.
+                    registrarSolicitudEstudiante(identificacion, ncontrol, horarios[1], horarios[0], usuario[5], usuario[6], profesor, materia, grupo, alumnos, laboratorio, estado, vale, material)
+                    return {"status": "redirect", "url": url_for('student_register'), 'mensaje': 'Vale Enviado Exitosamente'}
         else:
-            # Procesamiento del vale.
             ncontrol = usuario[0]   # Número de control del estudiante.
             horarios = obtener_horario()    # Obtiene fecha/hora actual.
-            identificacion = crear_identificacion(ncontrol, vale, horarios)  # Genera ID único.
+            # Actualiza contadores según tipo de vale.
+            if vale == 'LABORATORIO':
+                vales_cantidad(vale, '1', ncontrol)
+                session["user"] = (usuario[0], '1', usuario[2], usuario[3], usuario[4], usuario[5], usuario[6])
+            elif vale == 'PROYECTO':
+                cantidad = int(usuario[2])
+                cantidad = str(cantidad + 1)
+                vales_cantidad(vale, cantidad, ncontrol)
+                session["user"] = (usuario[0], usuario[1], cantidad, usuario[3], usuario[4], usuario[5], usuario[6])
 
-            # Verifica si el vale ya existe.
-            resultado = vale_existente_estudiante(identificacion)
-            if resultado:
-                return {"status": "error",'mensaje': 'Ya tienes un vale Agregado'}
-            else:
-                # Actualiza contadores según tipo de vale.
-                if vale == 'LABORATORIO':
-                    vales_cantidad(vale, '1', ncontrol)
-                    session["user"] = (usuario[0], '1', usuario[2], usuario[3], usuario[4], usuario[5], usuario[6])
-                elif vale == 'PROYECTO':
-                    cantidad = int(usuario[2])
-                    cantidad = str(cantidad + 1)
-                    vales_cantidad(vale, cantidad, ncontrol)
-                    session["user"] = (usuario[0], usuario[1], cantidad, usuario[3], usuario[4], usuario[5], usuario[6])
+            # Prepara datos para registro.
+            estado = 'SIN ACEPTAR'
+            materia = data.get('materia')
+            grupo = data.get('grupo')
+            profesor = data.get('profesor')
+            alumnos = data.get('alumnos')
+            laboratorio = data.get('laboratorio')
+            items = data.get('items')
 
-                # Prepara datos para registro.
-                estado = 'SIN ACEPTAR'
-                materia = data.get('materia')
-                grupo = data.get('grupo')
-                profesor = data.get('profesor')
-                alumnos = data.get('alumnos')
-                laboratorio = data.get('laboratorio')
-                items = data.get('items')
-
-                # Procesa numeración de equipos del laboratorio.
-                resultado = obtener_numeracion_laboratorio(laboratorio)
-                resultado = compara_y_agrega(items, resultado)
-                material = json.dumps(resultado)
-
-                # Registra la solicitud en la base de datos.
-                registrarSolicitudEstudiante(identificacion, ncontrol, horarios[1], horarios[0], usuario[5], usuario[6], profesor, materia, grupo, alumnos, laboratorio, estado, vale, material)
-                return {"status": "redirect", "url": url_for('student_voucher'), 'mensaje': 'Vale Enviado Exitosamente'}
+            # Procesa numeración de equipos del laboratorio.
+            resultado = obtener_numeracion_laboratorio(laboratorio)
+            resultado = compara_y_agrega(items, resultado)
+            material = json.dumps(resultado)
+            revisionVale(revision, horarios[1], horarios[0], profesor, materia, grupo, alumnos, 
+                         laboratorio, estado, vale, material)
+            return {"status": "redirect", "url": url_for('student_register'), 'mensaje': 'Vale Corregido Exitosamente'}
     
     @app.route('/estudiante/historial', methods = ['GET'])
     @action_required    # Decorador que verifica sesión activa.

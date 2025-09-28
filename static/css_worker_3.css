@@ -64,17 +64,12 @@ main .table-container table td button {
     background: rgb(90, 179, 2);
 }
 
-main .table-container table td button#botonCancelar {
+#botonCancelar {
     background: crimson;
 }
 
 main .table-container table tbody tr {
     border-bottom: solid 1px #333;
-}
-
-main .table-container table td#tdButton {
-    display: flex;
-    flex-direction: column;
 }
 
 main .table-container::-webkit-scrollbar {

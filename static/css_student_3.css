@@ -88,7 +88,8 @@ main .table-container::-webkit-scrollbar-track {
     font-style: italic;
 }
 
-.dialog-content-use button{
+.dialog-content-use button,
+.dialog-content-use a{
     border: none;
     border-radius: 8px;
     padding: 8px;
@@ -100,8 +101,18 @@ main .table-container::-webkit-scrollbar-track {
     width: 120px;
 }
 
+.dialog-content-use a{
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+}
+
 .dialog-content-use button#cancelarSolicitud{
     background: crimson;
+}
+
+.dialog-content-use a#editarSolicitud{
+    background: rgb(90, 179, 2);
 }
 
 .dialog-content-use .dialog-content-part{

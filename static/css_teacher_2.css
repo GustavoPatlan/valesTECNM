@@ -73,22 +73,10 @@ main .table-container table td button {
     margin-bottom: 3px;
 }
 
-main .table-container table td button#botonAceptar {
-    background: rgb(90, 179, 2);
-}
-
-main .table-container table td button#botonCancelar {
-    background: crimson;
-}
-
 main .table-container table tbody tr {
     border-bottom: solid 1px #333;
 }
 
-main .table-container table td#tdButton {
-    display: flex;
-    flex-direction: column;
-}
 
 main .table-container::-webkit-scrollbar {
     width: 8px;
@@ -174,6 +162,14 @@ main .table-container::-webkit-scrollbar-track {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.dialog-content-use button#botonAceptar {
+    background: rgb(90, 179, 2);
+}
+
+.dialog-content-use button#botonCancelar {
+    background: crimson;
 }
 
 .dialog-content-use a#cancelarSolicitud box-icon{

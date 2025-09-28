@@ -89,6 +89,9 @@
                             </div>
                         </div>
                     </div>
+                    {% if solicitud[13] == 'REVISION' %}
+                    <a id="editarSolicitud" href="/estudiante/vale/{{ solicitud[0] }}">EDITAR</a>
+                    {% endif %}
                     {% if solicitud[13] != 'ACTIVO' %}
                     <button id="cancelarSolicitud" onclick="openDialogClose('{{ solicitud[0] }}')">CANCELAR</button>
                     <dialog id="dialog-close-{{ solicitud[0] }}">

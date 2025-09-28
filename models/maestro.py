@@ -200,12 +200,12 @@ def vales_cantidad(vale, cantidad, ncontrol):
 
 def eliminarSolicitudEstudiante(identificacion):
     """
-    Elimina una solicitud de vale específica de la base de datos.
+    Cambia el estado de una solicitud a 'REVISION' para observacion del alumno.
 
     Parámetros:
-        identificacion: ID único de la solicitud.
+        identificacion: ID completo del vale a actualizar.
     """
-    sql = "DELETE FROM solicitud WHERE id_ncontrol = %s"
+    sql = "UPDATE solicitud SET estado = 'REVISION' WHERE id_ncontrol = %s"
     data = (identificacion,)
     agregarDatosDB_Individual(sql, data)
 

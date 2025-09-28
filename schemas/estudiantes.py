@@ -34,7 +34,6 @@ def obtener_horario():
     periodo = 'AM' if ahora.hour < 12 else 'PM'
     hora_con_periodo = f"{hora} {periodo}"
     datos = [fecha, hora_con_periodo]
-    print(datos)
     return datos
 
 def crear_identificacion(ncontrol, vale, horarios):

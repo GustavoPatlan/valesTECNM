@@ -10,7 +10,7 @@
 
 {% block contenidoPrincipal %}
 <div class="searchSection">
-  <h4>SOLICITUDES DE FIRMA</h4>
+    <h4>SOLICITUDES DE FIRMA</h4>
 </div>
 <div class="searchSection">
     <span>Busqueda</span>
@@ -39,8 +39,6 @@
                 <td data-label="Fecha de Solicitud">{{ solicitud[3] }}</td>
                 <td data-label="Laboratorio">{{ solicitud[12] }}</td>
                 <td data-label="Detalles" id="tdButton">
-                    <button id="botonAceptar" onclick="openDialogAceptar('{{ solicitud[0] }}')">ACEPTAR</button>
-                    <button id="botonCancelar" onclick="openDialogCancelar('{{ solicitud[0] }}')">CANCELAR</button>
                     <button onclick="openDialogInfo('{{ solicitud[0] }}')">INFORMACIÓN</button>
                 </td>
             </tr>
@@ -94,6 +92,8 @@
                             </div>
                         </div>
                     </div>
+                    <button id="botonAceptar" onclick="openDialogAceptar('{{ solicitud[0] }}')">ACEPTAR</button>
+                    <button id="botonCancelar" onclick="openDialogCancelar('{{ solicitud[0] }}')">CANCELAR</button>
                     <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
                 </div>
             </dialog>
