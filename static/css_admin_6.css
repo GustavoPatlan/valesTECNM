@@ -327,6 +327,10 @@ main .table-container::-webkit-scrollbar-track {
         margin-right: 10px;
     }
 
+    main .table-container{
+        height: 60%;
+    }
+
     .dialog-content-use,
     .dialog-content-use.form {
         min-width: 250px;
@@ -353,7 +357,7 @@ main .table-container::-webkit-scrollbar-track {
     .dialog-content-part-info-section-div {
         font-size: 11px;
     }
-    
+
     .dialog-content-part-info-section-div h5{
         font-size: 12px;
     }

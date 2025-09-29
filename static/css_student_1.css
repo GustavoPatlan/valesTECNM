@@ -46,7 +46,7 @@ main .mainLinkSection a:hover{
 }
 
 main .table-container{
-    height: 50%;
+    height: 80%;
     width: 100%;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -109,5 +109,9 @@ main .table-container::-webkit-scrollbar-track {
     main .mainLinkSection a{
         margin-bottom: 5px;
         width: 100%;
+    }
+
+    main .table-container{
+    height: 40%;
     }
 }

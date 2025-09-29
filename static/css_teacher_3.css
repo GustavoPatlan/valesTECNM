@@ -252,6 +252,10 @@ main .table-container::-webkit-scrollbar-track {
         margin-right: 10px;
     }
 
+    main .table-container{
+        height: 60%;
+    }
+
     .dialog-content-use {
         min-width: 250px;
     }

@@ -514,6 +514,10 @@ main .table-container::-webkit-scrollbar-track {
         margin-right: 10px;
     }
 
+    main .table-container{
+        height: 60%;
+    }
+
     .dialog-content-use,
     .dialog-content-use.form {
         min-width: 250px;
@@ -543,5 +547,5 @@ main .table-container::-webkit-scrollbar-track {
 
     .dialog-content-use .dialog-content-part .dialog-content-part-info .dialog-content-part-info-acciones{
         flex-direction: column;
-    }    
+    }
 }

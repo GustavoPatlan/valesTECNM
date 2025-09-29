@@ -77,7 +77,6 @@ main .table-container table tbody tr {
     border-bottom: solid 1px #333;
 }
 
-
 main .table-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -322,6 +321,10 @@ main .table-container::-webkit-scrollbar-track {
         font-weight: bold;
         font-size: 14px;
         margin-right: 10px;
+    }
+
+    main .table-container{
+        height: 60%;
     }
 
     .dialog-content-use {

@@ -275,6 +275,10 @@ main .table-container::-webkit-scrollbar-track {
         margin-right: 10px;
     }
 
+    main .table-container{
+        height: 60%;
+    }
+
     .dialog-content-use {
         min-width: 250px;
     }
@@ -290,7 +294,7 @@ main .table-container::-webkit-scrollbar-track {
     main .botonesLista{
         padding-bottom: 0;
     }
-    
+
     main .botonesLista button{
         margin-bottom: 5px;
     }

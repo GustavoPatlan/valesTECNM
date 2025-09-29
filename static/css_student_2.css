@@ -207,7 +207,7 @@ main .seccionMaterial .seccionMTabla .seccionMTCasilla button {
 
     main .seccionMaterial {
         height: 100%;
-        max-height: 200px;
+        max-height: 150px;
     }
 
     main .seccionFormulario .seccionFABoton .seccionFABEntrada {
@@ -216,7 +216,8 @@ main .seccionMaterial .seccionMTabla .seccionMTCasilla button {
 
     main .seccionFormulario .seccionFABoton .seccionFABEntrada button {
         margin-top: 5px;
-        width: 120px;
+        width: 100px;
+        padding: 5px;
     }
 }
 

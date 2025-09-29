@@ -172,7 +172,7 @@ main .table-container::-webkit-scrollbar-track {
     background-color: #f0f0f0;
 }
 
-.dialog-content-use button, 
+.dialog-content-use button,
 .dialog-content-use a{
     border: none;
     border-radius: 8px;
@@ -332,6 +332,10 @@ main .table-container::-webkit-scrollbar-track {
         font-weight: bold;
         font-size: 14px;
         margin-right: 10px;
+    }
+
+    main .table-container{
+        height: 60%;
     }
 
     .dialog-content-use {

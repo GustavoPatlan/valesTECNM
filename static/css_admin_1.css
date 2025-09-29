@@ -7,7 +7,7 @@ main h4 {
 }
 
 main .table-container {
-    height: 50%;
+    height: 80%;
     width: 100%;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -204,5 +204,9 @@ main .table-container table td button {
 
     .dialog-content-use div div {
         flex-direction: column;
+    }
+
+    main .table-container{
+        height: 25%;
     }
 }

@@ -248,4 +248,8 @@ main .table-container::-webkit-scrollbar-track {
     .dialog-content-use .dialog-content-part .dialog-content-part-material .dialog-content-part-material-table{
         height: 150px;
     }
+
+    main .table-container{
+        height: 60%;
+    }
 }
