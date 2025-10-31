@@ -1,4 +1,10 @@
 /*
+Memoria cache para manejar solicitudes y materiales
+*/
+let solicitudActualID = null;
+let materialeSolicitudActualID = null;
+
+/*
 Filtra las solicitudes en la tabla según el texto de búsqueda.
  1. Muestra solo las filas que coincidan con el texto ingresado.
  2. Oculta las no coincidentes con animación suave.
@@ -27,77 +33,144 @@ function filterList() {
 Abre el diálogo de confirmación para cancelar una solicitud.
 */
 function openDialogCancelar(id) {
-    let dialog = document.getElementById(`dialog-cancel-${id}`);
+    let dialog = document.getElementById("dialog-cancel");
     if (dialog) {
+        solicitudActualID = id; // guarda el ID en memoria
         dialog.showModal();
-    }
+    };
 };
 
 /*
 Cierra el diálogo de cancelación de solicitud.
 */
-function closeDialogCancelar(id) {
-    let dialog = document.getElementById(`dialog-cancel-${id}`);
+function closeDialogCancelar() {
+    let dialog = document.getElementById("dialog-cancel");
     if (dialog) {
         dialog.close();
-    }
+        solicitudActualID = null; // limpia el valor
+    };
 };
 
 /*
 Procesa la aceptación de una solicitud mediante petición al servidor.
 */
-function aceptarSolicitud(id) {
-    // Obtiene elementos relacionados.
-    let row = document.getElementById(`solicitud-${id}`);
-    let dialog1 = document.getElementById(`dialog-${id}`);
-    let dialog2 = document.getElementById(`dialog-accept-${id}`);
-    let dialog3 = document.getElementById(`dialog-cancel-${id}`);
-    if (row) {
-        // Envía solicitud al servidor.
-        fetch('/maestro/firma/aceptar', {
-            method: 'POST',
-            body: JSON.stringify({ identificacion: id }),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(response => response.json())
-            .then(data => {
-                switch (data.status) {
-                    case 'error':   // Notificación de error.
-                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
-                        break;
-                    case 'alerta':  // Modificación exitosa.
-                        row.remove();
-                        closeDialogAceptar(id);
-                        dialog1.remove();
-                        dialog2.remove();
-                        dialog3.remove();
+function aceptarSolicitud() {
+    // Enviar datos al servidor.
+    id = solicitudActualID;
+    materiales = materialeSolicitudActualID;
 
-                        // Muestra notificación de éxito.
-                        mostrarNotificacionRequest('Exito', data.mensaje, 'lawngreen', 'check');
-                        break;
-                };
-            });
-    };
+    fetch('/casetero/vales/pendientes/completado', {
+        method: 'POST',
+        body: JSON.stringify({ identificacion: id, materiales: materiales }),
+        headers: { 'Content-Type': 'application/json' }
+    })
+        .then(response => response.json())
+        .then(data => {
+            switch (data.status) {
+                case 'error':   // Notificación de error.
+                    closeDialogAceptar()
+                    mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
+                    break;
+                case 'redirect':    // Redirección exitosa.
+                    sessionStorage.setItem("notificacion_mensaje", data.mensaje);
+                    window.location.href = data.url;
+                    break;
+            };
+        });
 };
 
 /*
 Cierra el diálogo de aceptación de solicitud.
 */
-function closeDialogAceptar(id) {
-    let dialog = document.getElementById(`dialog-accept-${id}`);
+function closeDialogAceptar() {
+    let dialog = document.getElementById("dialog-accept");
     if (dialog) {
+        solicitudActualID = null; // limpia el valor
+        materialeSolicitudActualID = null; // limpia el valor
         dialog.close();
-    }
+    };
 };
 
 /*
 Abre el diálogo modal que muestra los detalles completos de una solicitud.
 */
-function openDialogInfo(id) {
+async function openDialogInfo(id) {
     let dialog = document.getElementById(`dialog-${id}`);
-    if (dialog) {
-        dialog.showModal();
+    let materialContainer = document.querySelector(`.dialog-content-part-material-table[data-id="${id}"]`);
+
+    // Si ya cargó materiales antes, no vuelvas a pedirlos
+    if (materialContainer.dataset.loaded === "true") {
+        if (dialog) {
+            dialog.showModal();
+        };
+        return
+    };
+
+    try {
+        let response = await fetch(`/casetero/vales/pendientes/api/materiales/${id}`);
+        if (!response.ok) throw new Error("Error al cargar materiales");
+
+        let materiales = await response.json();
+        renderMaterialVale(materialContainer, materiales);
+
+        materialContainer.dataset.loaded = "true"; // marcar como cargado
+
+        if (dialog) {
+            dialog.showModal();
+        };
+    } catch (err) {
+        materialContainer.innerHTML = "<p>Error al cargar materiales</p>";
     }
+};
+
+function renderMaterialVale(container, materiales) {
+    // Limpia cualquier contenido anterior
+    container.innerHTML = "";
+
+    materiales.forEach(item => {
+        // Cada item debe tener formato [nombre, cantidad, esEquipo]
+        const [nombre, cantidad, esEquipo] = item;
+
+        // Verifica si el material es de tipo equipo
+        if (esEquipo && esEquipo.toUpperCase() === "SI") {
+            const cantidadInt = parseInt(cantidad) || 1;
+
+            for (let i = 0; i < cantidadInt; i++) {
+                const div = document.createElement("div");
+                div.classList.add("span-container");
+
+                const btn = document.createElement("button");
+                btn.classList.add("remove-btn");
+                btn.textContent = "x";
+                btn.onclick = e => removeSpan(e);
+
+                const span = document.createElement("span");
+                span.textContent = `${nombre}:`;
+                span.onclick = e => openDialogMaterial(nombre, e);
+
+                div.appendChild(btn);
+                div.appendChild(span);
+                container.appendChild(div);
+            }
+        } else {
+            // Material normal (no es equipo)
+            const div = document.createElement("div");
+            div.classList.add("span-container");
+
+            const btn = document.createElement("button");
+            btn.classList.add("remove-btn");
+            btn.textContent = "x";
+            btn.onclick = e => removeSpan(e);
+
+            const span = document.createElement("span");
+            span.textContent = `${nombre}: ${cantidad}`;
+            span.onclick = e => openDialogCantidad(e);
+
+            div.appendChild(btn);
+            div.appendChild(span);
+            container.appendChild(div);
+        }
+    });
 };
 
 /*
@@ -117,6 +190,7 @@ Abre el diálogo de selección de material específico.
  3. Muestra el diálogo modal correspondiente al material.
 */
 let lastClickedElement = null;  // Almacena el elemento que abrió el diálogo
+
 function openDialogMaterial(id, event) {
     let dialog = document.getElementById(`dialog-item-${id}`);
     if (dialog) {
@@ -280,26 +354,10 @@ function enviarTablasMaterial(id) {
         return;
     }
     else {
-        // Enviar datos al servidor.
-        fetch('/casetero/vales/pendientes/completado', {
-            method: 'POST',
-            body: JSON.stringify({ identificacion: id, materiales: materiales }),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(response => response.json())
-            .then(data => {
-                switch (data.status) {
-                    case 'error':   // Notificación de error.
-                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
-                        break;
-                    case 'redirect':    // Redirección exitosa.
-                        sessionStorage.setItem("notificacion_mensaje", data.mensaje);
-                        window.location.href = data.url;
-                        break;
-                };
-            });
+        materialeSolicitudActualID = materiales;
+        openDialogAceptar(id);
     };
-}
+};
 
 /*
 Cancela una solicitud de vale mediante petición al servidor.
@@ -309,12 +367,12 @@ Cancela una solicitud de vale mediante petición al servidor.
    1. Error: Muestra notificación de error.
    2. Alerta: Elimina elementos y muestra notificación de éxito.
 */
-function cancelarSolicitudCasetero(id) {
+function cancelarSolicitudCasetero() {
     // Obtiene elementos relacionados.
+    id = solicitudActualID;
     let row = document.getElementById(`solicitud-${id}`);
     let dialog1 = document.getElementById(`dialog-${id}`);
-    let dialog2 = document.getElementById(`dialog-accept-${id}`);
-    let dialog3 = document.getElementById(`dialog-cancel-${id}`);
+
     if (row) {
         // Enviar datos al servidor.
         fetch('/casetero/vales/pendientes/cancelado', {
@@ -326,14 +384,13 @@ function cancelarSolicitudCasetero(id) {
             .then(data => {
                 switch (data.status) {
                     case 'error':   // Notificación de error.
+                        closeDialogCancelar();
                         mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
                         break;
                     case 'alerta':  // Remover solicitud.
                         row.remove();
-                        closeDialogCancelar(id);
+                        closeDialogCancelar();
                         dialog1.remove();
-                        dialog2.remove();
-                        dialog3.remove();
                         mostrarNotificacionRequest('Exito', data.mensaje, 'lawngreen', 'check');
                         break;
                 };
@@ -342,130 +399,12 @@ function cancelarSolicitudCasetero(id) {
 };
 
 /*
-Reporta un problema con un alumno al servidor.
- 1. Valida que el campo de reporte no esté vacío.
- 2. Realiza petición POST con el texto del reporte.
- 3. Maneja dos posibles respuestas del servidor:
-   1. Error: Muestra notificación de error.
-   2. Éxito: Cierra diálogo y muestra notificación de éxito.
+Abre el diálogo de confirmación para aceptar una solicitud.
 */
-function reportarAlumnoCasetero(id) {
-    // Obtiene elementos relacionados.
-    let texto = document.getElementById(`reporte-${id}`).value.trim();
-    if (!texto || texto === "") {
-        mostrarNotificacionRequest('Alerta', 'No hay datos en el reporte', 'goldenrod', 'error');
-    }
-    else {
-        // Enviar datos al servidor.
-        fetch('/casetero/vales/activos/reporte', {
-            method: 'POST',
-            body: JSON.stringify({ identificacion: id, reporte: texto }),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(response => response.json())
-            .then(data => {
-                switch (data.status) {
-                    case 'error':   // Notificación de error.
-                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
-                        break;
-                    case 'exito':   // Redirección exitosa.
-                        closeDialogAceptar(id)
-                        mostrarNotificacionRequest('Excelente', data.mensaje, 'lawngreen', 'check')
-                        break;
-                };
-            });
+function openDialogAceptar(id) {
+    let dialog = document.getElementById("dialog-accept");
+    if (dialog) {
+        solicitudActualID = id; // guarda el ID en memoria
+        dialog.showModal();
     };
-};
-
-/*
-Cancela un reporte existente sobre un alumno.
- 1. Valida que exista contenido en el campo de reporte.
- 2. Realiza petición POST para cancelar el reporte.
- 3. Maneja dos posibles respuestas del servidor:
-   1. Error: Muestra notificación de error.
-   2. Éxito: Limpia el campo y muestra notificación de éxito.
-*/
-function cancelarReporteAlumnoCasetero(id) {
-    // Obtiene elementos relacionados.
-    let texto = document.getElementById(`reporte-${id}`);
-    let valor = texto.value.trim();
-
-    if (!valor) {
-        mostrarNotificacionRequest('Alerta', 'No hay datos en el reporte', 'goldenrod', 'error');
-    } else {
-        // Enviar datos al servidor.
-        fetch('/casetero/vales/activos/cancelar', {
-            method: 'POST',
-            body: JSON.stringify({ identificacion: id }),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(response => response.json())
-            .then(data => {
-                switch (data.status) {
-                    case 'error':   // Notificación de error.
-                        mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
-                        break;
-                    case 'exito':   // Resetear reporte.
-                        texto.value = '';
-                        mostrarNotificacionRequest('Excelente', data.mensaje, 'lawngreen', 'check');
-                        break;
-                }
-            });
-    }
-};
-
-/*
-Finaliza un vale activo mediante petición al servidor.
- 1. Realiza petición POST para finalizar el vale.
- 2. Maneja dos posibles respuestas del servidor:
-   1. Error: Muestra notificación de error.
-   2. Redirect: Almacena mensaje y redirige a URL proporcionada.
-*/
-function registrarVale(id) {
-    // Enviar datos al servidor.
-    fetch('/casetero/vales/activos/finalizar', {
-        method: 'POST',
-        body: JSON.stringify({ identificacion: id }),
-        headers: { 'Content-Type': 'application/json' }
-    })
-        .then(response => response.json())
-        .then(data => {
-            switch (data.status) {
-                case 'error':   // Notificación de error.
-                    mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
-                    break;
-                case 'redirect':    // Redirección exitosa.
-                    sessionStorage.setItem("notificacion_mensaje", data.mensaje);
-                    window.location.href = data.url;
-                    break;
-            }
-        });
-};
-
-/*
-Finaliza un vale de maestro mediante petición al servidor.
- 1. Realiza petición POST para finalizar el vale.
- 2. Maneja dos posibles respuestas del servidor:
-   1. Error: Muestra notificación de error.
-   2. Redirect: Almacena mensaje y redirige a URL proporcionada.
-*/
-function registrarValeMaestro(id) {
-    // Enviar datos al servidor.
-    fetch('/casetero/vales/maestros/finalizar', {
-        method: 'POST',
-        body: JSON.stringify({ identificacion: id }),
-        headers: { 'Content-Type': 'application/json' }
-    })
-        .then(response => response.json())
-        .then(data => {
-            switch (data.status) {
-                case 'error':   // Notificación de error.
-                    mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
-                    break;
-                case 'redirect':    // Redirección exitosa.
-                    sessionStorage.setItem("notificacion_mensaje", data.mensaje);
-                    window.location.href = data.url;
-                    break;
-            }
-        });
 };

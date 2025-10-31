@@ -30,11 +30,11 @@
             {% for solicitud in solicitudes %}
             <tr id="solicitud-{{ solicitud[0] }}">
                 <td data-label="N. Control">{{ solicitud[1] }}</td>
-                <td data-label="Nombre">{{ solicitud[6] }} {{ solicitud[7] }}</td>
-                <td data-label="Vale">{{ solicitud[14] }}</td>
+                <td data-label="Nombre">{{ solicitud[4] }} {{ solicitud[5] }}</td>
+                <td data-label="Vale">{{ solicitud[12] }}</td>
                 <td data-label="Hora de Solicitud">{{ solicitud[2] }}</td>
                 <td data-label="Fecha de Solicitud">{{ solicitud[3] }}</td>
-                <td data-label="Laboratorio">{{ solicitud[12] }}</td>
+                <td data-label="Laboratorio">{{ solicitud[10] }}</td>
                 <td data-label="Detalles" id="tdButton">
                     <button onclick="openDialogInfo('{{ solicitud[0] }}')">DETALLES</button>
                 </td>
@@ -46,11 +46,11 @@
                         <div class="dialog-content-part-info">
                             <div class="dialog-content-part-info-section" id="sectionProfesor">
                                 <h5>ESTUDIANTE:</h5>
-                                <span>{{ solicitud[6] }} {{ solicitud[7] }}</span>
+                                <span>{{ solicitud[4] }} {{ solicitud[5] }}</span>
                             </div>
                             <div class="dialog-content-part-info-section" id="sectionProfesor">
                                 <h5>PROFESOR:</h5>
-                                <span>{{ solicitud[8] }}</span>
+                                <span>{{ solicitud[6] }}</span>
                             </div>
                             <div class="dialog-content-part-info-section">
                                 <h5>NÚMERO DE CONTROL:</h5>
@@ -58,11 +58,11 @@
                             </div>
                             <div class="dialog-content-part-info-section">
                                 <h5>VALE:</h5>
-                                <span>{{ solicitud[14] }}</span>
+                                <span>{{ solicitud[12] }}</span>
                             </div>
                             <div class="dialog-content-part-info-section">
                                 <h5>LABORATORIO:</h5>
-                                <span>{{ solicitud[12] }}</span>
+                                <span>{{ solicitud[10] }}</span>
                             </div>
                             <div class="dialog-content-part-info-section">
                                 <h5>HORA:</h5>
@@ -74,35 +74,19 @@
                             </div>
                             <div class="dialog-content-part-info-section">
                                 <h5>MATERIA:</h5>
-                                <span>{{ solicitud[9] }}</span>
+                                <span>{{ solicitud[7] }}</span>
                             </div>
                             <div class="dialog-content-part-info-section">
                                 <h5>GRUPO:</h5>
-                                <span>{{ solicitud[10] }}</span>
+                                <span>{{ solicitud[8] }}</span>
                             </div>
                             <div class="dialog-content-part-info-section">
                                 <h5>N. ALUMNOS:</h5>
-                                <span>{{ solicitud[11] }}</span>
+                                <span>{{ solicitud[9] }}</span>
                             </div>
                         </div>
                         <div class="dialog-content-part-material">
-                            <div class="dialog-content-part-material-table" data-id="{{ solicitud[0] }}">
-                                {% for item in material[solicitud[0]] %}
-                                {% if item[2] == 'SI' %}
-                                {% for i in range(item[1] | int) %}
-                                <div class="span-container">
-                                    <button class="remove-btn" onclick="removeSpan(event)">x</button>
-                                    <span onclick="openDialogMaterial('{{ item[0] }}', event)">{{ item[0] }}:</span>
-                                </div>
-                                {% endfor %}
-                                {% else %}
-                                <div class="span-container">
-                                    <button class="remove-btn" onclick="removeSpan(event)">x</button>
-                                    <span onclick="openDialogCantidad(event)">{{item[0]}}: {{item[1]}}</span>
-                                </div>
-                                {% endif %}
-                                {% endfor %}
-                            </div>
+                            <div class="dialog-content-part-material-table" data-id="{{ solicitud[0] }}"></div>
                         </div>
                     </div>
                     <button id="botonAceptar" onclick="enviarTablasMaterial('{{ solicitud[0] }}')">ENVIAR</button>
@@ -110,21 +94,21 @@
                     <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
                 </div>
             </dialog>
-            <dialog id="dialog-accept-{{ solicitud[0] }}">
-                <div class="dialog-content-use">
-                    <span>¿Estás seguro de aceptar el vale?</span>
-                    <button id="cancelarSolicitud" onclick="aceptarSolicitud('{{ solicitud[0] }}')">ACEPTAR</button>
-                    <button onclick="closeDialogAceptar('{{ solicitud[0] }}')">CANCELAR</button>
-                </div>
-            </dialog>
-            <dialog id="dialog-cancel-{{ solicitud[0] }}">
+            {% endfor %}
+            <dialog id="dialog-cancel">
                 <div class="dialog-content-use">
                     <span>¿Estás seguro de borrar el vale?</span>
-                    <button id="cancelarSolicitud" onclick="cancelarSolicitudCasetero('{{ solicitud[0] }}')">ACEPTAR</button>
-                    <button onclick="closeDialogCancelar('{{ solicitud[0] }}')">CANCELAR</button>
+                    <button id="cancelarSolicitud" onclick="cancelarSolicitudCasetero()">ACEPTAR</button>
+                    <button onclick="closeDialogCancelar()">CANCELAR</button>
                 </div>
             </dialog>
-            {% endfor %}
+            <dialog id="dialog-accept">
+                <div class="dialog-content-use">
+                    <span>¿Estás seguro de aceptar el vale?</span>
+                    <button id="cancelarSolicitud" onclick="aceptarSolicitud()">ACEPTAR</button>
+                    <button onclick="closeDialogAceptar()">CANCELAR</button>
+                </div>
+            </dialog>
         </tbody>
     </table>
 </div>
@@ -157,6 +141,5 @@
 {% endblock %}
 
 {% block scriptDedicado %}
-<!-- <script src="{{url_for('static', filename='js_teacher_2.js')}}"></script> -->
 <script src="{{url_for('static', filename='js_worker_3.js')}}"></script>
 {% endblock %}

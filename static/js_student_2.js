@@ -1,5 +1,3 @@
-
-
 let dialogLab = document.getElementById("seleccionLaboratorio");
 
 /*
@@ -43,12 +41,52 @@ function closeDialogLabCancelada() {
 };
 
 let dialogTeacher = document.getElementById("seleccionMaestro");
+let teacherList = document.getElementById("teacherList");
+
+// Variable global para saber si ya cargamos los maestros
+let teachersLoaded = false;
 
 /*
 Abre el diálogo modal para seleccionar maestro.
 */
-function openDialogTeacher() {
+async function openDialogTeacher() {
     dialogTeacher.showModal();
+
+    // Si ya se cargaron los maestros antes, no volver a pedirlos
+    if (!teachersLoaded) {
+        await loadTeachers();
+        teachersLoaded = true;
+    }
+};
+
+/*
+Carga la lista de maestros desde el backend
+*/
+async function loadTeachers() {
+    teacherList.innerHTML = "<li>Cargando...</li>";
+
+    try {
+        let response = await fetch("/estudiante/vale/api/maestros");
+        if (!response.ok) throw new Error("Error al cargar maestros");
+
+        let data = await response.json();
+        renderTeacherList(data);
+    } catch (error) {
+        teacherList.innerHTML = "<li>Error al cargar maestros</li>";
+    }
+};
+
+/*
+Renderiza la lista en el HTML
+*/
+function renderTeacherList(maestros) {
+    teacherList.innerHTML = ""; // Limpia la lista
+    maestros.forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = `${m[0]} ${m[1]}`;
+        li.onclick = () => selectTeacher(li);
+        teacherList.appendChild(li);
+    });
 };
 
 /*
@@ -175,22 +213,6 @@ function selectSalon(element) {
     salonInput.style.fontWeight = '500'
     botonMaterial.style.display = 'flex';
 
-    // Configuración de listas de materiales según salón.
-    if (selectedSalon === 'Y1' || selectedSalon === 'Y2') {
-        document.getElementById('potList').style.display = 'block';
-        document.getElementById('adList').style.display = 'none';
-        document.getElementById('sdList').style.display = 'none';
-    }
-    else if (selectedSalon === 'Y6' || selectedSalon === 'Y7') {
-        document.getElementById('potList').style.display = 'none';
-        document.getElementById('adList').style.display = 'block';
-        document.getElementById('sdList').style.display = 'none';
-    }
-    else if (selectedSalon === 'Y8') {
-        document.getElementById('potList').style.display = 'none';
-        document.getElementById('adList').style.display = 'none';
-        document.getElementById('sdList').style.display = 'block';
-    }
     dialogSalon.close();
 };
 
@@ -205,20 +227,86 @@ function closeDialogSalonCancelada() {
     let salonInput = document.getElementById('valeSalonInput');
     document.querySelector('.seccionMTabla').innerHTML = '';
     salonInput.value = '';
-    document.getElementById('potList').style.display = 'none';
-    document.getElementById('adList').style.display = 'none';
-    document.getElementById('sdList').style.display = 'none';
+
     botonMaterial.style.display = 'none';
     dialogSalon.close();
 };
 
 let dialogMaterial = document.getElementById("seleccionMaterial");
 
+// Caches por laboratorio
+let materialesCache = {};
+
+// Referencias a listas
+let potList = document.getElementById("materialBackList");
+
 /*
 Abre el diálogo modal para seleccionar material.
 */
-function openDialogMaterial() {
+async function openDialogMaterial() {
+    let laboratorioValor = document.getElementById("valeSalonInput").value.trim();
+
+    const grupos = {
+        Y1: 'Y1-Y2',
+        Y2: 'Y1-Y2',
+        Y6: 'Y6-Y7',
+        Y7: 'Y6-Y7',
+        Y8: 'Y8'
+    };
+
+    if (grupos[laboratorioValor]) {
+        laboratorioValor = grupos[laboratorioValor];
+    };
+
+    if (!laboratorioValor) {
+        mostrarNotificacionRequest('Error', "Selecciona un laboratorio antes de agregar material.", 'goldenrod', 'error');
+        return;
+    };
+
     dialogMaterial.showModal();
+
+    // Si ya está en caché, solo renderiza
+    if (materialesCache[laboratorioValor]) {
+        renderMaterialLists(materialesCache[laboratorioValor]);
+        return;
+    };
+
+    // Si no está en caché, solicita al backend
+    await loadMaterials(laboratorioValor);
+};
+
+/*
+Carga los materiales desde el backend
+*/
+async function loadMaterials(laboratorio) {
+    potList.innerHTML = "<li>Cargando...</li>";
+
+    try {
+        let response = await fetch(`/estudiante/vale/api/laboratorio/${encodeURIComponent(laboratorio)}`);
+        if (!response.ok) throw new Error("Error al cargar materiales");
+
+        let data = await response.json();
+        materialesCache[laboratorio] = data; // Guardamos en caché
+        renderMaterialLists(data);
+    } catch (error) {
+        potList.innerHTML = "<li>Error al cargar materiales</li>";
+    }
+};
+
+/*
+Renderiza las listas de materiales según el tipo
+*/
+function renderMaterialLists(materiales) {
+    // Limpia toda la lista antes de agregar nuevos elementos
+    potList.innerHTML = "";
+
+    materiales.forEach(item => {
+        const nombre = item;
+        const li = document.createElement("li");
+        li.textContent = nombre;
+        li.onclick = () => selectMaterial(li);
+        potList.appendChild(li);
+    });
 };
 
 /*
@@ -237,7 +325,7 @@ Filtra las listas de materiales según el texto ingresado:
 */
 function filterListMaterial() {
     let input = document.getElementById('searchInputMaterial').value.toLowerCase();
-    let lists = ['potList', 'adList', 'sdList'];
+    let lists = ['materialBackList'];
 
     lists.forEach(listId => {
         let listItems = document.querySelectorAll(`#${listId} li`);

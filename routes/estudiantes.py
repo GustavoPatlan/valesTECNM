@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, session, url_for, jsonify
 from schemas.estudiantes import *
 from models.estudiantes import *
 import json
@@ -63,10 +63,23 @@ def rutasDeEstudiantes(app):
         usuario = session["user"] = resultado[:-1]
 
         # Obtiene datos para los selectores del formulario.
-        maestros = maestros_registrados()
-        materiales = material_registrado_estudiante()
         horarios = obtener_horario()
-        return render_template('student_2.html', usuario = usuario, maestros = maestros, materiales = materiales, fecha = horarios[0])
+        return render_template('student_2.html', usuario = usuario, fecha = horarios[0])
+    
+    @app.route('/estudiante/vale/api/maestros')
+    @action_required    # Decorador que verifica sesión activa.
+    def student_voucher_api_1():
+        # Aquí podrías hacer una consulta a la base de datos
+        maestros = maestros_registrados()
+        return jsonify(maestros)
+    
+    @app.route('/estudiante/vale/api/laboratorio/<valor>')
+    @action_required    # Decorador que verifica sesión activa.
+    def student_voucher_api_2(valor):
+        # Aquí podrías hacer una consulta a la base de datos
+        materiales = material_registrado_estudiante_api(valor)
+        materiales = [r[0] for r in materiales]
+        return jsonify(materiales)
     
     @app.route('/estudiante/vale/<string:identificacion>', methods = ['GET'])
     @action_required    # Decorador que verifica sesión activa.

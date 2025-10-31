@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session, url_for, Response
+from flask import redirect, render_template, request, session, url_for, Response, jsonify
 from models.casetero import *
 from schemas.casetero import *
 import json
@@ -256,17 +256,17 @@ def rutasDeTrabajador(app):
         # Obtener vales pendientes para el laboratorio del casetero.
         solicitudes = valesParaCaseteroInfo(casetero[3])
 
-        # Procesar materiales de cada vale.
-        material = {}
-        for solicitud in solicitudes:
-            k = json.loads(solicitud[16])
-            material[solicitud[0]] = k
-
         # Obtener equipos disponibles del laboratorio y agruparlos. 
         equipo = obtenerMaterialCasetero(casetero[3])
         equipo = crearListadeEquipo(equipo)
-        return render_template('worker_3.html', casetero = casetero, solicitudes = solicitudes, material = material,
-                               equipo = equipo)
+        return render_template('worker_3.html', casetero = casetero, solicitudes = solicitudes, equipo = equipo)
+    
+    @app.route('/casetero/vales/pendientes/api/materiales/<vale_id>')
+    @action_required_w  # Decorador que verifica sesión activa.
+    def worker_voucher_2_api_1(vale_id):
+        materiales = materialesValesApi(vale_id)
+        materiales = json.loads(materiales[0])
+        return jsonify(materiales)
     
     @app.route('/casetero/vales/pendientes/completado', methods = ['POST'])
     @action_required_w  # Decorador que verifica sesión activa.

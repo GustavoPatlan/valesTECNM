@@ -76,6 +76,16 @@ def material_registrado_estudiante():
     resultado_3 = [(equipo[0], "S/D") for equipo in resultados[2]]
     return resultado_1 + resultado_2 + resultado_3
 
+def material_registrado_estudiante_api(valor):
+    grupos = {
+        "Y1-Y2" : "SELECT DISTINCT EQUIPO FROM labpotencia",
+        "Y6-Y7" : "SELECT DISTINCT EQUIPO FROM labelectronica",
+        "Y8" : "SELECT DISTINCT EQUIPO FROM labthird"
+    }
+    sql = grupos.get(valor)
+    resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
 def obtener_numeracion_laboratorio(laboratorio):
     """
     Obtiene el listado de equipos disponibles con su numeración correspondiente

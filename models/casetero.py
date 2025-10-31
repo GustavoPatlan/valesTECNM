@@ -61,8 +61,15 @@ def valesParaCaseteroInfo(laboratorio):
     Obtiene todos los vales en estado 'EN ESPERA' para un laboratorio específico.
     """
     condition = lab_conditions.get(laboratorio)
-    sql = f"SELECT * FROM solicitud WHERE estado = 'EN ESPERA' AND ({condition})"
+    sql = f"""SELECT id_ncontrol, ncontrol, hora_solicitud, fecha_solicitud, name, lastname, teacher, topic, grupo, number_group,
+    laboratory, estado, tipo_vale FROM solicitud WHERE estado = 'EN ESPERA' AND ({condition})"""
     resultado = obtenerDatosDB_Varios(sql)
+    return resultado
+
+def materialesValesApi(ide):
+    sql = "SELECT material FROM solicitud WHERE id_ncontrol LIKE %s"
+    data = (f"%{ide}%",)
+    resultado = obtenerDatosDB(sql, data)
     return resultado
 
 def valesParaCaseteroActivo(laboratorio):
