@@ -162,6 +162,12 @@ Registra la finalización de un vale.
 */
 function registrarVale(id) {
     // Enviar datos al servidor.
+
+    let row = document.getElementById(`solicitud-${id}`);
+    let dialog1 = document.getElementById(`dialog-${id}`);
+    let dialog2 = document.getElementById(`dialog-accept-${id}`);
+    let dialog3 = document.getElementById(`dialog-cancel-${id}`);
+
     fetch('/casetero/vales/activos/finalizar', {
         method: 'POST',
         body: JSON.stringify({ identificacion: id }),
@@ -174,8 +180,11 @@ function registrarVale(id) {
                     mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
                     break;
                 case 'redirect':    // Redirección exitosa.
-                    sessionStorage.setItem("notificacion_mensaje", data.mensaje);
-                    window.location.href = data.url;
+                    row.remove();
+                    dialog1.remove();
+                    dialog2.remove();
+                    dialog3.remove();
+                    mostrarNotificacionRequest('Exito', data.mensaje, 'lawngreen', 'check');
                     break;
             }
         });
@@ -195,3 +204,9 @@ function selectMaterialCheck(element) {
             element.textContent = '✔ ' + element.textContent;
         }
     };
+
+    function agregarFiltro(valor) {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = valor;
+    searchInput.dispatchEvent(new Event('input'));
+};

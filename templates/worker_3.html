@@ -12,6 +12,16 @@
 <div class="searchSection">
     <span>Busqueda</span>
     <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+    <div>
+        {% if casetero[3] == 'Y1-Y2' %}
+        <button onclick="agregarFiltro('Y1')">Y1</button>
+        <button onclick="agregarFiltro('Y2')">Y2</button>
+        {% endif %}
+        {% if casetero[3] == 'Y6-Y7' %}
+        <button onclick="agregarFiltro('Y6')">Y6</button>
+        <button onclick="agregarFiltro('Y7')">Y7</button>
+        {% endif %}
+    </div>
 </div>
 <div class="table-container">
     <table>
@@ -89,9 +99,11 @@
                             <div class="dialog-content-part-material-table" data-id="{{ solicitud[0] }}"></div>
                         </div>
                     </div>
-                    <button id="botonAceptar" onclick="enviarTablasMaterial('{{ solicitud[0] }}')">ENVIAR</button>
-                    <button id="botonCancelar" onclick="openDialogCancelar('{{ solicitud[0] }}')">CANCELAR</button>
-                    <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                    <div>
+                        <button id="botonAceptar" onclick="enviarTablasMaterial('{{ solicitud[0] }}')">ENVIAR</button>
+                        <button id="botonCancelar" onclick="openDialogCancelar('{{ solicitud[0] }}')">CANCELAR</button>
+                        <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                    </div>
                 </div>
             </dialog>
             {% endfor %}
@@ -112,21 +124,13 @@
         </tbody>
     </table>
 </div>
-{% for item in equipo %}
-{% for llave in item.keys() %}
-<dialog id="dialog-item-{{ llave }}">
+<dialog id="equipo-dialog">
     <div class="dialog-content-use">
         <h5>Selecciona el Equipo</h5>
-        <ul>
-            {% for ide in item[llave] %}
-            <li>{{ ide }}</li>
-            {% endfor %}
-        </ul>
-        <button onclick='closeDialogMaterial("{{ llave }}")'>CERRAR</button>
+        <ul id="equipo-list-container"></ul>
+        <button onclick="closeDialogMaterial()">CERRAR</button>
     </div>
 </dialog>
-{% endfor %}
-{% endfor %}
 <dialog id="dialog-item-cantidad">
     <div class="dialog-content-use">
         <h5>Selecciona la Cantidad</h5>
@@ -141,5 +145,15 @@
 {% endblock %}
 
 {% block scriptDedicado %}
+<script>
+    // Almacenar todos los datos del equipo en una variable global
+    const equipoData = {
+        {% for item in equipo %}
+            {% for llave, valores in item.items() %}
+                "{{ llave }}": {{ valores | tojson }},
+            {% endfor %}
+        {% endfor %}
+    };
+</script>
 <script src="{{url_for('static', filename='js_worker_3.js')}}"></script>
 {% endblock %}

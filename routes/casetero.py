@@ -169,7 +169,7 @@ def rutasDeTrabajador(app):
 
         # Registrar en historial y retornar confirmación.
         registrarVale(casetero[3], identificacion, materiales, horario, solicitud, caseteroName)
-        return {"status": "redirect", "url": url_for('worker_voucher_1'), 'mensaje': 'Vale Finalizado'}
+        return {"status": "redirect", 'mensaje': 'Vale Finalizado'}
     
     @app.route('/casetero/vales/activos/<string:identificacion>', methods = ['GET'])
     @action_required_w  # Decorador que verifica sesión activa.
@@ -290,7 +290,7 @@ def rutasDeTrabajador(app):
 
         # Procesar datos de la solicitud.
         materialAsignado(casetero[3], identificacion, materiales, horario)
-        return {"status": "redirect", "url": url_for('worker_voucher_2'), 'mensaje': 'Vale Activado Exitosamente'}
+        return {"status": "redirect", 'mensaje': 'Vale Activado Exitosamente'}
     
     @app.route('/casetero/vales/pendientes/cancelado', methods = ['POST'])
     @action_required_w  # Decorador que verifica sesión activa.

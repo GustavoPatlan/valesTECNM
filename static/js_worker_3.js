@@ -59,6 +59,9 @@ function aceptarSolicitud() {
     id = solicitudActualID;
     materiales = materialeSolicitudActualID;
 
+    let row = document.getElementById(`solicitud-${id}`);
+    let dialog = document.getElementById(`dialog-${id}`);
+
     fetch('/casetero/vales/pendientes/completado', {
         method: 'POST',
         body: JSON.stringify({ identificacion: id, materiales: materiales }),
@@ -68,15 +71,37 @@ function aceptarSolicitud() {
         .then(data => {
             switch (data.status) {
                 case 'error':   // Notificación de error.
-                    closeDialogAceptar()
+                    closeDialogAceptar();
                     mostrarNotificacionRequest('Error', data.mensaje, 'crimson', 'bug');
                     break;
                 case 'redirect':    // Redirección exitosa.
-                    sessionStorage.setItem("notificacion_mensaje", data.mensaje);
-                    window.location.href = data.url;
+                    eliminarMaterialesUsados(materiales);
+
+                    row.remove();
+                    dialog.remove();
+
+                    closeDialogAceptar();
+                    mostrarNotificacionRequest('Exito', data.mensaje, 'lawngreen', 'check');
                     break;
             };
         });
+};
+
+// Función que modifica equipoData directamente
+function eliminarMaterialesUsados(listaMaterialesUsados) {
+    listaMaterialesUsados.forEach(([categoria, material]) => {
+        if (equipoData[categoria]) {
+            const index = equipoData[categoria].indexOf(material);
+            if (index > -1) {
+                equipoData[categoria].splice(index, 1);
+            }
+
+            // Opcional: eliminar categoría si queda vacía
+            if (equipoData[categoria].length === 0) {
+                delete equipoData[categoria];
+            };
+        };
+    });
 };
 
 /*
@@ -190,14 +215,64 @@ Abre el diálogo de selección de material específico.
  3. Muestra el diálogo modal correspondiente al material.
 */
 let lastClickedElement = null;  // Almacena el elemento que abrió el diálogo
+let lastClickedCantidadElement = null;
 
-function openDialogMaterial(id, event) {
-    let dialog = document.getElementById(`dialog-item-${id}`);
-    if (dialog) {
-        lastClickedElement = event.target;  // Guarda el elemento que disparó el evento
+function openDialogMaterial(llave, event) {
+    const dialog = document.getElementById('equipo-dialog');
+    const listContainer = document.getElementById('equipo-list-container');
+
+    // Limpiar lista anterior
+    listContainer.innerHTML = '';
+
+    // Verificar si la llave existe en los datos
+    if (equipoData[llave]) {
+        // Crear elementos de lista para cada valor
+        equipoData[llave].forEach(ide => {
+            const li = document.createElement('li');
+            li.textContent = ide;
+
+            // Agregar evento click directamente a cada li
+            li.addEventListener('click', function () {
+                handleMaterialSelection(this.textContent);
+            });
+
+            listContainer.appendChild(li);
+        });
+
+        // Mostrar el dialog
+        lastClickedElement = event.currentTarget; // Usar currentTarget en lugar de target
         dialog.showModal();
-    }
-}
+    } else {
+        const li = document.createElement('li');
+        li.textContent = 'No hay datos disponibles';
+        listContainer.appendChild(li);
+        dialog.showModal();
+    };
+};
+
+// Función para manejar la selección de material
+function handleMaterialSelection(selectedValue) {
+    if (lastClickedElement) {
+        let text = lastClickedElement.textContent;
+
+        // Si ya tiene ":", eliminamos todo lo que viene después
+        if (text.includes(":")) {
+            text = text.split(":")[0].trim();
+        }
+
+        // Agregamos el nuevo valor
+        lastClickedElement.textContent = `${text}: ${selectedValue}`;
+
+        // Aplicamos estilos visuales
+        lastClickedElement.style.color = "green";
+
+        // Limpiar la referencia
+        lastClickedElement = null;
+    };
+
+    // Cerrar el diálogo
+    closeDialogMaterial();
+};
 
 /*
 Cierra el diálogo de selección de material.
@@ -205,44 +280,37 @@ Cierra el diálogo de selección de material.
  2. Limpia la referencia al último elemento clickeado.
  3. Cierra el diálogo modal correspondiente.
 */
-function closeDialogMaterial(id) {
-    let dialog = document.getElementById(`dialog-item-${id}`);
-    if (dialog) {
-        lastClickedElement = null;
-        dialog.close();
-    }
-}
+function closeDialogMaterial() {
+    lastClickedElement = null;
+    document.getElementById('equipo-dialog').close();
+};
 
 /*
-Configura los listeners para los items de diálogo.
+Configura los listeners para los items de diálogo de cantidad.
  1. Agrega eventos click a todos los elementos <li> dentro de diálogos.
  2. Actualiza el texto del elemento que abrió el diálogo con la selección.
  3. Aplica estilo visual (color verde) a la selección.
  4. Cierra el diálogo después de la selección.
 */
-document.querySelectorAll("dialog ul li").forEach(li => {
+document.querySelectorAll("#dialog-item-cantidad ul li").forEach(li => {
     li.addEventListener("click", function () {
-        if (lastClickedElement) {
-            let text = lastClickedElement.textContent;
+        if (lastClickedCantidadElement) {
+            let text = lastClickedCantidadElement.textContent;
 
             // Si ya tiene ":", eliminamos todo lo que viene después
             if (text.includes(":")) {
-                text = text.split(":")[0].trim(); // Tomamos solo la parte antes de ":"
+                text = text.split(":")[0].trim();
             }
 
             // Agregamos el nuevo valor
-            lastClickedElement.textContent = `${text}: ${this.textContent}`;
+            lastClickedCantidadElement.textContent = `${text}: ${this.textContent}`;
 
             // Aplicamos estilos visuales
-            lastClickedElement.style.color = "green";
+            lastClickedCantidadElement.style.color = "green"; // Color diferente para distinguir
         }
 
         // Cierra el diálogo
-        let dialog = this.closest("dialog");
-        if (dialog) {
-            lastClickedElement = null;
-            dialog.close();
-        }
+        closeDialogCantidad();
     });
 });
 
@@ -255,10 +323,10 @@ Abre el diálogo de selección de cantidad.
 function openDialogCantidad(event) {
     let dialog = document.getElementById(`dialog-item-cantidad`);
     if (dialog) {
-        lastClickedElement = event.target;  // Guarda el elemento que disparó el evento
+        lastClickedCantidadElement = event.currentTarget;  // Usar variable separada
         dialog.showModal();
-    }
-}
+    };
+};
 
 /*
 Cierra el diálogo de selección de cantidad.
@@ -268,10 +336,10 @@ Cierra el diálogo de selección de cantidad.
 function closeDialogCantidad() {
     let dialog = document.getElementById(`dialog-item-cantidad`);
     if (dialog) {
-        lastClickedElement = null;
+        lastClickedCantidadElement = null;
         dialog.close();
-    }
-}
+    };
+};
 
 /*
 Elimina un elemento span y su contenedor.
@@ -407,4 +475,10 @@ function openDialogAceptar(id) {
         solicitudActualID = id; // guarda el ID en memoria
         dialog.showModal();
     };
+};
+
+function agregarFiltro(valor) {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = valor;
+    searchInput.dispatchEvent(new Event('input'));
 };

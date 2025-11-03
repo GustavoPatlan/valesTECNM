@@ -12,6 +12,16 @@
 <div class="searchSection">
     <span>Busqueda</span>
     <input type="search" oninput="filterList()" placeholder="Buscar" id="searchInput">
+    <div>
+        {% if casetero[3] == 'Y1-Y2' %}
+        <button onclick="agregarFiltro('Y1')">Y1</button>
+        <button onclick="agregarFiltro('Y2')">Y2</button>
+        {% endif %}
+        {% if casetero[3] == 'Y6-Y7' %}
+        <button onclick="agregarFiltro('Y6')">Y6</button>
+        <button onclick="agregarFiltro('Y7')">Y7</button>
+        {% endif %}
+    </div>
 </div>
 <div class="table-container">
     <table>
@@ -94,9 +104,12 @@
                             </div>
                         </div>
                     </div>
-                    <a id="botonAceptar" href="/casetero/vales/activos/{{solicitud[0]}}">EDITAR</a>
-                    <button id="cancelarSolicitud" onclick="openDialogCancelar('{{ solicitud[0] }}')">FINALIZAR</button>
-                    <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                    <div class="divAction">
+                        <a id="botonAceptar" href="/casetero/vales/activos/{{solicitud[0]}}">EDITAR</a>
+                        <button id="cancelarSolicitud"
+                            onclick="openDialogCancelar('{{ solicitud[0] }}')">FINALIZAR</button>
+                        <button onclick="closeDialogInfo('{{ solicitud[0] }}')">CERRAR</button>
+                    </div>
                 </div>
             </dialog>
             <dialog id="dialog-accept-{{ solicitud[0] }}">

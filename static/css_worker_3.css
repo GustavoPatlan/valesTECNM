@@ -4,7 +4,6 @@ main {
 
 main .searchSection {
     display: flex;
-    flex-direction: row;
     align-items: center;
     padding-bottom: 5px;
 }
@@ -18,6 +17,25 @@ main .searchSection span {
 main .searchSection input {
     padding: 5px;
     border-radius: 8px;
+}
+
+main .searchSection div {
+    margin-left: 5px;
+}
+
+main .searchSection div button {
+    background: #1c336c;
+    border: none;
+    border-radius: 8px;
+    color: #f0f0f0;
+    padding: 8px;
+    padding-right: 15px;
+    padding-left: 15px;
+    cursor: pointer;
+}
+
+main .searchSection div button:hover {
+    background: #2b417a;
 }
 
 main .table-container {
@@ -265,8 +283,12 @@ main .table-container::-webkit-scrollbar-track {
     }
 
     main .searchSection {
-        justify-content: center;
         flex-direction: column;
+    }
+
+    main .searchSection div {
+        margin-left: 0px;
+        margin-top: 3px;
     }
 
     main .table-container table thead {
@@ -289,7 +311,7 @@ main .table-container::-webkit-scrollbar-track {
     }
 
     main .table-container table td {
-        text-align: left;
+        text-align: right;
         align-items: center;
         display: flex;
         justify-content: space-between;
@@ -313,7 +335,7 @@ main .table-container::-webkit-scrollbar-track {
         margin-right: 10px;
     }
 
-    main .table-container{
+    main .table-container {
         height: 60%;
     }
 

@@ -20,6 +20,25 @@ main .searchSection input {
     border-radius: 8px;
 }
 
+main .searchSection div {
+    margin-left: 5px;
+}
+
+main .searchSection div button {
+    background: #1c336c;
+    border: none;
+    border-radius: 8px;
+    color: #f0f0f0;
+    padding: 8px;
+    padding-right: 15px;
+    padding-left: 15px;
+    cursor: pointer;
+}
+
+main .searchSection div button:hover {
+    background: #2b417a;
+}
+
 main .table-container {
     height: 80%;
     width: 100%;
@@ -108,9 +127,8 @@ main .table-container::-webkit-scrollbar-track {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
     align-items: center;
+    text-align: center;
 }
 
 .dialog-content-use .dialog-content-textarea{
@@ -174,7 +192,6 @@ main .table-container::-webkit-scrollbar-track {
 
 .dialog-content-use button,
 .dialog-content-use a{
-    border: none;
     border-radius: 8px;
     padding: 8px;
     background: #1c336c;
@@ -182,9 +199,18 @@ main .table-container::-webkit-scrollbar-track {
     cursor: pointer;
     font-size: 13px;
     margin-top: 5px;
-    width: 120px;
     text-align: center;
+}
+
+.dialog-content-use button{
+    border: none;
+    width: 120px;
+}
+
+.dialog-content-use a{
+    display: inline-block;
     text-decoration: none;
+    width: 120px;
 }
 
 .dialog-content-use .remove-btn {
@@ -203,7 +229,6 @@ main .table-container::-webkit-scrollbar-track {
 
 .dialog-content-use .dialog-content-part {
     display: flex;
-    flex-direction: row;
     width: 100%;
 }
 
@@ -286,8 +311,12 @@ main .table-container::-webkit-scrollbar-track {
     }
 
     main .searchSection {
-        justify-content: center;
         flex-direction: column;
+    }
+
+    main .searchSection div {
+        margin-left: 0px;
+        margin-top: 3px;
     }
 
     main .table-container table thead {
@@ -310,7 +339,7 @@ main .table-container::-webkit-scrollbar-track {
     }
 
     main .table-container table td {
-        text-align: left;
+        text-align: right;
         align-items: center;
         display: flex;
         justify-content: space-between;
